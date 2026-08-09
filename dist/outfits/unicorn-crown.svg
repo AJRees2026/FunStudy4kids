@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Unicorn Crown: tiara with unicorn horn on top of head -->
+  <defs>
+    <linearGradient id="horn" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fde68a"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+    <linearGradient id="tiara" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fda4af"/>
+      <stop offset="100%" stop-color="#f43f5e"/>
+    </linearGradient>
+  </defs>
+  <!-- Unicorn horn -->
+  <path d="M 100 8 L 112 58 L 88 58 Z" fill="url(#horn)" stroke="#d97706" stroke-width="2"/>
+  <!-- Horn spiral lines -->
+  <path d="M 92 50 Q 100 47 108 50" stroke="#d97706" stroke-width="1.5" fill="none"/>
+  <path d="M 94 42 Q 100 39 106 42" stroke="#d97706" stroke-width="1.5" fill="none"/>
+  <path d="M 96 34 Q 100 31 104 34" stroke="#d97706" stroke-width="1.5" fill="none"/>
+  <path d="M 98 26 Q 100 23 102 26" stroke="#d97706" stroke-width="1.5" fill="none"/>
+  <!-- Tiara base -->
+  <path d="M 48 60 Q 100 50 152 60 L 148 72 Q 100 64 52 72 Z" fill="url(#tiara)" stroke="#e11d48" stroke-width="2"/>
+  <!-- Tiara gems -->
+  <circle cx="100" cy="66" r="6" fill="#a78bfa" stroke="#7c3aed" stroke-width="1"/>
+  <circle cx="72" cy="68" r="4" fill="#22d3ee" stroke="#0891b2" stroke-width="1"/>
+  <circle cx="128" cy="68" r="4" fill="#22d3ee" stroke="#0891b2" stroke-width="1"/>
+  <!-- Sparkles -->
+  <g fill="#fbbf24">
+    <path d="M 100 2 L 102 6 L 106 8 L 102 10 L 100 14 L 98 10 L 94 8 L 98 6 Z" opacity="0.7"/>
+  </g>
+</svg>
