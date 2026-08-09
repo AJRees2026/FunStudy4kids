@@ -1,44 +1,24 @@
 import { useState, useEffect, useCallback } from 'react'
-import {
-  supabase, type Profile, type Task, type Reward, type Outfit, type ChildOutfit,
-} from '../lib/supabase'
-import { THEMES, getTheme, getOutfit } from '../lib/themes'
-import { speak, setSpeechLang, getSpeechLang, isSpeechSupported } from '../lib/tts'
-import Avatar from '../components/Avatar'
-import Confetti from '../components/Confetti'
-import FocusTimer from '../components/FocusTimer'
+import { supabase, type Profile, type Task, type Reward } from '../lib/supabase'
+import { getTheme, type Theme } from '../lib/themes'
+import { speak, getSpeechLang, setSpeechLang, LANGUAGES } from '../lib/speech'
 import SpeakButton from '../components/SpeakButton'
 import PinPrompt from '../components/PinPrompt'
+import FocusTimer from '../components/FocusTimer'
+import Confetti from '../components/Confetti'
 import {
   Star, Flame, Award, LogOut, Play, Check, Lock, ShoppingBag,
-  ClipboardList, Shirt, X, Volume2,
+  ClipboardList, X, Volume2,
 } from 'lucide-react'
 
-const LANGUAGES = [
-  { code: 'en-US', label: 'English' },
-  { code: 'es-ES', label: 'Español' },
-  { code: 'fr-FR', label: 'Français' },
-  { code: 'de-DE', label: 'Deutsch' },
-  { code: 'pt-BR', label: 'Português' },
-  { code: 'it-IT', label: 'Italiano' },
-]
-
-type Tab = 'tasks' | 'shop' | 'outfits'
-
-export default function KidDashboard({
-  child,
-  onExit,
-  onRefreshChild,
-}: {
+type Props = {
   child: Profile
-  onExit: () => void
-  onRefreshChild: (id: string) => void
-}) {
-  const [tab, setTab] = useState<Tab>('tasks')
+  onSwitchProfile: () => void
+}
+
+export default function KidDashboard({ child, onSwitchProfile }: Props) {
   const [tasks, setTasks] = useState<Task[]>([])
   const [rewards, setRewards] = useState<Reward[]>([])
-  const [outfits, setOutfits] = useState<Outfit[]>([])
-  const [childOutfits, setChildOutfits] = useState<ChildOutfit[]>([])
   const [activeTask, setActiveTask] = useState<Task | null>(null)
   const [confetti, setConfetti] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
@@ -48,41 +28,50 @@ export default function KidDashboard({
     subtitle: string
     onApprove: () => void
   } | null>(null)
+  const [currentChild, setCurrentChild] = useState(child)
 
-  const guardianPin = child.parent_pin || '1234'
+  const isSpace = currentChild.theme_preference === 'space'
+  const theme: Theme = getTheme(currentChild.theme_preference)
 
-  const theme = getTheme(child)
-  const isSpace = theme.name === 'space'
-
-  const loadData = useCallback(async () => {
-    const [tasksRes, rewardsRes, outfitsRes, childOutfitsRes] = await Promise.all([
-      supabase.from('tasks').select('*').eq('child_id', child.id).order('due_date'),
-      supabase.from('rewards').select('*').eq('child_id', child.id).order('point_cost'),
-      supabase.from('outfits').select('*').order('point_cost'),
-      supabase.from('child_outfits').select('*').eq('child_id', child.id),
-    ])
-    if (tasksRes.data) setTasks(tasksRes.data as Task[])
-    if (rewardsRes.data) setRewards(rewardsRes.data as Reward[])
-    if (outfitsRes.data) setOutfits(outfitsRes.data as Outfit[])
-    if (childOutfitsRes.data) setChildOutfits(childOutfitsRes.data as ChildOutfit[])
-  }, [child.id])
-
-  useEffect(() => {
-    loadData()
-  }, [loadData])
+  const guardianPin = currentChild.parent_pin || '1234'
 
   const showToast = (msg: string) => {
     setToast(msg)
-    setTimeout(() => setToast(null), 2500)
+    setTimeout(() => setToast(null), 3000)
   }
 
-  const equippedOutfit = getOutfit(outfits, child.active_outfit_id)
+  const fetchData = useCallback(async () => {
+    const [{ data: taskData }, { data: rewardData }] = await Promise.all([
+      supabase.from('tasks').select('*').eq('child_id', currentChild.id).order('created_at', { ascending: false }),
+      supabase.from('rewards').select('*').eq('child_id', currentChild.id).order('created_at', { ascending: false }),
+    ])
+    if (taskData) setTasks(taskData as Task[])
+    if (rewardData) setRewards(rewardData as Reward[])
+  }, [currentChild.id])
 
-  const isOutfitUnlocked = (outfitId: string) =>
-    childOutfits.some((co) => co.outfit_id === outfitId && co.is_unlocked)
+  useEffect(() => { fetchData() }, [fetchData])
+
+  const executeCompleteTask = async (task: Task) => {
+    await supabase
+      .from('tasks')
+      .update({ status: 'completed', completed_at: new Date().toISOString() })
+      .eq('id', task.id)
+
+    const newPoints = currentChild.points + task.point_value
+    await supabase.from('profiles').update({ points: newPoints }).eq('id', currentChild.id)
+    setCurrentChild({ ...currentChild, points: newPoints })
+
+    setTasks((prev) => prev.map((t) => t.id === task.id ? { ...t, status: 'completed', completed_at: new Date().toISOString() } : t))
+    setConfetti(true)
+    setTimeout(() => setConfetti(false), 100)
+
+    const congrats = `Great job, ${currentChild.child_name || currentChild.name}! You earned ${task.point_value} ${theme.starLabel.toLowerCase()}!`
+    speak(congrats, speechLang)
+    showToast(congrats)
+  }
 
   const completeTask = async (task: Task) => {
-    if (child.require_pin_for_tasks) {
+    if (currentChild.require_pin_for_tasks) {
       setPinPrompt({
         title: 'Approve Task',
         subtitle: `Enter PIN to complete "${task.title}"`,
@@ -93,53 +82,24 @@ export default function KidDashboard({
     executeCompleteTask(task)
   }
 
-  const executeCompleteTask = async (task: Task) => {
+  const executeClaimReward = async (reward: Reward) => {
+    const newPoints = currentChild.points - reward.point_cost
     await supabase
-      .from('tasks')
-      .update({ status: 'completed', completed_at: new Date().toISOString() })
-      .eq('id', task.id)
-
-    await supabase.from('study_sessions').insert({
-      child_id: child.id,
-      task_id: task.id,
-      subject: task.subject,
-      duration_mins: task.duration_mins,
-    })
-
-    const newPoints = child.points + task.points_value
-    const newLevel = Math.floor(newPoints / 50) + 1
-    await supabase
-      .from('profiles')
-      .update({ points: newPoints, level: newLevel })
-      .eq('id', child.id)
-
-    setConfetti(true)
-    setTimeout(() => setConfetti(false), 100)
-    setActiveTask(null)
-    showToast(`+${task.points_value} ${theme.starLabel} earned! ${theme.emoji}`)
-
-    // Auto-speak congratulations
-    const childName = child.child_name || child.name
-    const congratsMsgs: Record<string, string> = {
-      'en-US': `Great job, ${childName}! You earned ${task.points_value} ${theme.starLabel.toLowerCase()}!`,
-      'es-ES': `¡Buen trabajo, ${childName}! Ganaste ${task.points_value} ${theme.starLabel.toLowerCase()}!`,
-      'fr-FR': `Bravo, ${childName}! Tu as gagné ${task.points_value} ${theme.starLabel.toLowerCase()}!`,
-      'de-DE': `Gut gemacht, ${childName}! Du hast ${task.points_value} ${theme.starLabel.toLowerCase()} verdient!`,
-      'pt-BR': `Muito bem, ${childName}! Você ganhou ${task.points_value} ${theme.starLabel.toLowerCase()}!`,
-      'it-IT': `Bravo, ${childName}! Hai guadagnato ${task.points_value} ${theme.starLabel.toLowerCase()}!`,
-    }
-    speak(congratsMsgs[speechLang] || congratsMsgs['en-US'], speechLang)
-
-    await loadData()
-    await onRefreshChild(child.id)
+      .from('rewards')
+      .update({ status: 'claimed', claimed_at: new Date().toISOString() })
+      .eq('id', reward.id)
+    await supabase.from('profiles').update({ points: newPoints }).eq('id', currentChild.id)
+    setCurrentChild({ ...currentChild, points: newPoints })
+    setRewards((prev) => prev.map((r) => r.id === reward.id ? { ...r, status: 'claimed', claimed_at: new Date().toISOString() } : r))
+    showToast(`You claimed "${reward.title}"! ${theme.emoji}`)
   }
 
   const claimReward = async (reward: Reward) => {
-    if (child.points < reward.point_cost) {
+    if (currentChild.points < reward.point_cost) {
       showToast(`Not enough ${theme.starLabel.toLowerCase()} yet! Keep studying! ${theme.emoji}`)
       return
     }
-    if (child.require_pin_for_rewards) {
+    if (currentChild.require_pin_for_rewards) {
       setPinPrompt({
         title: 'Approve Reward',
         subtitle: `Enter PIN to claim "${reward.title}"`,
@@ -150,185 +110,61 @@ export default function KidDashboard({
     executeClaimReward(reward)
   }
 
-  const executeClaimReward = async (reward: Reward) => {
-    const newPoints = child.points - reward.point_cost
-    await supabase
-      .from('rewards')
-      .update({ status: 'claimed', claimed_at: new Date().toISOString() })
-      .eq('id', reward.id)
-    await supabase
-      .from('profiles')
-      .update({ points: newPoints })
-      .eq('id', child.id)
-    showToast('Reward claimed! Ask a parent to approve. 🎁')
-    await loadData()
-    await onRefreshChild(child.id)
-  }
-
-  const unlockOutfit = async (outfit: Outfit) => {
-    if (child.points < outfit.point_cost) {
-      showToast(`Need ${outfit.point_cost - child.points} more ${theme.starLabel.toLowerCase()}!`)
-      return
-    }
-    const newPoints = child.points - outfit.point_cost
-    await supabase
-      .from('child_outfits')
-      .update({ is_unlocked: true, unlocked_at: new Date().toISOString() })
-      .eq('child_id', child.id)
-      .eq('outfit_id', outfit.id)
-    await supabase
-      .from('profiles')
-      .update({ points: newPoints })
-      .eq('id', child.id)
-    showToast(`${outfit.title} unlocked! 🎉`)
-    setConfetti(true)
-    setTimeout(() => setConfetti(false), 100)
-    await loadData()
-    await onRefreshChild(child.id)
-  }
-
-  const equipOutfit = async (outfit: Outfit) => {
-    await supabase
-      .from('profiles')
-      .update({ active_outfit_id: outfit.id })
-      .eq('id', child.id)
-    showToast(`${outfit.title} equipped! ✨`)
-    await loadData()
-    await onRefreshChild(child.id)
-  }
-
-  const unequipOutfit = async () => {
-    await supabase
-      .from('profiles')
-      .update({ active_outfit_id: null })
-      .eq('id', child.id)
-    showToast('Outfit removed.')
-    await loadData()
-    await onRefreshChild(child.id)
-  }
-
   const pendingTasks = tasks.filter((t) => t.status === 'pending')
   const completedTasks = tasks.filter((t) => t.status === 'completed')
-  const availableRewards = rewards.filter((r) => r.status === 'locked')
+  const availableRewards = rewards.filter((r) => r.status === 'available')
   const claimedRewards = rewards.filter((r) => r.status === 'claimed')
 
-  const textPrimary = isSpace ? 'text-white' : 'text-slate-800'
-  const textSecondary = isSpace ? 'text-slate-300' : 'text-slate-500'
-  const textMuted = isSpace ? 'text-slate-400' : 'text-slate-400'
-  const cardBorder = isSpace ? 'border border-slate-700/50' : 'border border-slate-100'
-
   return (
-    <div className={`min-h-screen ${theme.bg} pb-24`}>
-      <Confetti fire={confetti} />
-
+    <div className={`min-h-screen ${theme.bgGradient} pb-24`}>
       {/* Header */}
-      <div className={`${theme.headerBg} backdrop-blur-md sticky top-0 z-30 px-4 py-3 shadow-sm`}>
-        <div className="max-w-3xl mx-auto flex items-center justify-between">
+      <header className="sticky top-0 z-30 backdrop-blur-md bg-black/20 border-b border-white/5">
+        <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Avatar
-              photoUrl={child.photo_url}
-              outfit={equippedOutfit}
-              size={56}
-              ringClass={`ring-4 ${theme.ring} shadow-lg`}
-            />
+            <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-indigo-500 to-teal-500 flex items-center justify-center text-xl shadow-lg">
+              {currentChild.avatar || theme.emoji}
+            </div>
             <div>
-              <p className={`text-xs ${textMuted} font-semibold`}>Welcome back,</p>
-              <h1 className={`text-xl font-display font-extrabold ${textPrimary}`}>
-                Hi, {child.child_name || child.name}!
-              </h1>
+              <p className={`font-display font-bold ${theme.textPrimary} text-lg leading-none`}>
+                {currentChild.child_name || currentChild.name}
+              </p>
+              <div className="flex items-center gap-2 mt-1">
+                <span className={`flex items-center gap-1 text-xs font-bold ${theme.accent}`}>
+                  <Star className="w-3 h-3" /> {currentChild.points} {theme.starLabel}
+                </span>
+                <span className={`flex items-center gap-1 text-xs font-bold ${theme.textMuted}`}>
+                  <Flame className="w-3 h-3" /> {currentChild.streak || 0} day streak
+                </span>
+              </div>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <div className={`flex items-center gap-1.5 px-3 py-2 rounded-2xl ${
-              isSpace ? 'bg-cyan-900/50' : 'bg-amber-100'
-            }`}>
-              <span className="text-base">{theme.starIcon}</span>
-              <span className={`font-display font-extrabold text-lg ${
-                isSpace ? 'text-cyan-300' : 'text-amber-700'
-              }`}>{child.points}</span>
-            </div>
-            <div className={`flex items-center gap-1.5 px-3 py-2 rounded-2xl ${
-              isSpace ? 'bg-indigo-900/50' : 'bg-indigo-100'
-            }`}>
-              <Award className={`w-5 h-5 ${isSpace ? 'text-indigo-400' : 'text-indigo-500'}`} />
-              <span className={`font-display font-extrabold text-lg ${
-                isSpace ? 'text-indigo-300' : 'text-indigo-700'
-              }`}>{child.level}</span>
-            </div>
-            <div className={`flex items-center gap-1.5 px-3 py-2 rounded-2xl ${
-              isSpace ? 'bg-rose-900/50' : 'bg-rose-100'
-            }`}>
-              <Flame className={`w-5 h-5 ${isSpace ? 'text-rose-400' : 'text-rose-500'}`} />
-              <span className={`font-display font-extrabold text-lg ${
-                isSpace ? 'text-rose-300' : 'text-rose-700'
-              }`}>{child.streak}</span>
-            </div>
-          </div>
+          <button onClick={onSwitchProfile} className={`p-2 rounded-xl ${theme.textMuted} hover:${theme.textPrimary} transition-colors`}>
+            <LogOut className="w-5 h-5" />
+          </button>
         </div>
-      </div>
+      </header>
 
-      <div className="max-w-3xl mx-auto px-4 pt-4">
-        {/* Tab Switcher */}
-        <div className={`flex gap-2 mb-5 rounded-2xl p-1.5 ${
-          isSpace ? 'bg-slate-800/60' : 'bg-white/60'
-        } backdrop-blur-sm`}>
-          {([
-            { key: 'tasks' as Tab, label: 'My Tasks', icon: ClipboardList },
-            { key: 'shop' as Tab, label: 'Reward Shop', icon: ShoppingBag },
-            { key: 'outfits' as Tab, label: 'Outfits', icon: Shirt },
-          ]).map(({ key, label, icon: Icon }) => (
-            <button
-              key={key}
-              onClick={() => setTab(key)}
-              className={`flex-1 flex items-center justify-center gap-1.5 py-3 rounded-xl font-display font-bold text-sm transition-all ${
-                tab === key
-                  ? isSpace
-                    ? 'bg-slate-700 text-cyan-300 shadow-md'
-                    : 'bg-white text-indigo-600 shadow-md'
-                  : textSecondary
-              }`}
-            >
-              <Icon className="w-4 h-4" />
-              <span className="hidden sm:inline">{label}</span>
-              <span className="sm:hidden">{label.split(' ')[0]}</span>
-            </button>
-          ))}
-        </div>
-
-        {/* ── Tasks Tab ── */}
-        {tab === 'tasks' && (
-          <div className="space-y-4">
-            <div className={`${theme.streakBg} rounded-3xl p-4 text-white flex items-center justify-between animate-slideUp`}>
-              <div>
-                <p className="font-display font-bold text-lg">Daily Streak</p>
-                <p className="text-white/80 text-sm">{child.streak} days in a row! Keep it up!</p>
-              </div>
-              <div className="text-5xl animate-wiggle">🔥</div>
+      <main className="max-w-2xl mx-auto px-4 py-6 space-y-6">
+        {/* Pending Tasks */}
+        <section>
+          <h2 className={`font-display font-extrabold text-xl ${theme.textPrimary} mb-3 flex items-center gap-2`}>
+            <ClipboardList className="w-5 h-5 text-indigo-400" />
+            Tasks
+            <span className={`text-sm font-bold ${theme.textMuted} bg-white/5 px-2 py-0.5 rounded-full`}>
+              {pendingTasks.length}
+            </span>
+          </h2>
+          {pendingTasks.length === 0 ? (
+            <div className={`rounded-2xl p-6 text-center ${theme.cardBg} border ${theme.cardBorder}`}>
+              <p className={`font-display font-bold ${theme.textSecondary}`}>No tasks yet! Ask your parent to add some.</p>
             </div>
-
-            <h2 className={`text-lg font-display font-bold ${textPrimary} px-1`}>
-              My Tasks Today
-            </h2>
-            {pendingTasks.length === 0 && (
-              <div className={`${theme.cardBg} ${cardBorder} rounded-3xl p-8 text-center`}>
-                <div className="text-5xl mb-2">{theme.emoji}</div>
-                <p className={`font-display font-bold ${textPrimary}`}>All tasks done! You're a star!</p>
-              </div>
-            )}
-            {pendingTasks.map((task) => (
-              <div
-                key={task.id}
-                className={`${theme.cardBg} ${cardBorder} rounded-3xl p-4 shadow-md hover:shadow-lg transition-all animate-slideUp`}
-              >
-                <div className="flex items-center gap-4">
-                  <div className={`text-4xl flex-shrink-0 w-14 h-14 flex items-center justify-center rounded-2xl ${
-                    isSpace ? 'bg-slate-700/50' : 'bg-slate-50'
-                  }`}>
-                    {task.icon_name}
-                  </div>
+          ) : (
+            <div className="space-y-3">
+              {pendingTasks.map((task) => (
+                <div key={task.id} className={`rounded-2xl p-4 ${theme.cardBg} border ${theme.cardBorder} flex items-center gap-3`}>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5">
-                      <h3 className={`font-display font-bold ${textPrimary} text-lg truncate`}>
+                      <h3 className={`font-display font-bold ${theme.textPrimary} text-lg truncate`}>
                         {task.title}
                       </h3>
                       <SpeakButton text={task.title} lang={speechLang} iconSize={16} />
@@ -339,320 +175,152 @@ export default function KidDashboard({
                       }`}>
                         {task.subject}
                       </span>
-                      <span className={`text-xs font-bold ${textMuted}`}>{task.duration_mins} min</span>
-                      <span className={`text-xs font-bold flex items-center gap-0.5 ${
-                        isSpace ? 'text-cyan-400' : 'text-amber-600'
-                      }`}>
-                        {theme.starIcon} {task.points_value}
+                      <span className={`text-xs font-bold ${theme.textMuted}`}>{task.duration_mins} min</span>
+                      <span className={`text-xs font-bold ${theme.accent} flex items-center gap-0.5`}>
+                        <Star className="w-3 h-3" /> {task.point_value}
                       </span>
                     </div>
                   </div>
                   <button
                     onClick={() => setActiveTask(task)}
-                    className={`flex items-center gap-1.5 font-display font-bold px-4 py-3 rounded-2xl shadow-md hover:scale-105 active:scale-95 transition-all flex-shrink-0 ${
-                      isSpace
-                        ? 'bg-gradient-to-r from-cyan-500 to-indigo-500 text-white'
-                        : 'bg-gradient-to-r from-teal-400 to-indigo-500 text-white'
-                    }`}
+                    className="bg-gradient-to-r from-indigo-500 to-teal-500 text-white font-display font-bold px-4 py-2.5 rounded-xl hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5 shrink-0"
                   >
-                    <Play className="w-5 h-5 fill-white" />
-                    Start
+                    <Play className="w-4 h-4" /> Start
                   </button>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+          )}
+        </section>
 
-            {completedTasks.length > 0 && (
-              <>
-                <h2 className={`text-lg font-display font-bold ${textSecondary} px-1 pt-2`}>
-                  Completed Today ✅
-                </h2>
-                {completedTasks.map((task) => (
-                  <div key={task.id} className={`${theme.cardBg} ${cardBorder} rounded-3xl p-4 shadow-sm opacity-60`}>
-                    <div className="flex items-center gap-4">
-                      <div className={`text-3xl flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-2xl ${
-                        isSpace ? 'bg-slate-700/50' : 'bg-green-50'
-                      }`}>
-                        {task.icon_name}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-1.5">
-                          <h3 className={`font-display font-bold ${textSecondary} text-base truncate line-through`}>
-                            {task.title}
-                          </h3>
-                          <SpeakButton text={task.title} lang={speechLang} iconSize={14} />
-                        </div>
-                        <span className={`text-xs font-bold ${isSpace ? 'text-green-400' : 'text-green-600'}`}>
-                          +{task.points_value} {theme.starLabel.toLowerCase()} earned
-                        </span>
-                      </div>
-                      <div className="w-10 h-10 rounded-full bg-green-400 flex items-center justify-center flex-shrink-0">
-                        <Check className="w-6 h-6 text-white" />
-                      </div>
-                    </div>
+        {/* Completed Tasks */}
+        {completedTasks.length > 0 && (
+          <section>
+            <h2 className={`font-display font-extrabold text-lg ${theme.textPrimary} mb-3 flex items-center gap-2`}>
+              <Check className="w-5 h-5 text-teal-400" />
+              Completed
+              <span className={`text-sm font-bold ${theme.textMuted} bg-white/5 px-2 py-0.5 rounded-full`}>
+                {completedTasks.length}
+              </span>
+            </h2>
+            <div className="space-y-2">
+              {completedTasks.map((task) => (
+                <div key={task.id} className={`rounded-xl p-3 ${theme.cardBg} border ${theme.cardBorder} flex items-center gap-2 opacity-70`}>
+                  <Check className="w-4 h-4 text-teal-400 shrink-0" />
+                  <div className="flex-1 min-w-0 flex items-center gap-1.5">
+                    <h3 className={`font-display font-bold ${theme.textSecondary} text-sm truncate`}>
+                      {task.title}
+                    </h3>
+                    <SpeakButton text={task.title} lang={speechLang} iconSize={14} />
                   </div>
-                ))}
-              </>
-            )}
-          </div>
+                  <span className={`text-xs font-bold ${theme.accent} flex items-center gap-0.5`}>
+                    +{task.point_value} <Star className="w-3 h-3" />
+                  </span>
+                </div>
+              ))}
+            </div>
+          </section>
         )}
 
-        {/* ── Reward Shop Tab ── */}
-        {tab === 'shop' && (
-          <div className="space-y-4">
-            <div className="bg-gradient-to-r from-amber-400 to-yellow-400 rounded-3xl p-5 text-white flex items-center justify-between animate-slideUp">
-              <div>
-                <p className="font-display font-bold text-lg">My {theme.starLabel}</p>
-                <p className="text-3xl font-display font-extrabold">{child.points} {theme.starIcon}</p>
-              </div>
-              <div className="text-5xl animate-float">{theme.emoji}</div>
+        {/* Reward Shop */}
+        <section>
+          <h2 className={`font-display font-extrabold text-xl ${theme.textPrimary} mb-3 flex items-center gap-2`}>
+            <ShoppingBag className="w-5 h-5 text-amber-400" />
+            Reward Shop
+          </h2>
+          {availableRewards.length === 0 ? (
+            <div className={`rounded-2xl p-6 text-center ${theme.cardBg} border ${theme.cardBorder}`}>
+              <p className={`font-display font-bold ${theme.textSecondary}`}>No rewards available yet!</p>
             </div>
-
-            {claimedRewards.length > 0 && (
-              <>
-                <h2 className={`text-lg font-display font-bold ${textPrimary} px-1`}>
-                  Waiting for Approval
-                </h2>
-                {claimedRewards.map((r) => (
-                  <div key={r.id} className={`${theme.cardBg} ${cardBorder} border-2 rounded-3xl p-4 flex items-center gap-4 ${
-                    isSpace ? 'border-indigo-700' : 'border-indigo-200'
-                  }`}>
-                    <div className="text-3xl">{r.icon_name}</div>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-1.5">
-                        <h3 className={`font-display font-bold ${textPrimary}`}>{r.title}</h3>
-                        <SpeakButton text={r.title} lang={speechLang} iconSize={16} />
-                      </div>
-                      <p className={`text-xs font-semibold ${isSpace ? 'text-indigo-400' : 'text-indigo-500'}`}>
-                        Waiting for parent to approve
-                      </p>
+          ) : (
+            <div className="grid grid-cols-2 gap-3">
+              {availableRewards.map((reward) => {
+                const canAfford = currentChild.points >= reward.point_cost
+                return (
+                  <div key={reward.id} className={`rounded-2xl p-4 ${theme.cardBg} border ${theme.cardBorder} flex flex-col items-center text-center`}>
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center mb-2">
+                      <Award className="w-6 h-6 text-white" />
                     </div>
-                  </div>
-                ))}
-              </>
-            )}
-
-            <h2 className={`text-lg font-display font-bold ${textPrimary} px-1`}>
-              Spend Your {theme.starLabel}
-            </h2>
-            {availableRewards.length === 0 && (
-              <div className={`${theme.cardBg} ${cardBorder} rounded-3xl p-8 text-center`}>
-                <div className="text-5xl mb-2">🎁</div>
-                <p className={`font-display font-bold ${textPrimary}`}>No rewards yet. Ask a parent to add some!</p>
-              </div>
-            )}
-            {availableRewards.map((reward) => {
-              const canAfford = child.points >= reward.point_cost
-              return (
-                <div
-                  key={reward.id}
-                  className={`${theme.cardBg} ${cardBorder} rounded-3xl p-4 shadow-md transition-all animate-slideUp ${
-                    canAfford ? 'hover:shadow-lg' : 'opacity-75'
-                  }`}
-                >
-                  <div className="flex items-center gap-4">
-                    <div className={`text-4xl flex-shrink-0 w-14 h-14 flex items-center justify-center rounded-2xl ${
-                      isSpace ? 'bg-slate-700/50' : 'bg-slate-50'
-                    }`}>
-                      {reward.icon_name}
+                    <div className="flex items-center gap-1 mb-1">
+                      <h3 className={`font-display font-bold ${theme.textPrimary} text-sm`}>
+                        {reward.title}
+                      </h3>
+                      <SpeakButton text={reward.title} lang={speechLang} iconSize={14} />
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-1.5">
-                        <h3 className={`font-display font-bold ${textPrimary} text-lg truncate`}>
-                          {reward.title}
-                        </h3>
-                        <SpeakButton text={reward.title} lang={speechLang} iconSize={16} />
-                      </div>
-                      <div className="flex items-center gap-1 mt-1">
-                        <span className="text-base">{theme.starIcon}</span>
-                        <span className={`font-display font-extrabold ${
-                          isSpace ? 'text-cyan-400' : 'text-amber-600'
-                        }`}>{reward.point_cost}</span>
-                      </div>
-                    </div>
+                    <p className={`text-xs font-bold ${theme.accent} flex items-center gap-0.5 mb-3`}>
+                      <Star className="w-3 h-3" /> {reward.point_cost}
+                    </p>
                     <button
                       onClick={() => claimReward(reward)}
                       disabled={!canAfford}
-                      className={`flex items-center gap-1.5 font-display font-bold px-4 py-3 rounded-2xl transition-all flex-shrink-0 ${
+                      className={`w-full font-display font-bold text-sm py-2 rounded-xl transition-all ${
                         canAfford
-                          ? 'bg-gradient-to-r from-rose-400 to-pink-500 text-white shadow-md hover:scale-105 active:scale-95'
-                          : isSpace
-                            ? 'bg-slate-700 text-slate-500 cursor-not-allowed'
-                            : 'bg-slate-100 text-slate-400 cursor-not-allowed'
+                          ? 'bg-gradient-to-r from-amber-400 to-orange-500 text-white hover:scale-105 active:scale-95'
+                          : 'bg-white/5 text-slate-500 cursor-not-allowed'
                       }`}
                     >
-                      {canAfford ? (
-                        <><ShoppingBag className="w-5 h-5" />Claim</>
-                      ) : (
-                        <><Lock className="w-5 h-5" />Locked</>
-                      )}
+                      {canAfford ? 'Claim' : `Need ${reward.point_cost - currentChild.points} more`}
                     </button>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        )}
-
-        {/* ── Outfits Tab ── */}
-        {tab === 'outfits' && (
-          <div className="space-y-4">
-            {/* Current outfit preview */}
-            <div className={`${theme.cardBg} ${cardBorder} rounded-3xl p-5 shadow-md animate-slideUp`}>
-              <div className="flex items-center gap-4">
-                <Avatar
-                  photoUrl={child.photo_url}
-                  outfit={equippedOutfit}
-                  size={80}
-                  ringClass={`ring-4 ${theme.ring} shadow-lg`}
-                />
-                <div className="flex-1">
-                  <p className={`text-sm font-semibold ${textMuted}`}>Current Outfit</p>
-                  <h3 className={`font-display font-bold text-lg ${textPrimary}`}>
-                    {equippedOutfit ? equippedOutfit.title : 'No outfit equipped'}
-                  </h3>
-                  {equippedOutfit && (
-                    <button
-                      onClick={unequipOutfit}
-                      className={`text-xs font-bold mt-1 ${isSpace ? 'text-rose-400 hover:text-rose-300' : 'text-rose-500 hover:text-rose-400'}`}
-                    >
-                      Remove outfit
-                    </button>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            <h2 className={`text-lg font-display font-bold ${textPrimary} px-1`}>
-              My Outfits
-            </h2>
-            <div className="grid grid-cols-2 gap-3">
-              {outfits.map((outfit) => {
-                const unlocked = isOutfitUnlocked(outfit.id)
-                const equipped = child.active_outfit_id === outfit.id
-                return (
-                  <div
-                    key={outfit.id}
-                    className={`${theme.cardBg} ${cardBorder} rounded-3xl p-4 shadow-md text-center transition-all animate-slideUp ${
-                      unlocked ? 'hover:shadow-lg' : 'opacity-70'
-                    }`}
-                  >
-                    {/* Preview with outfit */}
-                    <div className="flex justify-center mb-2">
-                      <div className="relative">
-                        <Avatar
-                          photoUrl={child.photo_url}
-                          outfit={unlocked ? outfit : null}
-                          size={80}
-                          ringClass={`ring-2 ${equipped ? theme.ring : 'ring-transparent'}`}
-                        />
-                        {!unlocked && (
-                          <div className="absolute inset-0 flex items-center justify-center bg-slate-900/40 rounded-full">
-                            <Lock className="w-7 h-7 text-white" />
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    <h3 className={`font-display font-bold text-sm ${textPrimary} truncate`}>
-                      {outfit.title}
-                    </h3>
-                    {!unlocked ? (
-                      <>
-                        <p className={`text-xs font-bold ${isSpace ? 'text-cyan-400' : 'text-amber-600'} mb-2`}>
-                          {theme.starIcon} {outfit.point_cost}
-                        </p>
-                        <button
-                          onClick={() => unlockOutfit(outfit)}
-                          disabled={child.points < outfit.point_cost}
-                          className={`w-full text-xs font-display font-bold py-2 rounded-xl transition-all ${
-                            child.points >= outfit.point_cost
-                              ? 'bg-gradient-to-r from-amber-400 to-orange-400 text-white hover:scale-105 active:scale-95'
-                              : isSpace
-                                ? 'bg-slate-700 text-slate-500 cursor-not-allowed'
-                                : 'bg-slate-100 text-slate-400 cursor-not-allowed'
-                          }`}
-                        >
-                          Unlock
-                        </button>
-                      </>
-                    ) : equipped ? (
-                      <span className={`inline-block text-xs font-bold py-2 px-3 rounded-xl ${
-                        isSpace ? 'bg-cyan-900/50 text-cyan-300' : 'bg-green-100 text-green-600'
-                      }`}>
-                        ✓ Equipped
-                      </span>
-                    ) : (
-                      <button
-                        onClick={() => equipOutfit(outfit)}
-                        className={`w-full text-xs font-display font-bold py-2 rounded-xl transition-all ${
-                          isSpace
-                            ? 'bg-indigo-600 text-white hover:bg-indigo-500'
-                            : 'bg-indigo-500 text-white hover:bg-indigo-400'
-                        }`}
-                      >
-                        Wear
-                      </button>
-                    )}
                   </div>
                 )
               })}
             </div>
-          </div>
-        )}
-      </div>
+          )}
+        </section>
 
-      {/* Language selector + Exit button */}
-      <div className="fixed bottom-4 left-4 flex items-center gap-2 z-20">
-        <button
-          onClick={onExit}
-          className={`flex items-center gap-1.5 font-bold px-4 py-2.5 rounded-2xl shadow-md transition-all ${
-            isSpace
-              ? 'bg-slate-800/80 text-slate-300 hover:bg-slate-700'
-              : 'bg-white/80 text-slate-600 hover:bg-white'
-          } backdrop-blur-sm`}
-        >
-          <LogOut className="w-4 h-4" />
-          Exit
-        </button>
-        {isSpeechSupported() && (
-          <div className={`flex items-center gap-1.5 px-3 py-2.5 rounded-2xl shadow-md backdrop-blur-sm ${
-            isSpace ? 'bg-slate-800/80' : 'bg-white/80'
-          }`}>
-            <Volume2 className={`w-4 h-4 ${isSpace ? 'text-cyan-400' : 'text-indigo-500'}`} />
-            <select
-              value={speechLang}
-              onChange={(e) => {
-                setLang(e.target.value)
-                setSpeechLang(e.target.value)
-              }}
-              className={`bg-transparent text-sm font-bold focus:outline-none cursor-pointer ${
-                isSpace ? 'text-slate-200' : 'text-slate-700'
-              }`}
-            >
-              {LANGUAGES.map((l) => (
-                <option key={l.code} value={l.code} className={isSpace ? 'bg-slate-800' : 'bg-white'}>
-                  {l.label}
-                </option>
+        {/* Claimed Rewards */}
+        {claimedRewards.length > 0 && (
+          <section>
+            <h2 className={`font-display font-extrabold text-lg ${theme.textPrimary} mb-3`}>
+              Claimed Rewards
+            </h2>
+            <div className="space-y-2">
+              {claimedRewards.map((reward) => (
+                <div key={reward.id} className={`rounded-xl p-3 ${theme.cardBg} border ${theme.cardBorder} flex items-center gap-2 opacity-70`}>
+                  <Check className="w-4 h-4 text-teal-400 shrink-0" />
+                  <div className="flex-1 min-w-0 flex items-center gap-1.5">
+                    <h3 className={`font-display font-bold ${theme.textSecondary} text-sm truncate`}>
+                      {reward.title}
+                    </h3>
+                    <SpeakButton text={reward.title} lang={speechLang} iconSize={14} />
+                  </div>
+                </div>
               ))}
-            </select>
-          </div>
+            </div>
+          </section>
         )}
+      </main>
+
+      {/* Language Selector */}
+      <div className="fixed bottom-4 left-4 z-20">
+        <select
+          value={speechLang}
+          onChange={(e) => { setLang(e.target.value); setSpeechLang(e.target.value) }}
+          className={`rounded-xl px-3 py-2 text-sm font-bold ${theme.cardBg} ${theme.textPrimary} border ${theme.cardBorder} focus:outline-none`}
+        >
+          {LANGUAGES.map((l) => (
+            <option key={l.code} value={l.code}>{l.flag} {l.label}</option>
+          ))}
+        </select>
       </div>
 
       {/* Toast */}
       {toast && (
-        <div className={`fixed bottom-6 left-1/2 -translate-x-1/2 font-display font-bold px-6 py-3 rounded-2xl shadow-xl z-50 animate-pop ${
-          isSpace ? 'bg-slate-700 text-white' : 'bg-slate-800 text-white'
-        }`}>
-          {toast}
+        <div className="fixed bottom-4 right-4 z-40 max-w-xs">
+          <div className="bg-gradient-to-r from-indigo-500 to-teal-500 text-white font-display font-bold px-5 py-3 rounded-2xl shadow-2xl animate-pop">
+            {toast}
+          </div>
         </div>
       )}
+
+      {/* Confetti */}
+      {confetti && <Confetti />}
 
       {/* Focus Timer Modal */}
       {activeTask && (
         <FocusTimer
           durationMins={activeTask.duration_mins}
-          onDone={() => completeTask(activeTask)}
+          onDone={() => { completeTask(activeTask); setActiveTask(null) }}
           onClose={() => setActiveTask(null)}
           isSpace={isSpace}
         />

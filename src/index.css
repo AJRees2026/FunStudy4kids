@@ -1,23 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  body {
-    font-family: 'Nunito', system-ui, sans-serif;
-    @apply antialiased;
-  }
-  h1, h2, h3, h4, .font-display {
-    font-family: 'Baloo 2', system-ui, sans-serif;
-  }
+:root {
+  font-family: 'Inter', system-ui, sans-serif;
 }
 
-@layer utilities {
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.font-display {
+  font-family: 'Fredoka', 'Inter', sans-serif;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pop {
+  0% { transform: scale(0.95); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-pop {
+  animation: pop 0.2s ease-out;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+select option {
+  background: white;
+  color: #334155;
 }
