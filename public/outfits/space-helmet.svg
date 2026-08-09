@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Space Helmet: glass dome over the head + base ring -->
+  <defs>
+    <radialGradient id="glass" cx="40%" cy="35%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.35)"/>
+      <stop offset="60%" stop-color="rgba(99,102,241,0.12)"/>
+      <stop offset="100%" stop-color="rgba(99,102,241,0.05)"/>
+    </radialGradient>
+    <linearGradient id="ring" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e2e8f0"/>
+      <stop offset="50%" stop-color="#94a3b8"/>
+      <stop offset="100%" stop-color="#475569"/>
+    </linearGradient>
+  </defs>
+  <!-- Helmet base ring -->
+  <ellipse cx="100" cy="178" rx="62" ry="14" fill="url(#ring)" stroke="#334155" stroke-width="2"/>
+  <!-- Glass dome -->
+  <path d="M 38 175 Q 38 55 100 42 Q 162 55 162 175 Z" fill="url(#glass)" stroke="#6366f1" stroke-width="3" opacity="0.85"/>
+  <!-- Shine highlight -->
+  <ellipse cx="72" cy="80" rx="18" ry="30" fill="rgba(255,255,255,0.4)" transform="rotate(-20 72 80)"/>
+  <!-- Side antenna -->
+  <line x1="162" y1="100" x2="178" y2="78" stroke="#475569" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="178" cy="76" r="6" fill="#ef4444"/>
+</svg>

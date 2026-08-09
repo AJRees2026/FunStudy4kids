@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Magic Wand: held to the side of the avatar -->
+  <defs>
+    <linearGradient id="wandBody" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#c084fc"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+    <radialGradient id="starGlow">
+      <stop offset="0%" stop-color="#fef3c7"/>
+      <stop offset="50%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </radialGradient>
+  </defs>
+  <!-- Wand stick -->
+  <line x1="155" y1="195" x2="120" y2="110" stroke="url(#wandBody)" stroke-width="6" stroke-linecap="round"/>
+  <!-- Wand grip -->
+  <line x1="150" y1="190" x2="160" y2="195" stroke="#7c3aed" stroke-width="8" stroke-linecap="round"/>
+  <!-- Star at wand tip -->
+  <g transform="translate(120 110)">
+    <circle r="18" fill="url(#starGlow)" opacity="0.3"/>
+    <path d="M 0 -16 L 4.7 -5.2 L 16 -4.9 L 7.2 2.1 L 9.7 13.1 L 0 7.2 L -9.7 13.1 L -7.2 2.1 L -16 -4.9 L -4.7 -5.2 Z"
+      fill="url(#starGlow)" stroke="#d97706" stroke-width="1.5"/>
+  </g>
+  <!-- Sparkle trail -->
+  <g fill="#fbbf24" opacity="0.7">
+    <path d="M 135 90 L 137 94 L 141 96 L 137 98 L 135 102 L 133 98 L 129 96 L 133 94 Z" transform="scale(0.6) translate(90 60)"/>
+    <path d="M 100 80 L 102 84 L 106 86 L 102 88 L 100 92 L 98 88 L 94 86 L 98 84 Z" transform="scale(0.5) translate(100 80)"/>
+  </g>
+</svg>
