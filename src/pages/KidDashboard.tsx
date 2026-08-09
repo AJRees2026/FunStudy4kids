@@ -9,7 +9,7 @@ import FocusTimer from '../components/FocusTimer'
 import Confetti from '../components/Confetti'
 import {
   Star, Flame, Award, LogOut, Play, Check, Lock, ShoppingBag,
-  ClipboardList, X, Bell, Clock, BarChart3,
+  ClipboardList, X, Bell, Clock, BarChart3, Gift, Sparkles,
 } from 'lucide-react'
 
 type Props = {
@@ -33,6 +33,8 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
   const [approvalWaiting, setApprovalWaiting] = useState(false)
   const [cutoffNotified, setCutoffNotified] = useState(false)
   const cutoffCheckRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const [rewardPreview, setRewardPreview] = useState<Reward | null>(null)
+  const [rewardCelebration, setRewardCelebration] = useState(false)
 
   const isSpace = currentChild.theme_preference === 'space'
   const theme: Theme = getTheme(currentChild.theme_preference)
@@ -340,35 +342,66 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
             </div>
           ) : (
             <div className="space-y-3">
-              {pendingTasks.map((task) => (
-                <div key={task.id} className={`rounded-2xl p-4 ${theme.cardBg} border ${theme.cardBorder} flex items-center gap-3`}>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1.5">
-                      <h3 className={`font-display font-bold ${theme.textPrimary} text-lg truncate`}>
-                        {task.title}
-                      </h3>
-                      <SpeakButton text={task.title} iconSize={16} />
+              {pendingTasks.map((task) => {
+                const linkedReward = task.reward_id ? rewards.find((r) => r.id === task.reward_id) : null
+                const speakText = linkedReward
+                  ? `${task.title}. ${t('youWillEarn')} ${linkedReward.title}`
+                  : task.title
+                return (
+                <div key={task.id} className={`rounded-2xl p-4 ${theme.cardBg} border ${theme.cardBorder}`}>
+                  <div className="flex items-center gap-3">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5">
+                        <h3 className={`font-display font-bold ${theme.textPrimary} text-lg truncate`}>
+                          {task.title}
+                        </h3>
+                        <SpeakButton text={speakText} iconSize={16} />
+                      </div>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
+                          isSpace ? 'bg-indigo-900/60 text-indigo-300' : 'bg-indigo-100 text-indigo-600'
+                        }`}>
+                          {task.subject}
+                        </span>
+                        <span className={`text-xs font-bold ${theme.textMuted}`}>{task.duration_mins} {t('minutes')}</span>
+                        <span className={`text-xs font-bold ${theme.accent} flex items-center gap-0.5`}>
+                          <Star className="w-3 h-3" /> {task.point_value}
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
-                        isSpace ? 'bg-indigo-900/60 text-indigo-300' : 'bg-indigo-100 text-indigo-600'
-                      }`}>
-                        {task.subject}
-                      </span>
-                      <span className={`text-xs font-bold ${theme.textMuted}`}>{task.duration_mins} {t('minutes')}</span>
-                      <span className={`text-xs font-bold ${theme.accent} flex items-center gap-0.5`}>
-                        <Star className="w-3 h-3" /> {task.point_value}
-                      </span>
-                    </div>
+                    <button
+                      onClick={() => setActiveTask(task)}
+                      className="bg-gradient-to-r from-indigo-500 to-teal-500 text-white font-display font-bold px-4 py-2.5 rounded-xl hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5 shrink-0"
+                    >
+                      <Play className="w-4 h-4" /> {t('start')}
+                    </button>
                   </div>
-                  <button
-                    onClick={() => setActiveTask(task)}
-                    className="bg-gradient-to-r from-indigo-500 to-teal-500 text-white font-display font-bold px-4 py-2.5 rounded-xl hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5 shrink-0"
-                  >
-                    <Play className="w-4 h-4" /> {t('start')}
-                  </button>
+                  {linkedReward && (
+                    <button
+                      onClick={() => { setRewardPreview(linkedReward); setRewardCelebration(true); setTimeout(() => setRewardCelebration(false), 2000) }}
+                      className={`mt-3 w-full flex items-center gap-2 rounded-xl px-3 py-2 border transition-all hover:scale-[1.01] active:scale-95 ${
+                        isSpace
+                          ? 'bg-amber-500/10 border-amber-500/40 hover:bg-amber-500/20'
+                          : 'bg-amber-50 border-amber-200 hover:bg-amber-100'
+                      }`}
+                    >
+                      <span className="relative flex-shrink-0">
+                        <span className="absolute inset-0 rounded-full bg-amber-400/40 animate-ping" />
+                        <span className="relative w-7 h-7 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
+                          <Gift className="w-4 h-4 text-white" />
+                        </span>
+                      </span>
+                      <span className={`text-sm font-bold ${isSpace ? 'text-amber-300' : 'text-amber-600'}`}>
+                        {t('rewardBadge')}: {linkedReward.title}
+                      </span>
+                      <span className={`text-xs font-semibold ml-auto ${isSpace ? 'text-amber-400/70' : 'text-amber-500'}`}>
+                        {t('tapToPreview')}
+                      </span>
+                    </button>
+                  )}
                 </div>
-              ))}
+                )
+              })}
             </div>
           )}
         </section>
@@ -524,6 +557,80 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
           onSuccess={pinPrompt.onApprove}
           onCancel={() => setPinPrompt(null)}
         />
+      )}
+
+      {/* Reward Preview Modal */}
+      {rewardPreview && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4" onClick={() => setRewardPreview(null)}>
+          <div
+            className={`rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl animate-pop relative overflow-hidden ${
+              isSpace ? 'bg-slate-800 border border-slate-700' : 'bg-white'
+            }`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {rewardCelebration && (
+              <>
+                <div className="absolute inset-0 pointer-events-none">
+                  {[...Array(12)].map((_, i) => (
+                    <span
+                      key={i}
+                      className="absolute text-2xl animate-bounce"
+                      style={{
+                        left: `${Math.random() * 100}%`,
+                        top: `${Math.random() * 100}%`,
+                        animationDelay: `${i * 0.1}s`,
+                        animationDuration: '0.8s',
+                      }}
+                    >
+                      {['⭐', '🎉', '✨', '🌟', '💫'][i % 5]}
+                    </span>
+                  ))}
+                </div>
+                {confetti && <Confetti />}
+              </>
+            )}
+            <div className="relative">
+              <div className={`inline-flex items-center justify-center w-20 h-20 rounded-3xl mb-4 ${
+                rewardCelebration ? 'bg-gradient-to-br from-amber-400 to-orange-500 scale-110 animate-pulse' : 'bg-amber-500/20'
+              } transition-all duration-500`}>
+                <Gift className={`w-10 h-10 ${rewardCelebration ? 'text-white' : 'text-amber-400'}`} />
+              </div>
+              <p className={`text-xs font-bold uppercase tracking-wider mb-2 ${isSpace ? 'text-amber-400' : 'text-amber-500'}`}>
+                {t('previewReward')}
+              </p>
+              <h2 className={`font-display font-extrabold text-2xl mb-3 ${isSpace ? 'text-white' : 'text-slate-800'}`}>
+                {rewardPreview.title}
+              </h2>
+              <p className={`text-sm font-semibold mb-4 ${isSpace ? 'text-slate-400' : 'text-slate-500'}`}>
+                {t('youWillEarn')} <span className={`font-bold ${isSpace ? 'text-amber-300' : 'text-amber-600'}`}>{rewardPreview.title}</span>
+                <br />{t('forCompleting')} {t('tasks').toLowerCase()}
+              </p>
+              <div className="flex items-center justify-center gap-2 mb-6">
+                <span className={`flex items-center gap-1 text-lg font-bold ${theme.accent}`}>
+                  <Star className="w-5 h-5" /> {rewardPreview.point_cost} {t('pointsLower')}
+                </span>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => { speak(`${t('youWillEarn')} ${rewardPreview.title}`, lang); setRewardCelebration(true); setTimeout(() => setRewardCelebration(false), 2000) }}
+                  className={`flex-1 font-display font-bold py-3 rounded-2xl transition-all flex items-center justify-center gap-1.5 ${
+                    isSpace
+                      ? 'bg-amber-500/20 text-amber-300 hover:bg-amber-500/30'
+                      : 'bg-amber-50 text-amber-600 hover:bg-amber-100'
+                  }`}
+                >
+                  <Sparkles className="w-4 h-4" /> {t('previewReward')}
+                </button>
+                <button
+                  onClick={() => setRewardPreview(null)}
+                  className="flex-1 bg-gradient-to-r from-indigo-500 to-teal-500 text-white font-display font-bold py-3 rounded-2xl hover:scale-[1.02] active:scale-95 transition-all"
+                >
+                  {t('cancel')}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   )

@@ -152,6 +152,19 @@ const en: Dict = {
   homeworkIncomplete: 'Homework incomplete! Time is up.',
   homeworkReminder: 'Reminder: you still have homework to finish!',
   archived: 'Archived',
+  rewardManagement: 'Reward Management',
+  attachReward: 'Attach a Reward',
+  attachRewardDesc: 'Link a reward the child earns upon completing this task',
+  noRewardLinked: 'No reward linked',
+  selectReward: 'Select Reward',
+  rewardBadge: 'Reward',
+  previewReward: 'Preview Reward',
+  youWillEarn: 'You will earn',
+  forCompleting: 'for completing',
+  tapToPreview: 'Tap to preview',
+  rewardUnlocked: 'Reward Unlocked!',
+  customCatalog: 'Custom Reward Catalog',
+  catalogDesc: 'Create custom rewards kids can unlock with earned points',
 }
 
 const es: Dict = {
@@ -286,6 +299,19 @@ const es: Dict = {
   homeworkIncomplete: '¡Tareas incompletas! Se acabó el tiempo.',
   homeworkReminder: 'Recordatorio: aún tienes tareas por terminar.',
   archived: 'Archivado',
+  rewardManagement: 'Gestión de Recompensas',
+  attachReward: 'Adjuntar Recompensa',
+  attachRewardDesc: 'Vincula una recompensa que el niño gana al completar esta tarea',
+  noRewardLinked: 'Sin recompensa vinculada',
+  selectReward: 'Seleccionar Recompensa',
+  rewardBadge: 'Recompensa',
+  previewReward: 'Vista Previa',
+  youWillEarn: 'Ganarás',
+  forCompleting: 'por completar',
+  tapToPreview: 'Toca para previsualizar',
+  rewardUnlocked: '¡Recompensa Desbloqueada!',
+  customCatalog: 'Catálogo de Recompensas',
+  catalogDesc: 'Crea recompensas personalizadas que los niños pueden canjear',
 }
 
 const fr: Dict = {
@@ -420,6 +446,19 @@ const fr: Dict = {
   homeworkIncomplete: 'Devoirs incomplets ! Le temps est écoulé.',
   homeworkReminder: 'Rappel : vous avez encore des devoirs à finir.',
   archived: 'Archivé',
+  rewardManagement: 'Gestion des Récompenses',
+  attachReward: 'Attacher une Récompense',
+  attachRewardDesc: 'Lier une récompense que l\'enfant gagne en complétant cette tâche',
+  noRewardLinked: 'Aucune récompense liée',
+  selectReward: 'Sélectionner Récompense',
+  rewardBadge: 'Récompense',
+  previewReward: 'Aperçu',
+  youWillEarn: 'Vous gagnerez',
+  forCompleting: 'pour avoir complété',
+  tapToPreview: 'Touchez pour prévisualiser',
+  rewardUnlocked: 'Récompense Débloquée !',
+  customCatalog: 'Catalogue de Récompenses',
+  catalogDesc: 'Créez des récompenses personnalisées',
 }
 
 const ja: Dict = {
@@ -554,6 +593,19 @@ const ja: Dict = {
   homeworkIncomplete: '宿題未完了！時間切れです。',
   homeworkReminder: 'リマインダー：まだ終わっていない宿題があります。',
   archived: 'アーカイブ済み',
+  rewardManagement: 'ご褒美管理',
+  attachReward: 'ご褒美を紐付け',
+  attachRewardDesc: 'このタスク完了時に獲得できるご褒美を紐付けます',
+  noRewardLinked: '紐付けなし',
+  selectReward: 'ご褒美を選択',
+  rewardBadge: 'ご褒美',
+  previewReward: 'プレビュー',
+  youWillEarn: '獲得できるのは',
+  forCompleting: '完了で',
+  tapToPreview: 'タップしてプレビュー',
+  rewardUnlocked: 'ご褒美ゲット！',
+  customCatalog: 'カスタムご褒美カタログ',
+  catalogDesc: 'ポイントで交換できるオリジナルご褒美を作成',
 }
 
 const zh: Dict = {
@@ -688,6 +740,19 @@ const zh: Dict = {
   homeworkIncomplete: '作業未完成！時間到了。',
   homeworkReminder: '提醒：您還有作業要完成。',
   archived: '已歸檔',
+  rewardManagement: '獎勵管理',
+  attachReward: '附加獎勵',
+  attachRewardDesc: '連結一個孩子完成此任務後可獲得的獎勵',
+  noRewardLinked: '未連結獎勵',
+  selectReward: '選擇獎勵',
+  rewardBadge: '獎勵',
+  previewReward: '預覽獎勵',
+  youWillEarn: '您將獲得',
+  forCompleting: '完成',
+  tapToPreview: '點擊預覽',
+  rewardUnlocked: '獎勵解鎖！',
+  customCatalog: '自訂獎勵目錄',
+  catalogDesc: '建立孩子可用積分兌換的自訂獎勵',
 }
 
 const da: Dict = {
@@ -822,6 +887,19 @@ const da: Dict = {
   homeworkIncomplete: 'Lektier ufærdige! Tiden er udløbet.',
   homeworkReminder: 'Påmindelse: du har stadig lektier tilbage.',
   archived: 'Arkiveret',
+  rewardManagement: 'Belønningsstyring',
+  attachReward: 'Vedhæft Belønning',
+  attachRewardDesc: 'Tilknyt en belønning barnet tjener ved at fuldføre opgaven',
+  noRewardLinked: 'Ingen belønning tilknyttet',
+  selectReward: 'Vælg Belønning',
+  rewardBadge: 'Belønning',
+  previewReward: 'Forhåndsvisning',
+  youWillEarn: 'Du vil tjene',
+  forCompleting: 'for at fuldføre',
+  tapToPreview: 'Tryk for at forhåndsvise',
+  rewardUnlocked: 'Belønning Låst Op!',
+  customCatalog: 'Brugerdefineret Belønningskatalog',
+  catalogDesc: 'Opret tilpassede belønninger børn kan låse op med point',
 }
 
 const de: Dict = {
@@ -956,6 +1034,19 @@ const de: Dict = {
   homeworkIncomplete: 'Hausaufgaben unvollständig! Zeit ist abgelaufen.',
   homeworkReminder: 'Erinnerung: Du hast noch Hausaufgaben zu erledigen.',
   archived: 'Archiviert',
+  rewardManagement: 'Belohnungsverwaltung',
+  attachReward: 'Belohnung Anhängen',
+  attachRewardDesc: 'Verknüpfen Sie eine Belohnung für das Kind bei Abschluss',
+  noRewardLinked: 'Keine Belohnung verknüpft',
+  selectReward: 'Belohnung Wählen',
+  rewardBadge: 'Belohnung',
+  previewReward: 'Vorschau',
+  youWillEarn: 'Du erhältst',
+  forCompleting: 'für das Abschließen von',
+  tapToPreview: 'Tippen zum Vorschauen',
+  rewardUnlocked: 'Belohnung Freigeschaltet!',
+  customCatalog: 'Belohnungskatalog',
+  catalogDesc: 'Erstellen Sie individuelle Belohnungen',
 }
 
 const translations: Record<LangCode, Dict> = {

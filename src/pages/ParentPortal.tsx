@@ -4,7 +4,7 @@ import { useI18n, LANGUAGES, type LangCode } from '../lib/i18n'
 import {
   Shield, LogOut, Plus, Check, X, Clock, TrendingUp, BookOpen, Award,
   UserCog, Rocket, Sparkles, Lock, KeyRound, Copy, Bell, Globe,
-  BarChart3, CalendarClock, Trash2, Palette,
+  BarChart3, CalendarClock, Trash2, Palette, Gift,
 } from 'lucide-react'
 import DictationButton from '../components/DictationButton'
 import SpeakButton from '../components/SpeakButton'
@@ -285,6 +285,14 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
                           <span className="text-xs font-bold text-slate-400">{child?.child_name || child?.name}</span>
                           <span className="text-xs font-bold text-indigo-500 bg-indigo-50 px-2 py-0.5 rounded-full">{task.subject}</span>
                           <span className="text-xs font-bold text-slate-400">{task.duration_mins}m · {task.point_value} pts</span>
+                          {task.reward_id && (() => {
+                            const linkedReward = rewards.find((r) => r.id === task.reward_id)
+                            return linkedReward ? (
+                              <span className="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full flex items-center gap-1">
+                                <Gift className="w-3 h-3" /> {linkedReward.title}
+                              </span>
+                            ) : null
+                          })()}
                         </div>
                       </div>
                       {task.status === 'completed' && <Check className="w-5 h-5 text-teal-400" />}
@@ -299,8 +307,15 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
         {/* Rewards Tab */}
         {tab === 'rewards' && (
           <div className="space-y-4 animate-fadeIn">
+            <div className="bg-gradient-to-br from-amber-400 to-orange-500 rounded-3xl p-5 text-white shadow-lg">
+              <div className="flex items-center gap-2 mb-2">
+                <Gift className="w-5 h-5" />
+                <h3 className="font-display font-extrabold text-lg">{t('rewardManagement')}</h3>
+              </div>
+              <p className="text-amber-50 text-sm font-semibold">{t('catalogDesc')}</p>
+            </div>
             <div className="flex items-center justify-between">
-              <h2 className="font-display font-extrabold text-xl text-slate-800">{t('rewards')}</h2>
+              <h2 className="font-display font-extrabold text-xl text-slate-800">{t('customCatalog')}</h2>
               <button
                 onClick={() => setShowAddReward(true)}
                 disabled={children.length === 0}
@@ -620,8 +635,8 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
 
       {/* Modals */}
       {showAddTask && children.length > 0 && (
-        <AddTaskModal children={children} lang={lang} t={t} onClose={() => setShowAddTask(false)} onAdd={async (childId, title, subject, duration, points) => {
-          await supabase.from('tasks').insert({ child_id: childId, title, subject, duration_mins: duration, point_value: points, status: 'pending' })
+        <AddTaskModal children={children} rewards={rewards} lang={lang} t={t} onClose={() => setShowAddTask(false)} onAdd={async (childId, title, subject, duration, points, rewardId) => {
+          await supabase.from('tasks').insert({ child_id: childId, title, subject, duration_mins: duration, point_value: points, status: 'pending', reward_id: rewardId || null })
           setShowAddTask(false); fetchAll()
         }} />
       )}
@@ -646,14 +661,15 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
 
 type TFunc = (k: string) => string
 
-function AddTaskModal({ children, lang, t, onClose, onAdd }: {
-  children: Profile[]; lang: LangCode; t: TFunc; onClose: () => void
-  onAdd: (childId: string, title: string, subject: string, duration: number, points: number) => void
+function AddTaskModal({ children, rewards, lang, t, onClose, onAdd }: {
+  children: Profile[]; rewards: Reward[]; lang: LangCode; t: TFunc; onClose: () => void
+  onAdd: (childId: string, title: string, subject: string, duration: number, points: number, rewardId: string | null) => void
 }) {
   const [childId, setChildId] = useState(children[0]?.id || '')
   const [title, setTitle] = useState('')
   const [duration, setDuration] = useState(15)
   const [points, setPoints] = useState(10)
+  const [rewardId, setRewardId] = useState<string>('')
 
   const selectedChild = children.find((c) => c.id === childId) || children[0]
   const availableSubjects: string[] = selectedChild?.active_subjects && selectedChild.active_subjects.length > 0
@@ -661,11 +677,14 @@ function AddTaskModal({ children, lang, t, onClose, onAdd }: {
     : [...ALL_SUBJECTS]
   const [subject, setSubject] = useState(availableSubjects[0] || 'Math')
 
+  const childRewards = rewards.filter((r) => r.child_id === childId && r.status === 'available')
+
   const handleChildChange = (id: string) => {
     setChildId(id)
     const c = children.find((ch) => ch.id === id)
     const subs = c?.active_subjects && c.active_subjects.length > 0 ? c.active_subjects : [...ALL_SUBJECTS]
     setSubject(subs[0] || 'Math')
+    setRewardId('')
   }
 
   return (
@@ -705,7 +724,24 @@ function AddTaskModal({ children, lang, t, onClose, onAdd }: {
               <input type="number" value={points} onChange={(e) => setPoints(Number(e.target.value))} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 mt-1 font-semibold text-slate-700 text-center focus:outline-none focus:ring-2 focus:ring-indigo-400" />
             </div>
           </div>
-          <button onClick={() => onAdd(childId, title, subject, duration, points)} disabled={!title.trim()} className="w-full bg-gradient-to-r from-indigo-500 to-teal-500 text-white font-display font-bold text-lg py-3 rounded-2xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50">
+          {/* Attach Reward */}
+          <div>
+            <label className="text-xs text-slate-400 font-bold uppercase flex items-center gap-1.5">
+              <Gift className="w-3 h-3" /> {t('attachReward')}
+            </label>
+            <p className="text-xs text-slate-400 mb-2">{t('attachRewardDesc')}</p>
+            <select
+              value={rewardId}
+              onChange={(e) => setRewardId(e.target.value)}
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 mt-1 font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            >
+              <option value="">{t('noRewardLinked')}</option>
+              {childRewards.map((r) => (
+                <option key={r.id} value={r.id}>{r.title} ({r.point_cost} pts)</option>
+              ))}
+            </select>
+          </div>
+          <button onClick={() => onAdd(childId, title, subject, duration, points, rewardId || null)} disabled={!title.trim()} className="w-full bg-gradient-to-r from-indigo-500 to-teal-500 text-white font-display font-bold text-lg py-3 rounded-2xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50">
             {t('createTask')}
           </button>
         </div>
