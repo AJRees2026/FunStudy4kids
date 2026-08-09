@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Shield, X, Lock } from 'lucide-react'
+import { useI18n } from '../lib/i18n'
 
 type Props = {
   title: string
@@ -13,6 +14,7 @@ type Props = {
 export default function PinPrompt({
   title, subtitle, expectedPin, isSpace, onSuccess, onCancel,
 }: Props) {
+  const { t } = useI18n()
   const [pin, setPin] = useState('')
   const [error, setError] = useState('')
 
@@ -20,7 +22,7 @@ export default function PinPrompt({
     if (pin === expectedPin) {
       onSuccess()
     } else {
-      setError('Wrong PIN. Try again!')
+      setError(t('wrongPin'))
       setPin('')
     }
   }
@@ -82,13 +84,13 @@ export default function PinPrompt({
                   : 'bg-slate-100 text-slate-400 cursor-not-allowed'
             }`}
           >
-            Approve
+            {t('approve')}
           </button>
           <button
             onClick={onCancel}
             className={`text-sm font-semibold ${isSpace ? 'text-slate-400 hover:text-white' : 'text-slate-400 hover:text-slate-600'}`}
           >
-            Cancel
+            {t('cancel')}
           </button>
         </div>
       </div>

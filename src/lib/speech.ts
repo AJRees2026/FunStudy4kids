@@ -1,12 +1,15 @@
-export function getSpeechLang(): string {
-  return localStorage.getItem('speechLang') || 'en-US'
+import { LANGUAGES, type LangCode } from './i18n'
+
+export function getSpeechLang(): LangCode {
+  const stored = localStorage.getItem('appLang') as LangCode | null
+  return stored || 'en-US'
 }
 
-export function setSpeechLang(lang: string) {
-  localStorage.setItem('speechLang', lang)
+export function setSpeechLang(lang: LangCode) {
+  localStorage.setItem('appLang', lang)
 }
 
-export function speak(text: string, lang: string = getSpeechLang()) {
+export function speak(text: string, lang: LangCode = getSpeechLang()) {
   if (!('speechSynthesis' in window)) return
   window.speechSynthesis.cancel()
   const u = new SpeechSynthesisUtterance(text)
@@ -16,11 +19,4 @@ export function speak(text: string, lang: string = getSpeechLang()) {
   window.speechSynthesis.speak(u)
 }
 
-export const LANGUAGES = [
-  { code: 'en-US', label: 'English', flag: '🇺🇸' },
-  { code: 'es-ES', label: 'Español', flag: '🇪🇸' },
-  { code: 'fr-FR', label: 'Français', flag: '🇫🇷' },
-  { code: 'de-DE', label: 'Deutsch', flag: '🇩🇪' },
-  { code: 'pt-BR', label: 'Português', flag: '🇧🇷' },
-  { code: 'it-IT', label: 'Italiano', flag: '🇮🇹' },
-]
+export { LANGUAGES }

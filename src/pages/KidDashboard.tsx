@@ -1,14 +1,15 @@
-import { useState, useEffect, useCallback } from 'react'
-import { supabase, type Profile, type Task, type Reward } from '../lib/supabase'
+import { useState, useEffect, useCallback, useRef } from 'react'
+import { supabase, type Profile, type Task, type Reward, type ApprovalRequest } from '../lib/supabase'
 import { getTheme, type Theme } from '../lib/themes'
-import { speak, getSpeechLang, setSpeechLang, LANGUAGES } from '../lib/speech'
+import { speak } from '../lib/speech'
+import { useI18n } from '../lib/i18n'
 import SpeakButton from '../components/SpeakButton'
 import PinPrompt from '../components/PinPrompt'
 import FocusTimer from '../components/FocusTimer'
 import Confetti from '../components/Confetti'
 import {
   Star, Flame, Award, LogOut, Play, Check, Lock, ShoppingBag,
-  ClipboardList, X, Volume2,
+  ClipboardList, X, Bell, Clock, BarChart3,
 } from 'lucide-react'
 
 type Props = {
@@ -17,22 +18,24 @@ type Props = {
 }
 
 export default function KidDashboard({ child, onSwitchProfile }: Props) {
+  const { lang, t } = useI18n()
   const [tasks, setTasks] = useState<Task[]>([])
   const [rewards, setRewards] = useState<Reward[]>([])
   const [activeTask, setActiveTask] = useState<Task | null>(null)
   const [confetti, setConfetti] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
-  const [speechLang, setLang] = useState(getSpeechLang())
   const [pinPrompt, setPinPrompt] = useState<{
     title: string
     subtitle: string
     onApprove: () => void
   } | null>(null)
   const [currentChild, setCurrentChild] = useState(child)
+  const [approvalWaiting, setApprovalWaiting] = useState(false)
+  const [cutoffNotified, setCutoffNotified] = useState(false)
+  const cutoffCheckRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const isSpace = currentChild.theme_preference === 'space'
   const theme: Theme = getTheme(currentChild.theme_preference)
-
   const guardianPin = currentChild.parent_pin || '1234'
 
   const showToast = (msg: string) => {
@@ -51,6 +54,52 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
 
   useEffect(() => { fetchData() }, [fetchData])
 
+  // Auto-archive completed tasks daily
+  useEffect(() => {
+    if (!currentChild.auto_archive_daily) return
+    const lastArchive = localStorage.getItem(`lastArchive_${currentChild.id}`)
+    const today = new Date().toDateString()
+    if (lastArchive !== today) {
+      const completedTasks = tasks.filter((tk) => tk.status === 'completed')
+      if (completedTasks.length > 0) {
+        supabase.from('tasks').delete().in('id', completedTasks.map((tk) => tk.id))
+          .then(() => {
+            setTasks((prev) => prev.filter((tk) => tk.status === 'pending'))
+            localStorage.setItem(`lastArchive_${currentChild.id}`, today)
+          })
+      } else {
+        localStorage.setItem(`lastArchive_${currentChild.id}`, today)
+      }
+    }
+  }, [currentChild.id, currentChild.auto_archive_daily, tasks])
+
+  // Cutoff time notification check
+  useEffect(() => {
+    if (cutoffCheckRef.current) clearInterval(cutoffCheckRef.current)
+    const checkCutoff = () => {
+      const cutoff = currentChild.daily_cutoff_time || '18:00'
+      const now = new Date()
+      const [ch, cm] = cutoff.split(':').map(Number)
+      const cutoffDate = new Date()
+      cutoffDate.setHours(ch, cm, 0, 0)
+      if (now >= cutoffDate && !cutoffNotified) {
+        const pending = tasks.filter((tk) => tk.status === 'pending')
+        if (pending.length > 0) {
+          setCutoffNotified(true)
+          const msg = t('homeworkIncomplete')
+          speak(msg, lang)
+          showToast(msg)
+        }
+      }
+      if (now < cutoffDate) {
+        setCutoffNotified(false)
+      }
+    }
+    cutoffCheckRef.current = setInterval(checkCutoff, 60000)
+    checkCutoff()
+    return () => { if (cutoffCheckRef.current) clearInterval(cutoffCheckRef.current) }
+  }, [currentChild.daily_cutoff_time, tasks, cutoffNotified, lang, t])
+
   const executeCompleteTask = async (task: Task) => {
     await supabase
       .from('tasks')
@@ -61,22 +110,72 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
     await supabase.from('profiles').update({ points: newPoints }).eq('id', currentChild.id)
     setCurrentChild({ ...currentChild, points: newPoints })
 
-    setTasks((prev) => prev.map((t) => t.id === task.id ? { ...t, status: 'completed', completed_at: new Date().toISOString() } : t))
+    setTasks((prev) => prev.map((tk) => tk.id === task.id ? { ...tk, status: 'completed', completed_at: new Date().toISOString() } : tk))
     setConfetti(true)
     setTimeout(() => setConfetti(false), 100)
 
-    const congrats = `Great job, ${currentChild.child_name || currentChild.name}! You earned ${task.point_value} ${theme.starLabel.toLowerCase()}!`
-    speak(congrats, speechLang)
+    const congrats = `${t('greatJob')}, ${currentChild.child_name || currentChild.name}! ${t('youEarned')} ${task.point_value} ${isSpace ? t('fuelCells') : t('sparkles')}!`
+    speak(congrats, lang)
     showToast(congrats)
   }
 
   const completeTask = async (task: Task) => {
-    if (currentChild.require_pin_for_tasks) {
+    const mode = currentChild.task_approval_mode
+    if (mode === 'in_person_pin') {
       setPinPrompt({
-        title: 'Approve Task',
-        subtitle: `Enter PIN to complete "${task.title}"`,
+        title: t('approveTask'),
+        subtitle: `${t('enterPinToComplete')} "${task.title}"`,
         onApprove: () => { setPinPrompt(null); executeCompleteTask(task) },
       })
+      return
+    }
+    if (mode === 'remote_notification') {
+      setApprovalWaiting(true)
+      const { data: parent } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('id', currentChild.linked_parent_id || '')
+        .maybeSingle()
+
+      if (parent) {
+        await supabase.from('approval_requests').insert({
+          child_id: currentChild.id,
+          parent_id: (parent as any).id,
+          task_id: task.id,
+          task_title: task.title,
+          point_value: task.point_value,
+          status: 'pending',
+        })
+      }
+      showToast(t('approvalSent'))
+      speak(t('approvalSent'), lang)
+
+      const startTime = Date.now()
+      const checkApproval = setInterval(async () => {
+        const { data: req } = await supabase
+          .from('approval_requests')
+          .select('status')
+          .eq('task_id', task.id)
+          .eq('child_id', currentChild.id)
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .maybeSingle()
+
+        const status = (req as any)?.status
+        if (status === 'approved') {
+          clearInterval(checkApproval)
+          setApprovalWaiting(false)
+          executeCompleteTask(task)
+        } else if (status === 'denied') {
+          clearInterval(checkApproval)
+          setApprovalWaiting(false)
+          showToast(t('approvalDenied'))
+        } else if (Date.now() - startTime > 120000) {
+          clearInterval(checkApproval)
+          setApprovalWaiting(false)
+          showToast(t('approvalDenied'))
+        }
+      }, 3000)
       return
     }
     executeCompleteTask(task)
@@ -91,18 +190,18 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
     await supabase.from('profiles').update({ points: newPoints }).eq('id', currentChild.id)
     setCurrentChild({ ...currentChild, points: newPoints })
     setRewards((prev) => prev.map((r) => r.id === reward.id ? { ...r, status: 'claimed', claimed_at: new Date().toISOString() } : r))
-    showToast(`You claimed "${reward.title}"! ${theme.emoji}`)
+    showToast(`"${reward.title}" ${t('claimed')}! ${theme.emoji}`)
   }
 
   const claimReward = async (reward: Reward) => {
     if (currentChild.points < reward.point_cost) {
-      showToast(`Not enough ${theme.starLabel.toLowerCase()} yet! Keep studying! ${theme.emoji}`)
+      showToast(`${t('notEnough')} ${isSpace ? t('fuelCells') : t('sparkles')} ${t('keepStudying')} ${theme.emoji}`)
       return
     }
     if (currentChild.require_pin_for_rewards) {
       setPinPrompt({
-        title: 'Approve Reward',
-        subtitle: `Enter PIN to claim "${reward.title}"`,
+        title: t('approveReward'),
+        subtitle: `${t('enterPinToClaim')} "${reward.title}"`,
         onApprove: () => { setPinPrompt(null); executeClaimReward(reward) },
       })
       return
@@ -110,14 +209,91 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
     executeClaimReward(reward)
   }
 
-  const pendingTasks = tasks.filter((t) => t.status === 'pending')
-  const completedTasks = tasks.filter((t) => t.status === 'completed')
+  const pendingTasks = tasks.filter((tk) => tk.status === 'pending')
+  const completedTasks = tasks.filter((tk) => tk.status === 'completed')
   const availableRewards = rewards.filter((r) => r.status === 'available')
   const claimedRewards = rewards.filter((r) => r.status === 'claimed')
+  const totalTasks = tasks.length
+  const completedCount = completedTasks.length
+  const progressPct = totalTasks > 0 ? Math.round((completedCount / totalTasks) * 100) : 0
+  const displayMode = currentChild.progress_display_mode || 'percentage'
+
+  const renderProgress = () => {
+    if (totalTasks === 0) return null
+
+    if (displayMode === 'percentage') {
+      return (
+        <div className={`rounded-2xl p-4 ${theme.cardBg} border ${theme.cardBorder}`}>
+          <div className="flex items-center gap-2 mb-2">
+            <BarChart3 className={`w-4 h-4 ${theme.accent}`} />
+            <span className={`text-sm font-bold ${theme.textSecondary}`}>{progressPct}%</span>
+            <SpeakButton text={`${progressPct} percent`} iconSize={14} />
+          </div>
+          <div className={`h-3 rounded-full overflow-hidden ${isSpace ? 'bg-slate-700' : 'bg-slate-200'}`}>
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-teal-500 transition-all duration-500"
+              style={{ width: `${progressPct}%` }}
+            />
+          </div>
+        </div>
+      )
+    }
+
+    if (displayMode === 'task_count') {
+      return (
+        <div className={`rounded-2xl p-4 ${theme.cardBg} border ${theme.cardBorder}`}>
+          <div className="flex items-center gap-2">
+            <Check className={`w-4 h-4 text-teal-400`} />
+            <span className={`font-display font-bold text-lg ${theme.textPrimary}`}>
+              {completedCount} {t('ofDone')} {totalTasks} {t('done')}
+            </span>
+            <SpeakButton text={`${completedCount} ${t('ofDone')} ${totalTasks} ${t('done')}`} iconSize={14} />
+          </div>
+          <div className={`h-2 rounded-full overflow-hidden mt-2 ${isSpace ? 'bg-slate-700' : 'bg-slate-200'}`}>
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-teal-400 to-green-400 transition-all duration-500"
+              style={{ width: `${progressPct}%` }}
+            />
+          </div>
+        </div>
+      )
+    }
+
+    // theme_gauge
+    const gaugeLabel = isSpace ? t('cosmicFuel') : t('rainbowMeter')
+    const gaugeEmoji = isSpace ? '🚀' : '🌈'
+    return (
+      <div className={`rounded-2xl p-4 ${theme.cardBg} border ${theme.cardBorder}`}>
+        <div className="flex items-center gap-2 mb-2">
+          <span className="text-lg">{gaugeEmoji}</span>
+          <span className={`text-sm font-bold ${theme.textSecondary}`}>{gaugeLabel}</span>
+          <span className={`text-sm font-bold ${theme.accent} ml-auto`}>{progressPct}%</span>
+          <SpeakButton text={`${gaugeLabel} ${progressPct} percent`} iconSize={14} />
+        </div>
+        <div className={`h-4 rounded-full overflow-hidden ${isSpace ? 'bg-slate-800 border border-slate-700' : 'bg-slate-100 border border-slate-200'}`}>
+          {isSpace ? (
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-cyan-400 via-indigo-500 to-purple-500 transition-all duration-500 flex items-center justify-end pr-1"
+              style={{ width: `${Math.max(progressPct, 8)}%` }}
+            >
+              {progressPct > 15 && <span className="text-[10px]">⚡</span>}
+            </div>
+          ) : (
+            <div
+              className="h-full rounded-full transition-all duration-500"
+              style={{
+                width: `${Math.max(progressPct, 8)}%`,
+                background: 'linear-gradient(to right, #f43f5e, #f59e0b, #eab308, #22c55e, #06b6d4, #8b5cf6)',
+              }}
+            />
+          )}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className={`min-h-screen ${theme.bgGradient} pb-24`}>
-      {/* Header */}
       <header className="sticky top-0 z-30 backdrop-blur-md bg-black/20 border-b border-white/5">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -130,10 +306,10 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
               </p>
               <div className="flex items-center gap-2 mt-1">
                 <span className={`flex items-center gap-1 text-xs font-bold ${theme.accent}`}>
-                  <Star className="w-3 h-3" /> {currentChild.points} {theme.starLabel}
+                  <Star className="w-3 h-3" /> {currentChild.points} {isSpace ? t('fuelCells') : t('sparkles')}
                 </span>
                 <span className={`flex items-center gap-1 text-xs font-bold ${theme.textMuted}`}>
-                  <Flame className="w-3 h-3" /> {currentChild.streak || 0} day streak
+                  <Flame className="w-3 h-3" /> {currentChild.streak || 0} {t('dayStreak')}
                 </span>
               </div>
             </div>
@@ -145,18 +321,22 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
       </header>
 
       <main className="max-w-2xl mx-auto px-4 py-6 space-y-6">
+        {/* Progress Display */}
+        {renderProgress()}
+
         {/* Pending Tasks */}
         <section>
           <h2 className={`font-display font-extrabold text-xl ${theme.textPrimary} mb-3 flex items-center gap-2`}>
             <ClipboardList className="w-5 h-5 text-indigo-400" />
-            Tasks
+            {t('tasks')}
             <span className={`text-sm font-bold ${theme.textMuted} bg-white/5 px-2 py-0.5 rounded-full`}>
               {pendingTasks.length}
             </span>
+            <SpeakButton text={t('tasks')} iconSize={16} />
           </h2>
           {pendingTasks.length === 0 ? (
             <div className={`rounded-2xl p-6 text-center ${theme.cardBg} border ${theme.cardBorder}`}>
-              <p className={`font-display font-bold ${theme.textSecondary}`}>No tasks yet! Ask your parent to add some.</p>
+              <p className={`font-display font-bold ${theme.textSecondary}`}>{t('noTasksYet')}</p>
             </div>
           ) : (
             <div className="space-y-3">
@@ -167,7 +347,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                       <h3 className={`font-display font-bold ${theme.textPrimary} text-lg truncate`}>
                         {task.title}
                       </h3>
-                      <SpeakButton text={task.title} lang={speechLang} iconSize={16} />
+                      <SpeakButton text={task.title} iconSize={16} />
                     </div>
                     <div className="flex items-center gap-2 mt-1">
                       <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
@@ -175,7 +355,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                       }`}>
                         {task.subject}
                       </span>
-                      <span className={`text-xs font-bold ${theme.textMuted}`}>{task.duration_mins} min</span>
+                      <span className={`text-xs font-bold ${theme.textMuted}`}>{task.duration_mins} {t('minutes')}</span>
                       <span className={`text-xs font-bold ${theme.accent} flex items-center gap-0.5`}>
                         <Star className="w-3 h-3" /> {task.point_value}
                       </span>
@@ -185,7 +365,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                     onClick={() => setActiveTask(task)}
                     className="bg-gradient-to-r from-indigo-500 to-teal-500 text-white font-display font-bold px-4 py-2.5 rounded-xl hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5 shrink-0"
                   >
-                    <Play className="w-4 h-4" /> Start
+                    <Play className="w-4 h-4" /> {t('start')}
                   </button>
                 </div>
               ))}
@@ -198,7 +378,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
           <section>
             <h2 className={`font-display font-extrabold text-lg ${theme.textPrimary} mb-3 flex items-center gap-2`}>
               <Check className="w-5 h-5 text-teal-400" />
-              Completed
+              {t('completed')}
               <span className={`text-sm font-bold ${theme.textMuted} bg-white/5 px-2 py-0.5 rounded-full`}>
                 {completedTasks.length}
               </span>
@@ -211,7 +391,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                     <h3 className={`font-display font-bold ${theme.textSecondary} text-sm truncate`}>
                       {task.title}
                     </h3>
-                    <SpeakButton text={task.title} lang={speechLang} iconSize={14} />
+                    <SpeakButton text={task.title} iconSize={14} />
                   </div>
                   <span className={`text-xs font-bold ${theme.accent} flex items-center gap-0.5`}>
                     +{task.point_value} <Star className="w-3 h-3" />
@@ -226,11 +406,12 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
         <section>
           <h2 className={`font-display font-extrabold text-xl ${theme.textPrimary} mb-3 flex items-center gap-2`}>
             <ShoppingBag className="w-5 h-5 text-amber-400" />
-            Reward Shop
+            {t('rewardShop')}
+            <SpeakButton text={t('rewardShop')} iconSize={16} />
           </h2>
           {availableRewards.length === 0 ? (
             <div className={`rounded-2xl p-6 text-center ${theme.cardBg} border ${theme.cardBorder}`}>
-              <p className={`font-display font-bold ${theme.textSecondary}`}>No rewards available yet!</p>
+              <p className={`font-display font-bold ${theme.textSecondary}`}>{t('noRewardsYet')}</p>
             </div>
           ) : (
             <div className="grid grid-cols-2 gap-3">
@@ -245,7 +426,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                       <h3 className={`font-display font-bold ${theme.textPrimary} text-sm`}>
                         {reward.title}
                       </h3>
-                      <SpeakButton text={reward.title} lang={speechLang} iconSize={14} />
+                      <SpeakButton text={reward.title} iconSize={14} />
                     </div>
                     <p className={`text-xs font-bold ${theme.accent} flex items-center gap-0.5 mb-3`}>
                       <Star className="w-3 h-3" /> {reward.point_cost}
@@ -259,7 +440,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                           : 'bg-white/5 text-slate-500 cursor-not-allowed'
                       }`}
                     >
-                      {canAfford ? 'Claim' : `Need ${reward.point_cost - currentChild.points} more`}
+                      {canAfford ? t('claim') : `${t('need')} ${reward.point_cost - currentChild.points} ${t('more')}`}
                     </button>
                   </div>
                 )
@@ -272,7 +453,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
         {claimedRewards.length > 0 && (
           <section>
             <h2 className={`font-display font-extrabold text-lg ${theme.textPrimary} mb-3`}>
-              Claimed Rewards
+              {t('claimedRewards')}
             </h2>
             <div className="space-y-2">
               {claimedRewards.map((reward) => (
@@ -282,7 +463,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                     <h3 className={`font-display font-bold ${theme.textSecondary} text-sm truncate`}>
                       {reward.title}
                     </h3>
-                    <SpeakButton text={reward.title} lang={speechLang} iconSize={14} />
+                    <SpeakButton text={reward.title} iconSize={14} />
                   </div>
                 </div>
               ))}
@@ -290,19 +471,6 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
           </section>
         )}
       </main>
-
-      {/* Language Selector */}
-      <div className="fixed bottom-4 left-4 z-20">
-        <select
-          value={speechLang}
-          onChange={(e) => { setLang(e.target.value); setSpeechLang(e.target.value) }}
-          className={`rounded-xl px-3 py-2 text-sm font-bold ${theme.cardBg} ${theme.textPrimary} border ${theme.cardBorder} focus:outline-none`}
-        >
-          {LANGUAGES.map((l) => (
-            <option key={l.code} value={l.code}>{l.flag} {l.label}</option>
-          ))}
-        </select>
-      </div>
 
       {/* Toast */}
       {toast && (
@@ -313,11 +481,31 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
         </div>
       )}
 
+      {/* Approval Waiting Modal */}
+      {approvalWaiting && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4">
+          <div className={`rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl animate-pop ${
+            isSpace ? 'bg-slate-800 border border-slate-700' : 'bg-white'
+          }`}>
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-amber-500/20 mb-4">
+              <Bell className="w-8 h-8 text-amber-400 animate-pulse" />
+            </div>
+            <h2 className={`font-display font-extrabold text-xl mb-2 ${isSpace ? 'text-white' : 'text-slate-800'}`}>
+              {t('approvalPending')}
+            </h2>
+            <div className="flex items-center justify-center gap-2 mt-4">
+              <Clock className={`w-5 h-5 animate-pulse ${isSpace ? 'text-slate-400' : 'text-slate-500'}`} />
+              <p className={`text-sm font-semibold ${isSpace ? 'text-slate-400' : 'text-slate-500'}`}>...</p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Confetti */}
       {confetti && <Confetti />}
 
       {/* Focus Timer Modal */}
-      {activeTask && (
+      {activeTask && !approvalWaiting && (
         <FocusTimer
           durationMins={activeTask.duration_mins}
           onDone={() => { completeTask(activeTask); setActiveTask(null) }}
