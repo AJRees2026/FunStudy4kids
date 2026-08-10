@@ -17,6 +17,8 @@ export type Profile = {
   name: string
   child_name: string | null
   avatar: string | null
+  photo_url: string | null
+  grade: string | null
   points: number
   level: number
   streak: number
@@ -33,6 +35,23 @@ export type Profile = {
   active_subjects: string[] | null
   daily_cutoff_time: string
   auto_archive_daily: boolean
+}
+
+export type Outfit = {
+  id: string
+  title: string
+  icon_url: string
+  point_cost: number
+  theme: 'space' | 'unicorn' | 'any'
+  created_at: string
+}
+
+export type ChildOutfit = {
+  id: string
+  child_id: string
+  outfit_id: string
+  is_unlocked: boolean
+  unlocked_at: string | null
 }
 
 export type Task = {
