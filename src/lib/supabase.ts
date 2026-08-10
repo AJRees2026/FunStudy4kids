@@ -1,9 +1,9 @@
-import { createClient } from '@supabase/Bolt Database-js'
+import { createClient } from '@supabase/supabase-js'
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || import.meta.env.SUPABASE_URL || ''
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.SUPABASE_ANON_KEY || ''
 
-export const Bolt Database = createClient(supabaseUrl, supabaseAnonKey)
+export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 export type TaskApprovalMode = 'off' | 'in_person_pin' | 'remote_notification'
 export type ProgressDisplayMode = 'percentage' | 'task_count' | 'theme_gauge'
@@ -17,8 +17,8 @@ export type Profile = {
   name: string
   child_name: string | null
   avatar: string | null
-  photo_url?: string 
-  grade?: string
+  photo_url: string | null
+  grade: string | null
   points: number
   level: number
   streak: number
@@ -36,9 +36,7 @@ export type Profile = {
   daily_cutoff_time: string
   auto_archive_daily: boolean
 }
-git add src/lib/supabase.ts
-git commit -m "Fix TypeScript types for Outfit and Profile properties"
-git push
+
 export type Outfit = {
   id: string
   title: string
@@ -97,12 +95,3 @@ export function generatePairCode(): string {
   }
   return code
 }
-export interface Outfit {
-  id: string
-  name: string
-  image_url: string
-  unlocked?: boolean
-}
-git add src/lib/supabase.ts
-git commit -m "Add missing Outfit type and Profile fields"
-git push
