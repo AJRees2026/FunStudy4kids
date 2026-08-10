@@ -36,7 +36,9 @@ export type Profile = {
   daily_cutoff_time: string
   auto_archive_daily: boolean
 }
-
+git add src/lib/supabase.ts
+git commit -m "Fix TypeScript types for Outfit and Profile properties"
+git push
 export type Outfit = {
   id: string
   title: string
