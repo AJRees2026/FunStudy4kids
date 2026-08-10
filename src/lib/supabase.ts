@@ -17,8 +17,8 @@ export type Profile = {
   name: string
   child_name: string | null
   avatar: string | null
-  photo_url: string | null
-  grade: string | null
+  photo_url?: string 
+  grade?: string
   points: number
   level: number
   streak: number
@@ -95,20 +95,9 @@ export function generatePairCode(): string {
   }
   return code
 }
-
 export interface Outfit {
-  id: string;
-  name: string;
-  image_url: string;
-  unlocked?: boolean;
-}
-
-export interface Profile {
-  id: string;
-  role: 'parent' | 'child';
-  name: string;
-  photo_url?: string; 
-  grade?: string;     
-  points?: number;
-  created_at?: string;
+  id: string
+  name: string
+  image_url: string
+  unlocked?: boolean
 }
