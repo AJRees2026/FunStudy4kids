@@ -1,3 +1,4 @@
+cat > src/lib/supabase.ts << 'ENDOFFILE'
 import { createClient } from '@supabase/Bolt Database-js'
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || import.meta.env.SUPABASE_URL || ''
@@ -95,3 +96,4 @@ export function generatePairCode(): string {
   }
   return code
 }
+ENDOFFILE
