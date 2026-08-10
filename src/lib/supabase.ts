@@ -103,3 +103,6 @@ export interface Outfit {
   image_url: string
   unlocked?: boolean
 }
+git add src/lib/supabase.ts
+git commit -m "Add missing Outfit type and Profile fields"
+git push
