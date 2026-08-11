@@ -10,6 +10,15 @@ type Props = {
 
 type Step = 'language' | 'role' | 'parent-setup' | 'parent-created' | 'child-link'
 
+function BrandName() {
+  return (
+    <span aria-label="BrainySpark">
+      <span className="brand-brainy">Brainy</span>
+      <span className="brand-spark">Spark</span>
+    </span>
+  )
+}
+
 export default function Onboarding({ onLinked }: Props) {
   const { lang, setLang, t } = useI18n()
   const [step, setStep] = useState<Step>('language')
@@ -91,7 +100,7 @@ export default function Onboarding({ onLinked }: Props) {
               <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-br from-indigo-500 to-teal-500 mb-4 shadow-lg shadow-indigo-500/30">
                 <Globe className="w-10 h-10 text-white" />
               </div>
-              <h1 className="font-display font-extrabold text-3xl text-white mb-2">{t('appName')}</h1>
+              <h1 className="font-display font-extrabold text-3xl text-white mb-2"><BrandName /></h1>
               <p className="text-slate-400 font-semibold">{t('chooseLanguage')}</p>
             </div>
             <div className="space-y-2">
@@ -127,7 +136,7 @@ export default function Onboarding({ onLinked }: Props) {
               <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-br from-indigo-500 to-teal-500 mb-4 shadow-lg shadow-indigo-500/30">
                 <Rocket className="w-10 h-10 text-white" />
               </div>
-              <h1 className="font-display font-extrabold text-3xl text-white mb-2">{t('appName')}</h1>
+              <h1 className="font-display font-extrabold text-3xl text-white mb-2"><BrandName /></h1>
               <p className="text-slate-400 font-semibold">{t('areYouParentOrChild')}</p>
             </div>
             <div className="grid grid-cols-2 gap-4">

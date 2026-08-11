@@ -18,6 +18,14 @@ body {
   font-family: 'Fredoka', 'Inter', sans-serif;
 }
 
+.brand-brainy {
+  font-family: 'Better Faster', 'Fredoka', sans-serif;
+}
+
+.brand-spark {
+  font-family: 'Blueberry', 'Fredoka', sans-serif;
+}
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
