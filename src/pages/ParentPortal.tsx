@@ -661,7 +661,7 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
 
 type TFunc = (k: string) => string
 
-const SPACE_AVATARS = ['🚀', '🛸', '👨‍🚀', '🪐', '⭐']
+const SPACE_AVATARS = ['🚀', '🛸', '👨‍🚀', '🪐', '👽']
 const UNICORN_AVATARS = ['🦄', '🌈', '🧚', '🪄', '👑']
 const AVATARS_BY_GENDER: Record<'boy' | 'girl', string[]> = {
   boy: SPACE_AVATARS,
