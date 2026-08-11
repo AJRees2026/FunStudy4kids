@@ -11,9 +11,9 @@ export type LangInfo = {
 export const LANGUAGES: LangInfo[] = [
   { code: 'en-US', label: 'English', flag: '🇺🇸' },
   { code: 'fr-FR', label: 'Français', flag: '🇫🇷' },
-  { code: 'de-DE', label: 'Deutsch', flag: '🇩🇪' },
   { code: 'zh-TW', label: '繁體中文', flag: '🇹🇼' },
   { code: 'ja-JP', label: '日本語', flag: '🇯🇵' },
+  { code: 'de-DE', label: 'Deutsch', flag: '🇩🇪' },
   { code: 'es-ES', label: 'Español', flag: '🇪🇸' },
   { code: 'da-DK', label: 'Dansk', flag: '🇩🇰' },
 ]
