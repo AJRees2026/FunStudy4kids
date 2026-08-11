@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { supabase, generatePairCode, type Profile } from '../lib/supabase'
 import { useI18n, LANGUAGES, type LangCode } from '../lib/i18n'
-import { Rocket, Sparkles, Users, KeyRound, ArrowRight, Check, Globe, Mic } from 'lucide-react'
+import { Rocket, Sparkles, Users, KeyRound, ArrowRight, Check, Globe, Mic, Copy } from 'lucide-react'
 import DictationButton from '../components/DictationButton'
 
 type Props = {
@@ -37,6 +37,13 @@ export default function Onboarding({ onLinked }: Props) {
   const [linkError, setLinkError] = useState('')
   const [loading, setLoading] = useState(false)
   const [createdParent, setCreatedParent] = useState<Profile | null>(null)
+  const [copied, setCopied] = useState(false)
+
+  const copyPairCode = () => {
+    navigator.clipboard?.writeText(createdParent?.family_pair_code || '')
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
 
   const handleParentSetup = async () => {
     setLoading(true)
@@ -219,7 +226,16 @@ export default function Onboarding({ onLinked }: Props) {
             <p className="text-slate-400 text-sm font-semibold mb-6">{t('shareCode')}</p>
             <div className="bg-slate-900/80 border-2 border-dashed border-indigo-500 rounded-2xl p-6 mb-6">
               <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mb-2">{t('familyPairCode')}</p>
-              <p className="font-display font-extrabold text-5xl text-white tracking-[0.3em]">{createdParent.family_pair_code}</p>
+              <div className="flex items-center justify-center gap-3">
+                <p className="font-display font-extrabold text-5xl text-white tracking-[0.3em]">{createdParent.family_pair_code}</p>
+                <button
+                  onClick={copyPairCode}
+                  className="bg-slate-700/80 hover:bg-slate-600 rounded-xl p-2.5 transition-colors"
+                  aria-label="Copy pair code"
+                >
+                  {copied ? <Check className="w-5 h-5 text-teal-400" /> : <Copy className="w-5 h-5 text-slate-300" />}
+                </button>
+              </div>
             </div>
             <button
               onClick={() => { localStorage.setItem('activeProfileId', createdParent.id); onLinked(createdParent) }}
