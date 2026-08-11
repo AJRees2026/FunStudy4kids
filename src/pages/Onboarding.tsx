@@ -11,7 +11,7 @@ type Props = {
 type Step = 'language' | 'role' | 'parent-setup' | 'parent-created' | 'child-link'
 
 const SPACE_AVATARS = ['🚀', '🛸', '👨‍🚀', '🪐', '⭐']
-const UNICORN_AVATARS = ['🦄', '🌈', '🧙', '✨', '👑']
+const UNICORN_AVATARS = ['🦄', '🌈', '🧚', '🪄', '👑']
 const AVATARS_BY_GENDER: Record<'boy' | 'girl', string[]> = {
   boy: SPACE_AVATARS,
   girl: UNICORN_AVATARS,
