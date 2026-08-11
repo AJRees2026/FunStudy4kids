@@ -21,7 +21,7 @@ export const LANGUAGES: LangInfo[] = [
 type Dict = Record<string, string>
 
 const en: Dict = {
-  appName: 'StudyPulse Kids',
+  appName: 'BrainySpark',
   welcome: 'Welcome! Let\'s get started.',
   chooseLanguage: 'Choose your language',
   areYouParentOrChild: 'Are you a guardian or a child?',
@@ -168,7 +168,7 @@ const en: Dict = {
 }
 
 const es: Dict = {
-  appName: 'StudyPulse Kids',
+  appName: 'BrainySpark',
   welcome: '¡Bienvenido! Empecemos.',
   chooseLanguage: 'Elige tu idioma',
   areYouParentOrChild: '¿Eres tutor o niño?',
@@ -315,7 +315,7 @@ const es: Dict = {
 }
 
 const fr: Dict = {
-  appName: 'StudyPulse Kids',
+  appName: 'BrainySpark',
   welcome: 'Bienvenue ! Commençons.',
   chooseLanguage: 'Choisissez votre langue',
   areYouParentOrChild: 'Êtes-vous un tuteur ou un enfant ?',
@@ -462,7 +462,7 @@ const fr: Dict = {
 }
 
 const ja: Dict = {
-  appName: 'StudyPulse Kids',
+  appName: 'BrainySpark',
   welcome: 'ようこそ！始めましょう。',
   chooseLanguage: '言語を選択してください',
   areYouParentOrChild: '保護者ですか、お子様ですか？',
@@ -609,7 +609,7 @@ const ja: Dict = {
 }
 
 const zh: Dict = {
-  appName: 'StudyPulse Kids',
+  appName: 'BrainySpark',
   welcome: '歡迎！讓我們開始吧。',
   chooseLanguage: '選擇您的語言',
   areYouParentOrChild: '您是家長還是孩子？',
@@ -756,7 +756,7 @@ const zh: Dict = {
 }
 
 const da: Dict = {
-  appName: 'StudyPulse Kids',
+  appName: 'BrainySpark',
   welcome: 'Velkommen! Lad os komme i gang.',
   chooseLanguage: 'Vælg dit sprog',
   areYouParentOrChild: 'Er du forælder eller barn?',
@@ -903,7 +903,7 @@ const da: Dict = {
 }
 
 const de: Dict = {
-  appName: 'StudyPulse Kids',
+  appName: 'BrainySpark',
   welcome: 'Willkommen! Los geht\'s.',
   chooseLanguage: 'Wählen Sie Ihre Sprache',
   areYouParentOrChild: 'Sind Sie Erziehungsberechtigter oder Kind?',
