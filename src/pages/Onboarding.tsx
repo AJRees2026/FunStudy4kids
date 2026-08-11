@@ -28,6 +28,7 @@ export default function Onboarding({ onLinked }: Props) {
   const [childName, setChildName] = useState('')
   const [pairCode, setPairCode] = useState('')
   const [avatar, setAvatar] = useState(AVATARS[0])
+  const [gender, setGender] = useState<'boy' | 'girl' | ''>('')
   const [linkError, setLinkError] = useState('')
   const [loading, setLoading] = useState(false)
   const [createdParent, setCreatedParent] = useState<Profile | null>(null)
@@ -79,7 +80,8 @@ export default function Onboarding({ onLinked }: Props) {
         name: childName || 'Child',
         child_name: childName || 'Child',
         avatar,
-        theme_preference: 'space',
+        gender,
+        theme_preference: gender === 'girl' ? 'unicorn' : 'space',
         linked_parent_id: parent.id,
         require_pin_for_tasks: true,
         require_pin_for_rewards: true,
@@ -263,6 +265,29 @@ export default function Onboarding({ onLinked }: Props) {
                 />
               </div>
               <div>
+                <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mb-2">{t('chooseGender')}</p>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setGender('boy')}
+                    className={`rounded-2xl p-4 border-2 transition-all flex flex-col items-center gap-1 ${gender === 'boy' ? 'border-indigo-400 bg-indigo-500/20 scale-105' : 'border-slate-700 bg-slate-900/40 hover:border-indigo-400/60'}`}
+                  >
+                    <Rocket className="w-7 h-7 text-indigo-400" />
+                    <span className="font-display font-bold text-white text-sm">{t('boy')}</span>
+                    <span className="text-[10px] text-slate-400 font-semibold">{t('boyTheme')}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setGender('girl')}
+                    className={`rounded-2xl p-4 border-2 transition-all flex flex-col items-center gap-1 ${gender === 'girl' ? 'border-fuchsia-400 bg-fuchsia-500/20 scale-105' : 'border-slate-700 bg-slate-900/40 hover:border-fuchsia-400/60'}`}
+                  >
+                    <Sparkles className="w-7 h-7 text-fuchsia-400" />
+                    <span className="font-display font-bold text-white text-sm">{t('girl')}</span>
+                    <span className="text-[10px] text-slate-400 font-semibold">{t('girlTheme')}</span>
+                  </button>
+                </div>
+              </div>
+              <div>
                 <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mb-2">{t('chooseAvatar')}</p>
                 <div className="grid grid-cols-4 gap-2">
                   {AVATARS.map((option) => (
@@ -281,7 +306,7 @@ export default function Onboarding({ onLinked }: Props) {
             </div>
             <button
               onClick={handleChildLink}
-              disabled={loading || !childName.trim() || pairCode.length !== 6}
+              disabled={loading || !childName.trim() || pairCode.length !== 6 || !gender}
               className="w-full mt-6 bg-gradient-to-r from-teal-500 to-indigo-500 text-white font-display font-bold text-lg py-3 rounded-2xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
             >
               {loading ? t('linking') : <>{t('linkDevice')} <ArrowRight className="w-5 h-5" /></>}

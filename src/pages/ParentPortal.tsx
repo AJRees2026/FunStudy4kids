@@ -647,9 +647,9 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
         }} />
       )}
       {showAddChild && (
-        <AddChildModal parentId={currentParent.id} lang={lang} t={t} onClose={() => setShowAddChild(false)} onAdd={async (name, theme, avatar) => {
+        <AddChildModal parentId={currentParent.id} lang={lang} t={t} onClose={() => setShowAddChild(false)} onAdd={async (name, theme, avatar, gender) => {
           await supabase.from('profiles').insert({
-            role: 'child', name, child_name: name, avatar, theme_preference: theme,
+            role: 'child', name, child_name: name, avatar, gender, theme_preference: theme,
             linked_parent_id: currentParent.id, require_pin_for_tasks: true, require_pin_for_rewards: true, task_approval_mode: 'off',
           })
           setShowAddChild(false); fetchAll()
@@ -796,11 +796,12 @@ function AddRewardModal({ children, lang, t, onClose, onAdd }: {
 
 function AddChildModal({ parentId, lang, t, onClose, onAdd }: {
   parentId: string; lang: LangCode; t: TFunc; onClose: () => void
-  onAdd: (name: string, theme: 'space' | 'unicorn', avatar: string) => void
+  onAdd: (name: string, theme: 'space' | 'unicorn', avatar: string, gender: string) => void
 }) {
   const [name, setName] = useState('')
-  const [theme, setTheme] = useState<'space' | 'unicorn'>('space')
+  const [gender, setGender] = useState<'boy' | 'girl' | ''>('')
   const [avatar, setAvatar] = useState(AVATARS[0])
+  const theme: 'space' | 'unicorn' = gender === 'girl' ? 'unicorn' : 'space'
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
@@ -818,15 +819,17 @@ function AddChildModal({ parentId, lang, t, onClose, onAdd }: {
             </div>
           </div>
           <div>
-            <label className="text-xs text-slate-400 font-bold uppercase">{t('theme')}</label>
+            <label className="text-xs text-slate-400 font-bold uppercase">{t('chooseGender')}</label>
             <div className="grid grid-cols-2 gap-3 mt-1">
-              <button onClick={() => setTheme('space')} className={`rounded-2xl p-4 border-2 transition-all ${theme === 'space' ? 'border-indigo-500 bg-indigo-50' : 'border-slate-200'}`}>
-                <Rocket className="w-6 h-6 text-indigo-500 mx-auto mb-1" />
-                <p className="font-display font-bold text-slate-700 text-sm">{t('space')}</p>
+              <button onClick={() => setGender('boy')} className={`rounded-2xl p-4 border-2 transition-all flex flex-col items-center gap-1 ${gender === 'boy' ? 'border-indigo-500 bg-indigo-50 scale-105' : 'border-slate-200 hover:border-indigo-300'}`}>
+                <Rocket className="w-7 h-7 text-indigo-500" />
+                <p className="font-display font-bold text-slate-700 text-sm">{t('boy')}</p>
+                <p className="text-[10px] text-slate-400 font-semibold">{t('boyTheme')}</p>
               </button>
-              <button onClick={() => setTheme('unicorn')} className={`rounded-2xl p-4 border-2 transition-all ${theme === 'unicorn' ? 'border-fuchsia-500 bg-fuchsia-50' : 'border-slate-200'}`}>
-                <Sparkles className="w-6 h-6 text-fuchsia-500 mx-auto mb-1" />
-                <p className="font-display font-bold text-slate-700 text-sm">{t('unicorn')}</p>
+              <button onClick={() => setGender('girl')} className={`rounded-2xl p-4 border-2 transition-all flex flex-col items-center gap-1 ${gender === 'girl' ? 'border-fuchsia-500 bg-fuchsia-50 scale-105' : 'border-slate-200 hover:border-fuchsia-300'}`}>
+                <Sparkles className="w-7 h-7 text-fuchsia-500" />
+                <p className="font-display font-bold text-slate-700 text-sm">{t('girl')}</p>
+                <p className="text-[10px] text-slate-400 font-semibold">{t('girlTheme')}</p>
               </button>
             </div>
           </div>
@@ -846,7 +849,7 @@ function AddChildModal({ parentId, lang, t, onClose, onAdd }: {
               ))}
             </div>
           </div>
-          <button onClick={() => onAdd(name, theme, avatar)} disabled={!name.trim()} className="w-full bg-gradient-to-r from-indigo-500 to-teal-500 text-white font-display font-bold text-lg py-3 rounded-2xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50">
+          <button onClick={() => onAdd(name, theme, avatar, gender)} disabled={!name.trim() || !gender} className="w-full bg-gradient-to-r from-indigo-500 to-teal-500 text-white font-display font-bold text-lg py-3 rounded-2xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50">
             {t('addChild')}
           </button>
         </div>
