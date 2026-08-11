@@ -661,7 +661,12 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
 
 type TFunc = (k: string) => string
 
-const AVATARS = ['🚀', '🦄', '🧙', '🦸', '🐉', '🤖', '🌈', '⭐']
+const SPACE_AVATARS = ['🚀', '🛸', '👨‍🚀', '🪐', '⭐']
+const UNICORN_AVATARS = ['🦄', '🌈', '🧙', '✨', '👑']
+const AVATARS_BY_GENDER: Record<'boy' | 'girl', string[]> = {
+  boy: SPACE_AVATARS,
+  girl: UNICORN_AVATARS,
+}
 
 function AddTaskModal({ children, rewards, lang, t, onClose, onAdd }: {
   children: Profile[]; rewards: Reward[]; lang: LangCode; t: TFunc; onClose: () => void
@@ -800,7 +805,7 @@ function AddChildModal({ parentId, lang, t, onClose, onAdd }: {
 }) {
   const [name, setName] = useState('')
   const [gender, setGender] = useState<'boy' | 'girl' | ''>('')
-  const [avatar, setAvatar] = useState(AVATARS[0])
+  const [avatar, setAvatar] = useState('')
   const theme: 'space' | 'unicorn' = gender === 'girl' ? 'unicorn' : 'space'
 
   return (
@@ -836,7 +841,7 @@ function AddChildModal({ parentId, lang, t, onClose, onAdd }: {
           <div>
             <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mb-2">{t('chooseAvatar')}</p>
             <div className="grid grid-cols-4 gap-2">
-              {AVATARS.map((option) => (
+              {(gender ? AVATARS_BY_GENDER[gender] : []).map((option) => (
                 <button
                   key={option}
                   type="button"
@@ -849,7 +854,7 @@ function AddChildModal({ parentId, lang, t, onClose, onAdd }: {
               ))}
             </div>
           </div>
-          <button onClick={() => onAdd(name, theme, avatar, gender)} disabled={!name.trim() || !gender} className="w-full bg-gradient-to-r from-indigo-500 to-teal-500 text-white font-display font-bold text-lg py-3 rounded-2xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50">
+          <button onClick={() => onAdd(name, theme, avatar, gender)} disabled={!name.trim() || !gender || !avatar} className="w-full bg-gradient-to-r from-indigo-500 to-teal-500 text-white font-display font-bold text-lg py-3 rounded-2xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50">
             {t('addChild')}
           </button>
         </div>

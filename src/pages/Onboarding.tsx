@@ -10,7 +10,12 @@ type Props = {
 
 type Step = 'language' | 'role' | 'parent-setup' | 'parent-created' | 'child-link'
 
-const AVATARS = ['🚀', '🦄', '🧙', '🦸', '🐉', '🤖', '🌈', '⭐']
+const SPACE_AVATARS = ['🚀', '🛸', '👨‍🚀', '🪐', '⭐']
+const UNICORN_AVATARS = ['🦄', '🌈', '🧙', '✨', '👑']
+const AVATARS_BY_GENDER: Record<'boy' | 'girl', string[]> = {
+  boy: SPACE_AVATARS,
+  girl: UNICORN_AVATARS,
+}
 
 function BrandName() {
   return (
@@ -27,8 +32,8 @@ export default function Onboarding({ onLinked }: Props) {
   const [parentName, setParentName] = useState('')
   const [childName, setChildName] = useState('')
   const [pairCode, setPairCode] = useState('')
-  const [avatar, setAvatar] = useState(AVATARS[0])
   const [gender, setGender] = useState<'boy' | 'girl' | ''>('')
+  const [avatar, setAvatar] = useState('')
   const [linkError, setLinkError] = useState('')
   const [loading, setLoading] = useState(false)
   const [createdParent, setCreatedParent] = useState<Profile | null>(null)
@@ -290,7 +295,7 @@ export default function Onboarding({ onLinked }: Props) {
               <div>
                 <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mb-2">{t('chooseAvatar')}</p>
                 <div className="grid grid-cols-4 gap-2">
-                  {AVATARS.map((option) => (
+                  {(gender ? AVATARS_BY_GENDER[gender] : []).map((option) => (
                     <button
                       key={option}
                       type="button"
@@ -306,7 +311,7 @@ export default function Onboarding({ onLinked }: Props) {
             </div>
             <button
               onClick={handleChildLink}
-              disabled={loading || !childName.trim() || pairCode.length !== 6 || !gender}
+              disabled={loading || !childName.trim() || pairCode.length !== 6 || !gender || !avatar}
               className="w-full mt-6 bg-gradient-to-r from-teal-500 to-indigo-500 text-white font-display font-bold text-lg py-3 rounded-2xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
             >
               {loading ? t('linking') : <>{t('linkDevice')} <ArrowRight className="w-5 h-5" /></>}
