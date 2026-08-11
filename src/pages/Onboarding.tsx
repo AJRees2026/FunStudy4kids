@@ -108,7 +108,7 @@ export default function Onboarding({ onLinked }: Props) {
                 <button
                   key={l.code}
                   onClick={() => setLang(l.code as LangCode)}
-                  className={`w-full flex items-center gap-3 rounded-2xl px-5 py-4 font-display font-bold text-lg transition-all ${
+                  className={`w-full flex items-center gap-3 rounded-2xl px-5 py-4 font-courier font-bold text-lg transition-all ${
                     lang === l.code
                       ? 'bg-gradient-to-r from-indigo-500 to-teal-500 text-white shadow-lg scale-[1.02]'
                       : 'bg-slate-800/80 border border-slate-700 text-slate-300 hover:border-indigo-500 hover:scale-[1.01]'

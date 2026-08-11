@@ -26,6 +26,10 @@ body {
   font-family: 'Blueberry', 'Fredoka', sans-serif;
 }
 
+.font-courier {
+  font-family: 'Courier New', Courier, monospace;
+}
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
