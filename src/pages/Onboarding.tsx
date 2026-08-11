@@ -10,6 +10,8 @@ type Props = {
 
 type Step = 'language' | 'role' | 'parent-setup' | 'parent-created' | 'child-link'
 
+const AVATARS = ['🚀', '🦄', '🧙', '🦸', '🐉', '🤖', '🌈', '⭐']
+
 function BrandName() {
   return (
     <span aria-label="BrainySpark">
@@ -25,6 +27,7 @@ export default function Onboarding({ onLinked }: Props) {
   const [parentName, setParentName] = useState('')
   const [childName, setChildName] = useState('')
   const [pairCode, setPairCode] = useState('')
+  const [avatar, setAvatar] = useState(AVATARS[0])
   const [linkError, setLinkError] = useState('')
   const [loading, setLoading] = useState(false)
   const [createdParent, setCreatedParent] = useState<Profile | null>(null)
@@ -75,6 +78,7 @@ export default function Onboarding({ onLinked }: Props) {
         role: 'child',
         name: childName || 'Child',
         child_name: childName || 'Child',
+        avatar,
         theme_preference: 'space',
         linked_parent_id: parent.id,
         require_pin_for_tasks: true,
@@ -257,6 +261,22 @@ export default function Onboarding({ onLinked }: Props) {
                   inputMode="numeric"
                   className="w-full bg-slate-900/60 text-white rounded-2xl px-4 py-3 mt-1 text-center text-3xl font-display font-bold tracking-[0.3em] focus:outline-none focus:ring-2 focus:ring-teal-400 placeholder-slate-600"
                 />
+              </div>
+              <div>
+                <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mb-2">{t('chooseAvatar')}</p>
+                <div className="grid grid-cols-4 gap-2">
+                  {AVATARS.map((option) => (
+                    <button
+                      key={option}
+                      type="button"
+                      onClick={() => setAvatar(option)}
+                      aria-label={option}
+                      className={`rounded-2xl p-3 text-3xl border-2 transition-all ${avatar === option ? 'border-teal-400 bg-teal-500/20 scale-105' : 'border-slate-700 bg-slate-900/40 hover:border-teal-400/60'}`}
+                    >
+                      {option}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
             <button

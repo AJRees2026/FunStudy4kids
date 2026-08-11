@@ -647,9 +647,9 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
         }} />
       )}
       {showAddChild && (
-        <AddChildModal parentId={currentParent.id} lang={lang} t={t} onClose={() => setShowAddChild(false)} onAdd={async (name, theme) => {
+        <AddChildModal parentId={currentParent.id} lang={lang} t={t} onClose={() => setShowAddChild(false)} onAdd={async (name, theme, avatar) => {
           await supabase.from('profiles').insert({
-            role: 'child', name, child_name: name, theme_preference: theme,
+            role: 'child', name, child_name: name, avatar, theme_preference: theme,
             linked_parent_id: currentParent.id, require_pin_for_tasks: true, require_pin_for_rewards: true, task_approval_mode: 'off',
           })
           setShowAddChild(false); fetchAll()
@@ -660,6 +660,8 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
 }
 
 type TFunc = (k: string) => string
+
+const AVATARS = ['🚀', '🦄', '🧙', '🦸', '🐉', '🤖', '🌈', '⭐']
 
 function AddTaskModal({ children, rewards, lang, t, onClose, onAdd }: {
   children: Profile[]; rewards: Reward[]; lang: LangCode; t: TFunc; onClose: () => void
@@ -794,10 +796,11 @@ function AddRewardModal({ children, lang, t, onClose, onAdd }: {
 
 function AddChildModal({ parentId, lang, t, onClose, onAdd }: {
   parentId: string; lang: LangCode; t: TFunc; onClose: () => void
-  onAdd: (name: string, theme: 'space' | 'unicorn') => void
+  onAdd: (name: string, theme: 'space' | 'unicorn', avatar: string) => void
 }) {
   const [name, setName] = useState('')
   const [theme, setTheme] = useState<'space' | 'unicorn'>('space')
+  const [avatar, setAvatar] = useState(AVATARS[0])
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
@@ -827,7 +830,23 @@ function AddChildModal({ parentId, lang, t, onClose, onAdd }: {
               </button>
             </div>
           </div>
-          <button onClick={() => onAdd(name, theme)} disabled={!name.trim()} className="w-full bg-gradient-to-r from-indigo-500 to-teal-500 text-white font-display font-bold text-lg py-3 rounded-2xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50">
+          <div>
+            <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mb-2">{t('chooseAvatar')}</p>
+            <div className="grid grid-cols-4 gap-2">
+              {AVATARS.map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() => setAvatar(option)}
+                  aria-label={option}
+                  className={`rounded-2xl p-3 text-3xl border-2 transition-all ${avatar === option ? 'border-teal-400 bg-teal-50 scale-105' : 'border-slate-200 hover:border-teal-300'}`}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+          <button onClick={() => onAdd(name, theme, avatar)} disabled={!name.trim()} className="w-full bg-gradient-to-r from-indigo-500 to-teal-500 text-white font-display font-bold text-lg py-3 rounded-2xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50">
             {t('addChild')}
           </button>
         </div>

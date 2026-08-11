@@ -89,6 +89,7 @@ const en: Dict = {
   addChildProfile: 'Add Child Profile',
   addChild: 'Add Child',
   theme: 'Theme',
+  chooseAvatar: 'Choose an avatar',
   space: 'Space',
   unicorn: 'Unicorn',
   noTasksYet: 'No tasks yet! Ask your guardian to add some.',
