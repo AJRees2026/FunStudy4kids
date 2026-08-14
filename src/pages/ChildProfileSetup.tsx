@@ -336,6 +336,3 @@ export default function ChildProfileSetup({ profile, onDone }: Props) {
     </div>
   )
 }
-
-
-export default ChildProfileSetup
