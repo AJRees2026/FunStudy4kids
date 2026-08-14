@@ -10,12 +10,6 @@ type Props = {
 
 type Step = 'language' | 'role' | 'parent-setup' | 'parent-created' | 'child-link'
 
-const SPACE_AVATARS = ['🚀', '🛸', '👨‍🚀', '🪐', '👽']
-const UNICORN_AVATARS = ['🦄', '🌈', '🧚', '🪄', '👑']
-const AVATARS_BY_GENDER: Record<'boy' | 'girl', string[]> = {
-  boy: SPACE_AVATARS,
-  girl: UNICORN_AVATARS,
-}
 
 function BrandName() {
   return (
@@ -33,7 +27,6 @@ export default function Onboarding({ onLinked }: Props) {
   const [childName, setChildName] = useState('')
   const [pairCode, setPairCode] = useState('')
   const [gender, setGender] = useState<'boy' | 'girl' | ''>('')
-  const [avatar, setAvatar] = useState('')
   const [linkError, setLinkError] = useState('')
   const [loading, setLoading] = useState(false)
   const [createdParent, setCreatedParent] = useState<Profile | null>(null)
@@ -91,7 +84,6 @@ export default function Onboarding({ onLinked }: Props) {
         role: 'child',
         name: childName || 'Child',
         child_name: childName || 'Child',
-        avatar,
         gender,
         theme_preference: gender === 'girl' ? 'unicorn' : 'space',
         linked_parent_id: parent.id,
@@ -308,26 +300,10 @@ export default function Onboarding({ onLinked }: Props) {
                   </button>
                 </div>
               </div>
-              <div>
-                <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mb-2">{t('chooseAvatar')}</p>
-                <div className="grid grid-cols-4 gap-2">
-                  {(gender ? AVATARS_BY_GENDER[gender] : []).map((option) => (
-                    <button
-                      key={option}
-                      type="button"
-                      onClick={() => setAvatar(option)}
-                      aria-label={option}
-                      className={`rounded-2xl p-3 text-3xl border-2 transition-all ${avatar === option ? 'border-teal-400 bg-teal-500/20 scale-105' : 'border-slate-700 bg-slate-900/40 hover:border-teal-400/60'}`}
-                    >
-                      {option}
-                    </button>
-                  ))}
-                </div>
-              </div>
             </div>
             <button
               onClick={handleChildLink}
-              disabled={loading || !childName.trim() || pairCode.length !== 6 || !gender || !avatar}
+              disabled={loading || !childName.trim() || pairCode.length !== 6 || !gender}
               className="w-full mt-6 bg-gradient-to-r from-teal-500 to-indigo-500 text-white font-display font-bold text-lg py-3 rounded-2xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
             >
               {loading ? t('linking') : <>{t('linkDevice')} <ArrowRight className="w-5 h-5" /></>}

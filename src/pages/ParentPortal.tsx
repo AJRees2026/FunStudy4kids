@@ -230,8 +230,8 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
                 <div className="space-y-3">
                   {children.map((c) => (
                     <div key={c.id} className="flex items-center gap-3 p-3 bg-slate-50 rounded-2xl">
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-teal-500 flex items-center justify-center text-lg">
-                        {c.avatar || '🚀'}
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-teal-500 flex items-center justify-center text-lg overflow-hidden">
+                        {c.photo_url ? <img src={c.photo_url} alt={c.child_name || c.name} className="w-full h-full object-cover" /> : '🚀'}
                       </div>
                       <div className="flex-1">
                         <p className="font-display font-bold text-slate-700">{c.child_name || c.name}</p>
@@ -381,8 +381,8 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
                   return (
                     <div key={req.id} className="bg-white rounded-2xl p-4 border border-amber-200 shadow-sm">
                       <div className="flex items-center gap-2 mb-2">
-                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-teal-500 flex items-center justify-center text-sm">
-                          {child?.avatar || '🚀'}
+                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-teal-500 flex items-center justify-center text-sm overflow-hidden">
+                          {child?.photo_url ? <img src={child.photo_url} alt={child?.child_name || child?.name} className="w-full h-full object-cover" /> : '🚀'}
                         </div>
                         <p className="font-display font-bold text-slate-700 text-sm">{child?.child_name || child?.name}</p>
                         <span className="text-xs text-slate-400 font-semibold ml-auto">
@@ -454,8 +454,8 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
                   {children.map((c) => (
                     <div key={c.id} className="border border-slate-200 rounded-2xl p-4">
                       <div className="flex items-center gap-2 mb-4">
-                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-teal-500 flex items-center justify-center text-sm">
-                          {c.avatar || '🚀'}
+                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-teal-500 flex items-center justify-center text-sm overflow-hidden">
+                          {c.photo_url ? <img src={c.photo_url} alt={c.child_name || c.name} className="w-full h-full object-cover" /> : '🚀'}
                         </div>
                         <p className="font-display font-bold text-slate-700">{c.child_name || c.name}</p>
                       </div>
@@ -526,8 +526,8 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
                     return (
                       <div key={c.id} className="border border-slate-200 rounded-2xl p-4 space-y-4">
                         <div className="flex items-center gap-2">
-                          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-teal-500 flex items-center justify-center text-sm">
-                            {c.avatar || '🚀'}
+                          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-teal-500 flex items-center justify-center text-sm overflow-hidden">
+                            {c.photo_url ? <img src={c.photo_url} alt={c.child_name || c.name} className="w-full h-full object-cover" /> : '🚀'}
                           </div>
                           <p className="font-display font-bold text-slate-700">{c.child_name || c.name}</p>
                         </div>
@@ -647,9 +647,9 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
         }} />
       )}
       {showAddChild && (
-        <AddChildModal parentId={currentParent.id} lang={lang} t={t} onClose={() => setShowAddChild(false)} onAdd={async (name, theme, avatar, gender) => {
+        <AddChildModal parentId={currentParent.id} lang={lang} t={t} onClose={() => setShowAddChild(false)} onAdd={async (name, theme, gender) => {
           await supabase.from('profiles').insert({
-            role: 'child', name, child_name: name, avatar, gender, theme_preference: theme,
+            role: 'child', name, child_name: name, gender, theme_preference: theme,
             linked_parent_id: currentParent.id, require_pin_for_tasks: true, require_pin_for_rewards: true, task_approval_mode: 'off',
           })
           setShowAddChild(false); fetchAll()
@@ -661,12 +661,6 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
 
 type TFunc = (k: string) => string
 
-const SPACE_AVATARS = ['🚀', '🛸', '👨‍🚀', '🪐', '👽']
-const UNICORN_AVATARS = ['🦄', '🌈', '🧚', '🪄', '👑']
-const AVATARS_BY_GENDER: Record<'boy' | 'girl', string[]> = {
-  boy: SPACE_AVATARS,
-  girl: UNICORN_AVATARS,
-}
 
 function AddTaskModal({ children, rewards, lang, t, onClose, onAdd }: {
   children: Profile[]; rewards: Reward[]; lang: LangCode; t: TFunc; onClose: () => void
@@ -801,11 +795,10 @@ function AddRewardModal({ children, lang, t, onClose, onAdd }: {
 
 function AddChildModal({ parentId, lang, t, onClose, onAdd }: {
   parentId: string; lang: LangCode; t: TFunc; onClose: () => void
-  onAdd: (name: string, theme: 'space' | 'unicorn', avatar: string, gender: string) => void
+  onAdd: (name: string, theme: 'space' | 'unicorn', gender: string) => void
 }) {
   const [name, setName] = useState('')
   const [gender, setGender] = useState<'boy' | 'girl' | ''>('')
-  const [avatar, setAvatar] = useState('')
   const theme: 'space' | 'unicorn' = gender === 'girl' ? 'unicorn' : 'space'
 
   return (
@@ -838,23 +831,7 @@ function AddChildModal({ parentId, lang, t, onClose, onAdd }: {
               </button>
             </div>
           </div>
-          <div>
-            <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mb-2">{t('chooseAvatar')}</p>
-            <div className="grid grid-cols-4 gap-2">
-              {(gender ? AVATARS_BY_GENDER[gender] : []).map((option) => (
-                <button
-                  key={option}
-                  type="button"
-                  onClick={() => setAvatar(option)}
-                  aria-label={option}
-                  className={`rounded-2xl p-3 text-3xl border-2 transition-all ${avatar === option ? 'border-teal-400 bg-teal-50 scale-105' : 'border-slate-200 hover:border-teal-300'}`}
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-          </div>
-          <button onClick={() => onAdd(name, theme, avatar, gender)} disabled={!name.trim() || !gender || !avatar} className="w-full bg-gradient-to-r from-indigo-500 to-teal-500 text-white font-display font-bold text-lg py-3 rounded-2xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50">
+          <button onClick={() => onAdd(name, theme, gender)} disabled={!name.trim() || !gender} className="w-full bg-gradient-to-r from-indigo-500 to-teal-500 text-white font-display font-bold text-lg py-3 rounded-2xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50">
             {t('addChild')}
           </button>
         </div>
