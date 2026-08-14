@@ -4,18 +4,27 @@ import { I18nProvider } from './lib/i18n'
 import Onboarding from './pages/Onboarding'
 import KidDashboard from './pages/KidDashboard'
 import ParentPortal from './pages/ParentPortal'
+import ChildProfileSetup from './pages/ChildProfileSetup'
 
 export default function App() {
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
+  const [needsProfileSetup, setNeedsProfileSetup] = useState(false)
 
   useEffect(() => {
     const id = localStorage.getItem('activeProfileId')
     if (!id) { setLoading(false); return }
     supabase.from('profiles').select('*').eq('id', id).maybeSingle()
       .then(({ data }) => {
-        if (data) setProfile(data as Profile)
-        else localStorage.removeItem('activeProfileId')
+        if (data) {
+          const p = data as Profile
+          setProfile(p)
+          if (p.role === 'child' && !p.photo_url) {
+            setNeedsProfileSetup(true)
+          }
+        } else {
+          localStorage.removeItem('activeProfileId')
+        }
         setLoading(false)
       })
   }, [])
@@ -23,6 +32,7 @@ export default function App() {
   const handleSwitchProfile = () => {
     localStorage.removeItem('activeProfileId')
     setProfile(null)
+    setNeedsProfileSetup(false)
   }
 
   return (
@@ -32,7 +42,20 @@ export default function App() {
           <div className="text-white font-display font-bold text-xl animate-pulse">Loading...</div>
         </div>
       ) : !profile ? (
-        <Onboarding onLinked={(p) => setProfile(p)} />
+        <Onboarding onLinked={(p) => {
+          setProfile(p)
+          if (p.role === 'child' && !p.photo_url) {
+            setNeedsProfileSetup(true)
+          }
+        }} />
+      ) : needsProfileSetup ? (
+        <ChildProfileSetup
+          child={profile}
+          onDone={(updated) => {
+            setProfile(updated)
+            setNeedsProfileSetup(false)
+          }}
+        />
       ) : profile.role === 'parent' ? (
         <ParentPortal parent={profile} onSwitchProfile={handleSwitchProfile} />
       ) : (

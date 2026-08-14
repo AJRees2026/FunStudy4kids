@@ -166,6 +166,17 @@ const en: Dict = {
   rewardUnlocked: 'Reward Unlocked!',
   customCatalog: 'Custom Reward Catalog',
   catalogDesc: 'Create custom rewards kids can unlock with earned points',
+  profileSetup: 'Set Up Your Profile',
+  profileSetupDesc: 'Take a selfie or upload a photo to use as your profile picture.',
+  takeSelfie: 'Take Selfie',
+  uploadPhoto: 'Upload Photo',
+  retakePhoto: 'Retake',
+  usePhoto: 'Use Photo',
+  saving: 'Saving...',
+  profileSaved: 'Profile saved!',
+  cameraError: 'Camera not available. You can upload a photo instead.',
+  photoError: 'Could not save photo. Please try again.',
+  continueToApp: 'Continue',
 }
 
 const es: Dict = {
@@ -313,6 +324,17 @@ const es: Dict = {
   rewardUnlocked: '¡Recompensa Desbloqueada!',
   customCatalog: 'Catálogo de Recompensas',
   catalogDesc: 'Crea recompensas personalizadas que los niños pueden canjear',
+  profileSetup: 'Configura Tu Perfil',
+  profileSetupDesc: 'Toma una selfie o sube una foto para tu perfil.',
+  takeSelfie: 'Tomar Selfie',
+  uploadPhoto: 'Subir Foto',
+  retakePhoto: 'Reintentar',
+  usePhoto: 'Usar Foto',
+  saving: 'Guardando...',
+  profileSaved: '¡Perfil guardado!',
+  cameraError: 'Cámara no disponible. Puedes subir una foto.',
+  photoError: 'No se pudo guardar la foto. Inténtalo de nuevo.',
+  continueToApp: 'Continuar',
 }
 
 const fr: Dict = {
@@ -460,6 +482,17 @@ const fr: Dict = {
   rewardUnlocked: 'Récompense Débloquée !',
   customCatalog: 'Catalogue de Récompenses',
   catalogDesc: 'Créez des récompenses personnalisées',
+  profileSetup: 'Configurez Votre Profil',
+  profileSetupDesc: 'Prenez un selfie ou téléchargez une photo de profil.',
+  takeSelfie: 'Prendre un Selfie',
+  uploadPhoto: 'Télécharger une Photo',
+  retakePhoto: 'Reprendre',
+  usePhoto: 'Utiliser la Photo',
+  saving: 'Enregistrement...',
+  profileSaved: 'Profil enregistré !',
+  cameraError: 'Caméra indisponible. Vous pouvez télécharger une photo.',
+  photoError: 'Impossible d\'enregistrer la photo. Réessayez.',
+  continueToApp: 'Continuer',
 }
 
 const ja: Dict = {
@@ -607,6 +640,17 @@ const ja: Dict = {
   rewardUnlocked: 'ご褒美ゲット！',
   customCatalog: 'カスタムご褒美カタログ',
   catalogDesc: 'ポイントで交換できるオリジナルご褒美を作成',
+  profileSetup: 'プロフィールを設定',
+  profileSetupDesc: 'セルフィーを撮るか、写真をアップロードしてください。',
+  takeSelfie: 'セルフィーを撮る',
+  uploadPhoto: '写真をアップロード',
+  retakePhoto: '撮り直す',
+  usePhoto: 'この写真を使う',
+  saving: '保存中...',
+  profileSaved: 'プロフィールを保存しました！',
+  cameraError: 'カメラが使えません。写真をアップロードできます。',
+  photoError: '写真を保存できませんでした。もう一度お試しください。',
+  continueToApp: '続ける',
 }
 
 const zh: Dict = {
@@ -754,6 +798,17 @@ const zh: Dict = {
   rewardUnlocked: '獎勵解鎖！',
   customCatalog: '自訂獎勵目錄',
   catalogDesc: '建立孩子可用積分兌換的自訂獎勵',
+  profileSetup: '設定你的個人檔案',
+  profileSetupDesc: '拍一張自拍或上傳一張照片作為你的大頭照。',
+  takeSelfie: '拍自拍',
+  uploadPhoto: '上傳照片',
+  retakePhoto: '重拍',
+  usePhoto: '使用照片',
+  saving: '儲存中...',
+  profileSaved: '個人檔案已儲存！',
+  cameraError: '相機無法使用。你可以改為上傳照片。',
+  photoError: '無法儲存照片，請再試一次。',
+  continueToApp: '繼續',
 }
 
 const da: Dict = {
@@ -901,6 +956,17 @@ const da: Dict = {
   rewardUnlocked: 'Belønning Låst Op!',
   customCatalog: 'Brugerdefineret Belønningskatalog',
   catalogDesc: 'Opret tilpassede belønninger børn kan låse op med point',
+  profileSetup: 'Opsæt Din Profil',
+  profileSetupDesc: 'Tag et selfie eller upload et billede som din profilfoto.',
+  takeSelfie: 'Tag Selfie',
+  uploadPhoto: 'Upload Billede',
+  retakePhoto: 'Tag Igen',
+  usePhoto: 'Brug Billede',
+  saving: 'Gemmer...',
+  profileSaved: 'Profil gemt!',
+  cameraError: 'Kamera ikke tilgængeligt. Du kan uploade et billede i stedet.',
+  photoError: 'Kunne ikke gemme billedet. Prøv igen.',
+  continueToApp: 'Fortsæt',
 }
 
 const de: Dict = {
@@ -1048,6 +1114,17 @@ const de: Dict = {
   rewardUnlocked: 'Belohnung Freigeschaltet!',
   customCatalog: 'Belohnungskatalog',
   catalogDesc: 'Erstellen Sie individuelle Belohnungen',
+  profileSetup: 'Profil Einrichten',
+  profileSetupDesc: 'Mach ein Selfie oder lade ein Foto als Profilbild hoch.',
+  takeSelfie: 'Selfie Machen',
+  uploadPhoto: 'Foto Hochladen',
+  retakePhoto: 'Erneut Aufnehmen',
+  usePhoto: 'Foto Verwenden',
+  saving: 'Speichern...',
+  profileSaved: 'Profil gespeichert!',
+  cameraError: 'Kamera nicht verfügbar. Du kannst ein Foto hochladen.',
+  photoError: 'Foto konnte nicht gespeichert werden. Bitte erneut versuchen.',
+  continueToApp: 'Weiter',
 }
 
 const translations: Record<LangCode, Dict> = {
