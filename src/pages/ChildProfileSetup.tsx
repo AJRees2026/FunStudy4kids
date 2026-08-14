@@ -2,6 +2,7 @@ import { useState, useRef, useCallback, useEffect } from 'react'
 import { supabase, type Profile } from '../lib/supabase'
 import { getTheme, type Theme } from '../lib/themes'
 import { useI18n } from '../lib/i18n'
+import PhotoCropper, { type Transform } from '../components/PhotoCropper'
 import { Camera, Upload, Check, RefreshCw, ArrowRight, CircleAlert as AlertCircle } from 'lucide-react'
 
 type Props = {
@@ -18,6 +19,7 @@ export default function ChildProfileSetup({ child, onDone }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const streamRef = useRef<MediaStream | null>(null)
+  const imgRef = useRef<HTMLImageElement | null>(null)
 
   const [mode, setMode] = useState<'choose' | 'camera' | 'preview'>('choose')
   const [capturedBlob, setCapturedBlob] = useState<Blob | null>(null)
@@ -26,6 +28,7 @@ export default function ChildProfileSetup({ child, onDone }: Props) {
   const [cameraError, setCameraError] = useState(false)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+  const transformRef = useRef<Transform>({ scale: 1, x: 0, y: 0 })
 
   const stopCamera = useCallback(() => {
     if (streamRef.current) {
@@ -109,19 +112,55 @@ export default function ChildProfileSetup({ child, onDone }: Props) {
     setError('')
   }
 
+  const renderCropped = (): Promise<Blob | null> => {
+    return new Promise((resolve) => {
+      if (!previewUrl) { resolve(null); return }
+      const img = new Image()
+      img.onload = () => {
+        const tf = transformRef.current
+        const outSize = 320
+        const canvas = canvasRef.current
+        if (!canvas) { resolve(null); return }
+        canvas.width = outSize
+        canvas.height = outSize
+        const ctx = canvas.getContext('2d')
+        if (!ctx) { resolve(null); return }
+
+        ctx.fillStyle = '#000'
+        ctx.fillRect(0, 0, outSize, outSize)
+
+        const srcSize = Math.min(img.width, img.height)
+        const srcX = (img.width - srcSize) / 2
+        const srcY = (img.height - srcSize) / 2
+
+        const drawW = outSize * tf.scale
+        const drawH = outSize * tf.scale
+        const drawX = (outSize - drawW) / 2 + tf.x
+        const drawY = (outSize - drawH) / 2 + tf.y
+
+        ctx.drawImage(img, srcX, srcY, srcSize, srcSize, drawX, drawY, drawW, drawH)
+        canvas.toBlob((blob) => resolve(blob), 'image/jpeg', 0.92)
+      }
+      img.onerror = () => resolve(null)
+      img.src = previewUrl
+    })
+  }
+
   const savePhoto = async () => {
     if (!capturedBlob) return
     setSaving(true)
     setError('')
 
     try {
-      const fileExt = capturedBlob.type === 'image/png' ? 'png' : 'jpg'
-      const fileName = `${child.id}-${Date.now()}.${fileExt}`
+      const blob = await renderCropped()
+      if (!blob) throw new Error('render failed')
+
+      const fileName = `${child.id}-${Date.now()}.jpg`
       const filePath = `${child.id}/${fileName}`
 
       const { error: uploadError } = await supabase.storage
         .from('avatars')
-        .upload(filePath, capturedBlob, { contentType: capturedBlob.type, upsert: false })
+        .upload(filePath, blob, { contentType: 'image/jpeg', upsert: false })
 
       if (uploadError) throw uploadError
 
@@ -256,9 +295,14 @@ export default function ChildProfileSetup({ child, onDone }: Props) {
 
         {mode === 'preview' && previewUrl && (
           <div className="space-y-4">
-            <div className="relative rounded-2xl overflow-hidden aspect-square mx-auto max-w-xs">
-              <img src={previewUrl} alt="Profile preview" className="w-full h-full object-cover" />
-            </div>
+            <PhotoCropper
+              src={previewUrl}
+              size={280}
+              onChange={(tf) => { transformRef.current = tf }}
+            />
+            <p className={`text-center text-xs font-semibold ${theme.textMuted}`}>
+              {t('adjustPhoto')}
+            </p>
             {error && (
               <p className="text-rose-400 text-sm font-semibold text-center">{error}</p>
             )}

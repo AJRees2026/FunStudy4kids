@@ -177,6 +177,10 @@ const en: Dict = {
   cameraError: 'Camera not available. You can upload a photo instead.',
   photoError: 'Could not save photo. Please try again.',
   continueToApp: 'Continue',
+  adjustPhoto: 'Drag to move, pinch or scroll to zoom',
+  zoomIn: 'Zoom In',
+  zoomOut: 'Zoom Out',
+  reset: 'Reset',
 }
 
 const es: Dict = {
@@ -335,6 +339,10 @@ const es: Dict = {
   cameraError: 'Cámara no disponible. Puedes subir una foto.',
   photoError: 'No se pudo guardar la foto. Inténtalo de nuevo.',
   continueToApp: 'Continuar',
+  adjustPhoto: 'Arrastra para mover, pellizca o desplaza para acercar',
+  zoomIn: 'Acercar',
+  zoomOut: 'Alejar',
+  reset: 'Restablecer',
 }
 
 const fr: Dict = {
@@ -493,6 +501,10 @@ const fr: Dict = {
   cameraError: 'Caméra indisponible. Vous pouvez télécharger une photo.',
   photoError: 'Impossible d\'enregistrer la photo. Réessayez.',
   continueToApp: 'Continuer',
+  adjustPhoto: 'Glissez pour déplacer, pincez ou défilez pour zoomer',
+  zoomIn: 'Zoom Avant',
+  zoomOut: 'Zoom Arrière',
+  reset: 'Réinitialiser',
 }
 
 const ja: Dict = {
@@ -651,6 +663,10 @@ const ja: Dict = {
   cameraError: 'カメラが使えません。写真をアップロードできます。',
   photoError: '写真を保存できませんでした。もう一度お試しください。',
   continueToApp: '続ける',
+  adjustPhoto: 'ドラッグで移動、ピンチまたはスクロールでズーム',
+  zoomIn: '拡大',
+  zoomOut: '縮小',
+  reset: 'リセット',
 }
 
 const zh: Dict = {
@@ -809,6 +825,10 @@ const zh: Dict = {
   cameraError: '相機無法使用。你可以改為上傳照片。',
   photoError: '無法儲存照片，請再試一次。',
   continueToApp: '繼續',
+  adjustPhoto: '拖曳移動，捏合或滾動縮放',
+  zoomIn: '放大',
+  zoomOut: '縮小',
+  reset: '重設',
 }
 
 const da: Dict = {
@@ -967,6 +987,10 @@ const da: Dict = {
   cameraError: 'Kamera ikke tilgængeligt. Du kan uploade et billede i stedet.',
   photoError: 'Kunne ikke gemme billedet. Prøv igen.',
   continueToApp: 'Fortsæt',
+  adjustPhoto: 'Træk for at flytte, knib eller rul for at zoome',
+  zoomIn: 'Zoom Ind',
+  zoomOut: 'Zoom Ud',
+  reset: 'Nulstil',
 }
 
 const de: Dict = {
@@ -1125,6 +1149,10 @@ const de: Dict = {
   cameraError: 'Kamera nicht verfügbar. Du kannst ein Foto hochladen.',
   photoError: 'Foto konnte nicht gespeichert werden. Bitte erneut versuchen.',
   continueToApp: 'Weiter',
+  adjustPhoto: 'Ziehen zum Bewegen, Pinch oder Scrollen zum Zoomen',
+  zoomIn: 'Vergrößern',
+  zoomOut: 'Verkleinern',
+  reset: 'Zurücksetzen',
 }
 
 const translations: Record<LangCode, Dict> = {
