@@ -6,14 +6,14 @@ import PhotoCropper, { type Transform } from '../components/PhotoCropper'
 import { Camera, Upload, Check, RefreshCw, ArrowRight, CircleAlert as AlertCircle } from 'lucide-react'
 
 type Props = {
-  child: Profile
+  profile: Profile
   onDone: (updated: Profile) => void
 }
 
-export default function ChildProfileSetup({ child, onDone }: Props) {
+export default function ChildProfileSetup({ profile, onDone }: Props) {
   const { t } = useI18n()
-  const theme: Theme = getTheme(child.theme_preference)
-  const isSpace = child.theme_preference === 'space'
+  const theme: Theme = getTheme(profile.theme_preference)
+  const isSpace = profile.theme_preference === 'space'
 
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -155,8 +155,8 @@ export default function ChildProfileSetup({ child, onDone }: Props) {
       const blob = await renderCropped()
       if (!blob) throw new Error('render failed')
 
-      const fileName = `${child.id}-${Date.now()}.jpg`
-      const filePath = `${child.id}/${fileName}`
+      const fileName = `${profile.id}-${Date.now()}.jpg`
+      const filePath = `${profile.id}/${fileName}`
 
       const { error: uploadError } = await supabase.storage
         .from('avatars')
@@ -170,11 +170,11 @@ export default function ChildProfileSetup({ child, onDone }: Props) {
       const { error: updateError } = await supabase
         .from('profiles')
         .update({ photo_url: photoUrl })
-        .eq('id', child.id)
+        .eq('id', profile.id)
 
       if (updateError) throw updateError
 
-      onDone({ ...child, photo_url: photoUrl })
+      onDone({ ...profile, photo_url: photoUrl })
     } catch {
       setError(t('photoError'))
     } finally {
@@ -184,7 +184,7 @@ export default function ChildProfileSetup({ child, onDone }: Props) {
 
   const skip = () => {
     stopCamera()
-    onDone(child)
+    onDone(profile)
   }
 
   return (
@@ -336,3 +336,6 @@ export default function ChildProfileSetup({ child, onDone }: Props) {
     </div>
   )
 }
+
+
+export default ChildProfileSetup

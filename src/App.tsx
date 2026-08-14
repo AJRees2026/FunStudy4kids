@@ -19,7 +19,7 @@ export default function App() {
         if (data) {
           const p = data as Profile
           setProfile(p)
-          if (p.role === 'child' && !p.photo_url) {
+          if (!p.photo_url) {
             setNeedsProfileSetup(true)
           }
         } else {
@@ -44,13 +44,13 @@ export default function App() {
       ) : !profile ? (
         <Onboarding onLinked={(p) => {
           setProfile(p)
-          if (p.role === 'child' && !p.photo_url) {
+          if (!p.photo_url) {
             setNeedsProfileSetup(true)
           }
         }} />
       ) : needsProfileSetup ? (
         <ChildProfileSetup
-          child={profile}
+          profile={profile}
           onDone={(updated) => {
             setProfile(updated)
             setNeedsProfileSetup(false)
