@@ -180,7 +180,7 @@ export default function MoodTracker({ childId, theme, isSpace }: Props) {
       </div>
 
       {/* Mood legend */}
-      <div className="flex flex-wrap gap-2 mt-4">
+      <div className="flex flex-wrap justify-center gap-2 mt-4">
         {MOODS.map((m) => (
           <div key={m.key} className="flex items-center gap-1.5">
             <span className={`w-5 h-5 rounded-lg ${m.bgClass} flex items-center justify-center text-xs`}>{m.emoji}</span>
