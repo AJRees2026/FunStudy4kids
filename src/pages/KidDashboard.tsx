@@ -340,6 +340,20 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <button
+                onClick={() => setView('mood')}
+                className={`group rounded-3xl p-5 ${theme.cardBg} border ${theme.cardBorder} text-left transition-all hover:scale-[1.03] active:scale-95`}
+              >
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-yellow-400 to-rose-500 flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
+                  <Smile className="w-6 h-6 text-white" />
+                </div>
+                <h3 className={`font-display font-extrabold text-lg ${theme.textPrimary} mb-1`}>{t('moodTracker')}</h3>
+                <p className={`text-xs font-semibold ${theme.textMuted} leading-snug`}>{t('moodTrackerDesc')}</p>
+                <div className={`flex items-center gap-1 mt-3 text-xs font-bold ${theme.accent}`}>
+                  {t('moodTracker')} <ChevronRight className="w-3 h-3" />
+                </div>
+              </button>
+
+              <button
                 onClick={() => setView('subjects')}
                 className={`group rounded-3xl p-5 ${theme.cardBg} border ${theme.cardBorder} text-left transition-all hover:scale-[1.03] active:scale-95`}
               >
@@ -403,20 +417,6 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                     {availableRewards.length}
                   </span>
                 )}
-              </button>
-
-              <button
-                onClick={() => setView('mood')}
-                className={`group rounded-3xl p-5 ${theme.cardBg} border ${theme.cardBorder} text-left transition-all hover:scale-[1.03] active:scale-95`}
-              >
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-yellow-400 to-rose-500 flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
-                  <Smile className="w-6 h-6 text-white" />
-                </div>
-                <h3 className={`font-display font-extrabold text-lg ${theme.textPrimary} mb-1`}>{t('moodTracker')}</h3>
-                <p className={`text-xs font-semibold ${theme.textMuted} leading-snug`}>{t('moodTrackerDesc')}</p>
-                <div className={`flex items-center gap-1 mt-3 text-xs font-bold ${theme.accent}`}>
-                  {t('moodTracker')} <ChevronRight className="w-3 h-3" />
-                </div>
               </button>
             </div>
           </section>
