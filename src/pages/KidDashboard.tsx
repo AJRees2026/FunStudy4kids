@@ -12,6 +12,7 @@ import ReadingJourney from '../components/ReadingJourney'
 import {
   Star, Flame, Award, LogOut, Play, Check, Lock, ShoppingBag,
   ClipboardList, X, Bell, Clock, BarChart3, Gift, Sparkles,
+  ArrowLeft, BookMarked, ChevronRight,
 } from 'lucide-react'
 
 type Props = {
@@ -37,6 +38,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
   const cutoffCheckRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const [rewardPreview, setRewardPreview] = useState<Reward | null>(null)
   const [rewardCelebration, setRewardCelebration] = useState(false)
+  const [view, setView] = useState<'home' | 'subjects' | 'reading' | 'tasks' | 'rewards'>('home')
 
   const isSpace = currentChild.theme_preference === 'space'
   const theme: Theme = getTheme(currentChild.theme_preference)
@@ -327,18 +329,119 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
       <main className="max-w-2xl mx-auto px-4 py-6 space-y-6">
         {/* Progress Display */}
         {renderProgress()}
-        <SubjectProgress tasks={tasks} theme={theme} isSpace={isSpace} childId={currentChild.id} onTasksChange={fetchData} />
-        <ReadingJourney childId={currentChild.id} theme={theme} isSpace={isSpace} onStarsAwarded={(count) => {
-          const newPoints = currentChild.points + count
-          supabase.from('profiles').update({ points: newPoints }).eq('id', currentChild.id)
-          setCurrentChild({ ...currentChild, points: newPoints })
-          setConfetti(true)
-          setTimeout(() => setConfetti(false), 100)
-          showToast(`${t('greatJob')}! ${count} ${isSpace ? t('fuelCells') : t('sparkles')}!`)
-        }} />
 
-        {/* Pending Tasks */}
-        <section>
+        {/* Home / Index View */}
+        {view === 'home' && (
+          <section className="animate-fadeIn">
+            <div className="text-center mb-6">
+              <h2 className={`font-display font-extrabold text-2xl ${theme.textPrimary} mb-1`}>{t('exploreActivities')}</h2>
+              <p className={`text-sm font-semibold ${theme.textMuted}`}>{t('chooseActivity')}</p>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <button
+                onClick={() => setView('subjects')}
+                className={`group rounded-3xl p-5 ${theme.cardBg} border ${theme.cardBorder} text-left transition-all hover:scale-[1.03] active:scale-95`}
+              >
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-teal-500 flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
+                  <BarChart3 className="w-6 h-6 text-white" />
+                </div>
+                <h3 className={`font-display font-extrabold text-lg ${theme.textPrimary} mb-1`}>{t('subjectProgress')}</h3>
+                <p className={`text-xs font-semibold ${theme.textMuted} leading-snug`}>{t('progressBySubjectDesc')}</p>
+                <div className={`flex items-center gap-1 mt-3 text-xs font-bold ${theme.accent}`}>
+                  {t('subjectProgress')} <ChevronRight className="w-3 h-3" />
+                </div>
+              </button>
+
+              <button
+                onClick={() => setView('reading')}
+                className={`group rounded-3xl p-5 ${theme.cardBg} border ${theme.cardBorder} text-left transition-all hover:scale-[1.03] active:scale-95`}
+              >
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-rose-400 to-fuchsia-500 flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
+                  <BookMarked className="w-6 h-6 text-white" />
+                </div>
+                <h3 className={`font-display font-extrabold text-lg ${theme.textPrimary} mb-1`}>{t('readingJourney')}</h3>
+                <p className={`text-xs font-semibold ${theme.textMuted} leading-snug`}>{t('readingJourneyDesc')}</p>
+                <div className={`flex items-center gap-1 mt-3 text-xs font-bold ${theme.accent}`}>
+                  {t('readingJourney')} <ChevronRight className="w-3 h-3" />
+                </div>
+              </button>
+
+              <button
+                onClick={() => setView('tasks')}
+                className={`group rounded-3xl p-5 ${theme.cardBg} border ${theme.cardBorder} text-left transition-all hover:scale-[1.03] active:scale-95 relative`}
+              >
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-blue-500 flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
+                  <ClipboardList className="w-6 h-6 text-white" />
+                </div>
+                <h3 className={`font-display font-extrabold text-lg ${theme.textPrimary} mb-1`}>{t('tasks')}</h3>
+                <p className={`text-xs font-semibold ${theme.textMuted} leading-snug`}>{t('tasksDesc')}</p>
+                <div className={`flex items-center gap-1 mt-3 text-xs font-bold ${theme.accent}`}>
+                  {t('tasks')} <ChevronRight className="w-3 h-3" />
+                </div>
+                {pendingTasks.length > 0 && (
+                  <span className="absolute top-3 right-3 bg-rose-500 text-white text-xs font-bold rounded-full px-2 py-0.5 min-w-[20px] text-center shadow-md">
+                    {pendingTasks.length}
+                  </span>
+                )}
+              </button>
+
+              <button
+                onClick={() => setView('rewards')}
+                className={`group rounded-3xl p-5 ${theme.cardBg} border ${theme.cardBorder} text-left transition-all hover:scale-[1.03] active:scale-95 relative`}
+              >
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
+                  <ShoppingBag className="w-6 h-6 text-white" />
+                </div>
+                <h3 className={`font-display font-extrabold text-lg ${theme.textPrimary} mb-1`}>{t('rewardShop')}</h3>
+                <p className={`text-xs font-semibold ${theme.textMuted} leading-snug`}>{t('rewardShopDesc')}</p>
+                <div className={`flex items-center gap-1 mt-3 text-xs font-bold ${theme.accent}`}>
+                  {t('rewardShop')} <ChevronRight className="w-3 h-3" />
+                </div>
+                {availableRewards.length > 0 && (
+                  <span className="absolute top-3 right-3 bg-amber-400 text-white text-xs font-bold rounded-full px-2 py-0.5 min-w-[20px] text-center shadow-md">
+                    {availableRewards.length}
+                  </span>
+                )}
+              </button>
+            </div>
+          </section>
+        )}
+
+        {/* Back Button for sub-views */}
+        {view !== 'home' && (
+          <button
+            onClick={() => setView('home')}
+            className={`flex items-center gap-1.5 rounded-xl px-3 py-2 font-display font-bold text-sm ${theme.cardBg} border ${theme.cardBorder} ${theme.textSecondary} transition-all hover:scale-105 active:scale-95`}
+          >
+            <ArrowLeft className="w-4 h-4" /> {t('backToHome')}
+          </button>
+        )}
+
+        {/* Subject Progress View */}
+        {view === 'subjects' && (
+          <div className="animate-fadeIn">
+            <SubjectProgress tasks={tasks} theme={theme} isSpace={isSpace} childId={currentChild.id} onTasksChange={fetchData} />
+          </div>
+        )}
+
+        {/* Reading Journey View */}
+        {view === 'reading' && (
+          <div className="animate-fadeIn">
+            <ReadingJourney childId={currentChild.id} theme={theme} isSpace={isSpace} onStarsAwarded={(count) => {
+              const newPoints = currentChild.points + count
+              supabase.from('profiles').update({ points: newPoints }).eq('id', currentChild.id)
+              setCurrentChild({ ...currentChild, points: newPoints })
+              setConfetti(true)
+              setTimeout(() => setConfetti(false), 100)
+              showToast(`${t('greatJob')}! ${count} ${isSpace ? t('fuelCells') : t('sparkles')}!`)
+            }} />
+          </div>
+        )}
+
+        {/* Tasks View */}
+        {view === 'tasks' && (
+        <>
+        <section className="animate-fadeIn">
           <h2 className={`font-display font-extrabold text-xl ${theme.textPrimary} mb-3 flex items-center gap-2`}>
             <ClipboardList className="w-5 h-5 text-indigo-400" />
             {t('tasks')}
@@ -445,9 +548,13 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
             </div>
           </section>
         )}
+        </>
+        )}
 
-        {/* Reward Shop */}
-        <section>
+        {/* Reward Shop View */}
+        {view === 'rewards' && (
+        <>
+        <section className="animate-fadeIn">
           <h2 className={`font-display font-extrabold text-xl ${theme.textPrimary} mb-3 flex items-center gap-2`}>
             <ShoppingBag className="w-5 h-5 text-amber-400" />
             {t('rewardShop')}
@@ -513,6 +620,8 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
               ))}
             </div>
           </section>
+        )}
+        </>
         )}
       </main>
 

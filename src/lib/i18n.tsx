@@ -223,6 +223,13 @@ const en: Dict = {
   coverPhoto: 'Cover Photo',
   removeCover: 'Remove Cover',
   cameraUnavailable: 'Camera not available. You can upload a photo instead.',
+  exploreActivities: 'Explore Activities',
+  chooseActivity: 'Choose an activity to get started!',
+  backToHome: 'Back to Home',
+  progressBySubjectDesc: 'Track your learning across subjects',
+  readingJourneyDesc: 'Log your books and earn reading stars',
+  tasksDesc: 'Complete tasks and earn rewards',
+  rewardShopDesc: 'Spend your points on fun rewards',
 }
 
 const es: Dict = {
@@ -419,6 +426,13 @@ const es: Dict = {
   coverPhoto: 'Foto de Portada',
   removeCover: 'Quitar Portada',
   cameraUnavailable: 'Cámara no disponible. Puedes subir una foto.',
+  exploreActivities: 'Explorar Actividades',
+  chooseActivity: '¡Elige una actividad para empezar!',
+  backToHome: 'Volver al Inicio',
+  progressBySubjectDesc: 'Sigue tu aprendizaje por materias',
+  readingJourneyDesc: 'Registra tus libros y gana estrellas',
+  tasksDesc: 'Completa tareas y gana recompensas',
+  rewardShopDesc: 'Gasta tus puntos en recompensas',
 }
 
 const fr: Dict = {
@@ -615,6 +629,13 @@ const fr: Dict = {
   coverPhoto: 'Photo de Couverture',
   removeCover: 'Supprimer la Couverture',
   cameraUnavailable: 'Caméra non disponible. Vous pouvez télécharger une photo.',
+  exploreActivities: 'Explorer les Activités',
+  chooseActivity: 'Choisissez une activité pour commencer !',
+  backToHome: 'Retour à l\'Accueil',
+  progressBySubjectDesc: 'Suivez votre apprentissage par matière',
+  readingJourneyDesc: 'Enregistrez vos livres et gagnez des étoiles',
+  tasksDesc: 'Complétez des tâches et gagnez des récompenses',
+  rewardShopDesc: 'Dépensez vos points en récompenses',
 }
 
 const ja: Dict = {
@@ -811,6 +832,13 @@ const ja: Dict = {
   coverPhoto: '表紙の写真',
   removeCover: '表紙を削除',
   cameraUnavailable: 'カメラが利用できません。写真をアップロードできます。',
+  exploreActivities: 'アクティビティを探す',
+  chooseActivity: 'アクティビティを選んで始めよう！',
+  backToHome: 'ホームに戻る',
+  progressBySubjectDesc: '科目ごとの学習を追跡',
+  readingJourneyDesc: '本を記録して読書スターを獲得',
+  tasksDesc: 'タスクを完了してご褒美を獲得',
+  rewardShopDesc: 'ポイントを使ってご褒美をゲット',
 }
 
 const zh: Dict = {
@@ -1007,6 +1035,13 @@ const zh: Dict = {
   coverPhoto: '封面照片',
   removeCover: '移除封面',
   cameraUnavailable: '相機不可用。你可以改為上傳照片。',
+  exploreActivities: '探索活動',
+  chooseActivity: '選擇一個活動開始吧！',
+  backToHome: '返回首頁',
+  progressBySubjectDesc: '追蹤各科目的學習',
+  readingJourneyDesc: '記錄書籍並獲得閱讀星星',
+  tasksDesc: '完成任務並獲得獎勵',
+  rewardShopDesc: '用點數兌換有趣的獎勵',
 }
 
 const da: Dict = {
@@ -1203,6 +1238,13 @@ const da: Dict = {
   coverPhoto: 'Forsidefoto',
   removeCover: 'Fjern Forside',
   cameraUnavailable: 'Kamera ikke tilgængeligt. Du kan uploade et billede i stedet.',
+  exploreActivities: 'Udforsk Aktiviteter',
+  chooseActivity: 'Vælg en aktivitet for at komme i gang!',
+  backToHome: 'Tilbage til Forsiden',
+  progressBySubjectDesc: 'Følg din læring på tværs af fag',
+  readingJourneyDesc: 'Registrer dine bøger og tjen læsestjerner',
+  tasksDesc: 'Færdiggør opgaver og tjen belønninger',
+  rewardShopDesc: 'Brug dine point på sjove belønninger',
 }
 
 const de: Dict = {
@@ -1399,6 +1441,13 @@ const de: Dict = {
   coverPhoto: 'Coverfoto',
   removeCover: 'Cover Entfernen',
   cameraUnavailable: 'Kamera nicht verfügbar. Du kannst ein Foto hochladen.',
+  exploreActivities: 'Aktivitäten Entdecken',
+  chooseActivity: 'Wähle eine Aktivität, um loszulegen!',
+  backToHome: 'Zurück zur Startseite',
+  progressBySubjectDesc: 'Verfolge dein Lernen nach Fächern',
+  readingJourneyDesc: 'Erfasse deine Bücher und sammle Lesestern',
+  tasksDesc: 'Erledige Aufgaben und sammle Belohnungen',
+  rewardShopDesc: 'Tausche deine Punkte gegen Belohnungen',
 }
 
 const translations: Record<LangCode, Dict> = {
