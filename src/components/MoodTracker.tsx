@@ -11,7 +11,7 @@ type Props = {
 }
 
 export const MOODS: { key: MoodType; emoji: string; color: string; bgClass: string; textClass: string }[] = [
-  { key: 'super_happy', emoji: '🌈', color: '#FFD166', bgClass: 'bg-[#FFD166]', textClass: 'text-[#9a6b00]' },
+  { key: 'fantastic', emoji: '🌈', color: '#FFD166', bgClass: 'bg-[#FFD166]', textClass: 'text-[#9a6b00]' },
   { key: 'good', emoji: '☀️', color: '#06D6A0', bgClass: 'bg-[#06D6A0]', textClass: 'text-[#005c44]' },
   { key: 'okay', emoji: '🌤️', color: '#118AB2', bgClass: 'bg-[#118AB2]', textClass: 'text-white' },
   { key: 'sad', emoji: '🌦️', color: '#B19FFB', bgClass: 'bg-[#B19FFB]', textClass: 'text-[#3d2b6b]' },
