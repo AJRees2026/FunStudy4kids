@@ -7,6 +7,7 @@ import SpeakButton from '../components/SpeakButton'
 import PinPrompt from '../components/PinPrompt'
 import FocusTimer from '../components/FocusTimer'
 import Confetti from '../components/Confetti'
+import SubjectProgress from '../components/SubjectProgress'
 import {
   Star, Flame, Award, LogOut, Play, Check, Lock, ShoppingBag,
   ClipboardList, X, Bell, Clock, BarChart3, Gift, Sparkles,
@@ -325,6 +326,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
       <main className="max-w-2xl mx-auto px-4 py-6 space-y-6">
         {/* Progress Display */}
         {renderProgress()}
+        <SubjectProgress tasks={tasks} theme={theme} isSpace={isSpace} />
 
         {/* Pending Tasks */}
         <section>
