@@ -75,6 +75,23 @@ export type Reward = {
   claimed_at: string | null
 }
 
+export type BookStatus = 'want_to_read' | 'in_progress' | 'completed'
+
+export type Book = {
+  id: string
+  child_id: string
+  title: string
+  author: string
+  total_pages: number
+  current_page: number
+  isbn: string | null
+  status: BookStatus
+  start_date: string | null
+  completion_date: string | null
+  created_at: string
+  updated_at: string
+}
+
 export type ApprovalRequest = {
   id: string
   child_id: string

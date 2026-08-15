@@ -8,6 +8,7 @@ import PinPrompt from '../components/PinPrompt'
 import FocusTimer from '../components/FocusTimer'
 import Confetti from '../components/Confetti'
 import SubjectProgress from '../components/SubjectProgress'
+import ReadingJourney from '../components/ReadingJourney'
 import {
   Star, Flame, Award, LogOut, Play, Check, Lock, ShoppingBag,
   ClipboardList, X, Bell, Clock, BarChart3, Gift, Sparkles,
@@ -327,6 +328,14 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
         {/* Progress Display */}
         {renderProgress()}
         <SubjectProgress tasks={tasks} theme={theme} isSpace={isSpace} childId={currentChild.id} onTasksChange={fetchData} />
+        <ReadingJourney childId={currentChild.id} theme={theme} isSpace={isSpace} onStarsAwarded={(count) => {
+          const newPoints = currentChild.points + count
+          supabase.from('profiles').update({ points: newPoints }).eq('id', currentChild.id)
+          setCurrentChild({ ...currentChild, points: newPoints })
+          setConfetti(true)
+          setTimeout(() => setConfetti(false), 100)
+          showToast(`${t('greatJob')}! ${count} ${isSpace ? t('fuelCells') : t('sparkles')}!`)
+        }} />
 
         {/* Pending Tasks */}
         <section>
