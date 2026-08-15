@@ -326,7 +326,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
       <main className="max-w-2xl mx-auto px-4 py-6 space-y-6">
         {/* Progress Display */}
         {renderProgress()}
-        <SubjectProgress tasks={tasks} theme={theme} isSpace={isSpace} />
+        <SubjectProgress tasks={tasks} theme={theme} isSpace={isSpace} childId={currentChild.id} onTasksChange={fetchData} />
 
         {/* Pending Tasks */}
         <section>

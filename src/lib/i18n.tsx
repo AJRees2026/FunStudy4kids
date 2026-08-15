@@ -134,6 +134,7 @@ const en: Dict = {
   subjectProgress: 'Progress by Subject',
   weeklySubjectGoals: 'Weekly goal: 5 lessons per subject',
   halfStarsEveryTen: '0.5 stars / 10%',
+  addTaskPlaceholder: 'Add a task…',
   lessons: 'lessons',
   progressDisplayMode: 'Progress Display Mode',
   modePercentage: 'Percentage',
