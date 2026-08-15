@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS mood_entries (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   child_id uuid NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
   entry_date date NOT NULL,
-  mood text NOT NULL CHECK (mood IN ('super_happy', 'good', 'okay', 'sad', 'frustrated')),
+  mood text NOT NULL CHECK ( IN ('super_happy', 'good', 'okay', 'sad', 'frustrated')),
   note text,
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now(),
