@@ -361,7 +361,7 @@ export default function ReadingJourney({ childId, theme, isSpace, onStarsAwarded
                   isSpace ? 'bg-white/5 border-slate-700' : 'bg-white border-slate-100 shadow-sm'
                 }`}
               >
-                <div className={`relative h-28 rounded-xl mb-2 flex items-center justify-center overflow-hidden ${
+                <div className={`relative aspect-[2/3] rounded-xl mb-2 flex items-center justify-center overflow-hidden ${
                   isSpace ? 'bg-gradient-to-br from-indigo-900/60 to-slate-800' : 'bg-gradient-to-br from-indigo-100 to-slate-100'
                 }`}>
                   {book.cover_url ? (
