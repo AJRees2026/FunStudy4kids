@@ -1,10 +1,8 @@
 import { useState } from 'react'
-import { BookOpen, Calculator, FlaskConical, Globe as Globe2, Star, Plus, Check } from 'lucide-react'
+import { BookOpen, Calculator, FlaskConical, Globe as Globe2, Star, Plus, Check, Sparkles } from 'lucide-react'
 import { useI18n } from '../lib/i18n'
 import { supabase, type Task } from '../lib/supabase'
 import type { Theme } from '../lib/themes'
-
-type SubjectKey = 'english' | 'mathematics' | 'science' | 'socialStudies'
 
 type SubjectProgressProps = {
   tasks: Task[]
@@ -12,10 +10,11 @@ type SubjectProgressProps = {
   isSpace: boolean
   childId: string
   onTasksChange: () => void
+  readOnly?: boolean
 }
 
 type SubjectConfig = {
-  key: SubjectKey
+  key: string
   label: string
   icon: typeof BookOpen
   color: string
@@ -24,9 +23,9 @@ type SubjectConfig = {
   dbSubject: string
 }
 
-const WEEKLY_GOAL = 5
+const WEEKLY_GOAL = 3
 
-const SUBJECTS: SubjectConfig[] = [
+const BUILTIN_SUBJECTS: SubjectConfig[] = [
   { key: 'english', label: 'English Language', icon: BookOpen, color: 'text-sky-400', barColor: 'bg-sky-400', aliases: ['english', 'reading', 'language arts'], dbSubject: 'Reading' },
   { key: 'mathematics', label: 'Mathematics', icon: Calculator, color: 'text-amber-400', barColor: 'bg-amber-400', aliases: ['math', 'mathematics'], dbSubject: 'Math' },
   { key: 'science', label: 'Science', icon: FlaskConical, color: 'text-emerald-400', barColor: 'bg-emerald-400', aliases: ['science'], dbSubject: 'Science' },
@@ -37,20 +36,36 @@ function matchesSubject(taskSubject: string, aliases: string[]): boolean {
   return aliases.includes(taskSubject.trim().toLowerCase())
 }
 
-export default function SubjectProgress({ tasks, theme, isSpace, childId, onTasksChange }: SubjectProgressProps) {
+export default function SubjectProgress({ tasks, theme, isSpace, childId, onTasksChange, readOnly = false }: SubjectProgressProps) {
   const { t } = useI18n()
-  const [newTask, setNewTask] = useState<Record<SubjectKey, string>>({
-    english: '',
-    mathematics: '',
-    science: '',
-    socialStudies: '',
-  })
-  const [adding, setAdding] = useState<SubjectKey | null>(null)
+  const [customSubjects, setCustomSubjects] = useState<SubjectConfig[]>([])
+  const [newSubjectName, setNewSubjectName] = useState('')
+  const [showAddSubject, setShowAddSubject] = useState(false)
+  const [newTask, setNewTask] = useState<Record<string, string>>({})
+  const [adding, setAdding] = useState<string | null>(null)
 
-  const completedTasks = tasks.filter((task) => task.status === 'completed')
+  const allSubjects = [...BUILTIN_SUBJECTS, ...customSubjects]
+
+  const addCustomSubject = () => {
+    const name = newSubjectName.trim()
+    if (!name) return
+    const key = `custom_${name.toLowerCase().replace(/\s+/g, '_')}`
+    if (allSubjects.some((s) => s.key === key)) return
+    setCustomSubjects((prev) => [...prev, {
+      key,
+      label: name,
+      icon: Sparkles,
+      color: 'text-violet-400',
+      barColor: 'bg-violet-400',
+      aliases: [name.toLowerCase()],
+      dbSubject: name,
+    }])
+    setNewSubjectName('')
+    setShowAddSubject(false)
+  }
 
   const addTask = async (subject: SubjectConfig) => {
-    const title = newTask[subject.key].trim()
+    const title = (newTask[subject.key] || '').trim()
     if (!title) return
     setAdding(subject.key)
     await supabase.from('tasks').insert({
@@ -85,16 +100,16 @@ export default function SubjectProgress({ tasks, theme, isSpace, childId, onTask
         </div>
         <div className={`flex items-center gap-1 text-sm font-bold ${theme.accent}`}>
           <Star className="w-4 h-4 fill-current" />
-          {t('halfStarsEveryTen')}
+          {t('oneStarPerTask')}
         </div>
       </div>
 
       <div className="space-y-5">
-        {SUBJECTS.map((subject) => {
+        {allSubjects.map((subject) => {
           const subjectTasks = tasks.filter((task) => matchesSubject(task.subject, subject.aliases))
           const completedLessons = subjectTasks.filter((task) => task.status === 'completed').length
           const percentage = Math.min(100, Math.round((completedLessons / WEEKLY_GOAL) * 100))
-          const stars = Math.floor(percentage / 10) * 0.5
+          const stars = completedLessons
           const Icon = subject.icon
           const isAdding = adding === subject.key
 
@@ -104,7 +119,7 @@ export default function SubjectProgress({ tasks, theme, isSpace, childId, onTask
                 <Icon className={`w-4 h-4 ${subject.color}`} />
                 <span className={`text-sm font-bold ${theme.textPrimary}`}>{subject.label}</span>
                 <span className={`ml-auto text-xs font-bold ${theme.textMuted}`}>
-                  {completedLessons}/{WEEKLY_GOAL} {t('lessons')}
+                  {completedLessons}/{WEEKLY_GOAL} {t('tasks').toLowerCase()}
                 </span>
               </div>
               <div className="flex items-center gap-3 mb-2">
@@ -113,7 +128,7 @@ export default function SubjectProgress({ tasks, theme, isSpace, childId, onTask
                 </div>
                 <span className={`w-10 text-right text-xs font-bold ${theme.textSecondary}`}>{percentage}%</span>
                 <span className={`w-14 flex items-center justify-end gap-1 text-xs font-bold ${theme.accent}`}>
-                  <Star className="w-3.5 h-3.5 fill-current" /> {stars.toFixed(1)}
+                  <Star className="w-3.5 h-3.5 fill-current" /> {stars}
                 </span>
               </div>
 
@@ -124,11 +139,14 @@ export default function SubjectProgress({ tasks, theme, isSpace, childId, onTask
                     return (
                       <button
                         key={task.id}
-                        onClick={() => toggleTask(task)}
-                        className={`w-full flex items-center gap-2 rounded-xl px-3 py-2 transition-all active:scale-[0.98] ${
+                        onClick={() => readOnly ? undefined : toggleTask(task)}
+                        disabled={readOnly}
+                        className={`w-full flex items-center gap-2 rounded-xl px-3 py-2 transition-all ${
+                          readOnly ? '' : 'active:scale-[0.98] hover:opacity-80'
+                        } ${
                           done
                             ? isSpace ? 'bg-emerald-900/30' : 'bg-emerald-50'
-                            : isSpace ? 'bg-white/5 hover:bg-white/10' : 'bg-slate-50 hover:bg-slate-100'
+                            : isSpace ? 'bg-white/5' : 'bg-slate-50'
                         }`}
                       >
                         <span className={`w-5 h-5 rounded-md border-2 flex items-center justify-center shrink-0 transition-all ${
@@ -151,31 +169,76 @@ export default function SubjectProgress({ tasks, theme, isSpace, childId, onTask
                 </div>
               )}
 
-              <div className={`flex items-center gap-2 rounded-xl px-3 py-1.5 ${isSpace ? 'bg-white/5' : 'bg-slate-50'}`}>
-                <input
-                  type="text"
-                  value={newTask[subject.key]}
-                  onChange={(e) => setNewTask((prev) => ({ ...prev, [subject.key]: e.target.value }))}
-                  onKeyDown={(e) => { if (e.key === 'Enter') addTask(subject) }}
-                  placeholder={t('addTaskPlaceholder')}
-                  className={`flex-1 bg-transparent text-sm font-semibold outline-none ${theme.textPrimary} placeholder:${theme.textMuted}`}
-                />
-                <button
-                  onClick={() => addTask(subject)}
-                  disabled={!newTask[subject.key].trim() || isAdding}
-                  className={`shrink-0 rounded-lg p-1.5 transition-all ${
-                    newTask[subject.key].trim() && !isAdding
-                      ? `${subject.barColor} text-white hover:scale-110 active:scale-90`
-                      : 'opacity-40 cursor-not-allowed'
-                  }`}
-                >
-                  <Plus className="w-4 h-4" />
-                </button>
-              </div>
+              {!readOnly && (
+                <div className={`flex items-center gap-2 rounded-xl px-3 py-1.5 ${isSpace ? 'bg-white/5' : 'bg-slate-50'}`}>
+                  <input
+                    type="text"
+                    value={newTask[subject.key] || ''}
+                    onChange={(e) => setNewTask((prev) => ({ ...prev, [subject.key]: e.target.value }))}
+                    onKeyDown={(e) => { if (e.key === 'Enter') addTask(subject) }}
+                    placeholder={t('addTaskPlaceholder')}
+                    className={`flex-1 bg-transparent text-sm font-semibold outline-none ${theme.textPrimary} placeholder:${theme.textMuted}`}
+                  />
+                  <button
+                    onClick={() => addTask(subject)}
+                    disabled={!(newTask[subject.key] || '').trim() || isAdding}
+                    className={`shrink-0 rounded-lg p-1.5 transition-all ${
+                      (newTask[subject.key] || '').trim() && !isAdding
+                        ? `${subject.barColor} text-white hover:scale-110 active:scale-90`
+                        : 'opacity-40 cursor-not-allowed'
+                    }`}
+                  >
+                    <Plus className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
             </div>
           )
         })}
       </div>
+
+      {!readOnly && (
+        <div className="mt-4">
+          {showAddSubject ? (
+            <div className={`flex items-center gap-2 rounded-xl px-3 py-2 ${isSpace ? 'bg-white/5' : 'bg-slate-50'}`}>
+              <Sparkles className={`w-4 h-4 ${theme.accent}`} />
+              <input
+                type="text"
+                value={newSubjectName}
+                onChange={(e) => setNewSubjectName(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter') addCustomSubject() }}
+                placeholder={t('addSubjectPlaceholder')}
+                className={`flex-1 bg-transparent text-sm font-semibold outline-none ${theme.textPrimary} placeholder:${theme.textMuted}`}
+                autoFocus
+              />
+              <button
+                onClick={addCustomSubject}
+                disabled={!newSubjectName.trim()}
+                className={`shrink-0 rounded-lg p-1.5 transition-all ${
+                  newSubjectName.trim()
+                    ? 'bg-violet-500 text-white hover:scale-110 active:scale-90'
+                    : 'opacity-40 cursor-not-allowed'
+                }`}
+              >
+                <Check className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => { setShowAddSubject(false); setNewSubjectName('') }}
+                className={`shrink-0 rounded-lg p-1.5 ${theme.textMuted} hover:opacity-70 transition-opacity`}
+              >
+                <Plus className="w-4 h-4 rotate-45" />
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setShowAddSubject(true)}
+              className={`w-full flex items-center justify-center gap-2 rounded-xl py-2 text-sm font-bold transition-all hover:opacity-80 ${theme.textMuted}`}
+            >
+              <Plus className="w-4 h-4" /> {t('addSubject')}
+            </button>
+          )}
+        </div>
+      )}
     </section>
   )
 }

@@ -8,6 +8,8 @@ import {
 } from 'lucide-react'
 import DictationButton from '../components/DictationButton'
 import SpeakButton from '../components/SpeakButton'
+import SubjectProgress from '../components/SubjectProgress'
+import { getTheme } from '../lib/themes'
 
 type Props = {
   parent: Profile
@@ -245,6 +247,24 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
                 </div>
               )}
             </div>
+
+            {children.length > 0 && children.map((c) => {
+              const childTasks = tasks.filter((tk) => tk.child_id === c.id)
+              const childTheme = getTheme(c.theme_preference)
+              return (
+                <div key={`progress_${c.id}`}>
+                  <h3 className="font-display font-bold text-slate-700 mb-3">{c.child_name || c.name} — {t('subjectProgress')}</h3>
+                  <SubjectProgress
+                    tasks={childTasks}
+                    theme={childTheme}
+                    isSpace={c.theme_preference === 'space'}
+                    childId={c.id}
+                    onTasksChange={fetchAll}
+                    readOnly
+                  />
+                </div>
+              )
+            })}
           </div>
         )}
 
