@@ -132,7 +132,7 @@ const en: Dict = {
   pointsLower: 'points',
   homeworkProgress: 'Homework Progress Settings',
   subjectProgress: 'Progress by Subject',
-  weeklySubjectGoals: 'Weekly goal: 5 lessons per subject',
+  weeklySubjectGoals: 'Weekly Goal: 3 tasks per subject',
   halfStarsEveryTen: '0.5 stars / 10%',
   oneStarPerTask: '1 star / task',
   addTaskPlaceholder: 'Add a task…',
