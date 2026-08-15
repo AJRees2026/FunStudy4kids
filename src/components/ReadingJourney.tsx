@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { BookOpen, Plus, Star, X, Trash2, Pencil, Award, BookMarked, Camera, Upload, ImageIcon } from 'lucide-react'
+import { BookOpen, Plus, Star, X, Trash2, Pencil, Award, BookMarked, Camera, Upload, Image as ImageIcon } from 'lucide-react'
 import { useI18n } from '../lib/i18n'
 import { supabase, type Book, type BookStatus } from '../lib/supabase'
 import type { Theme } from '../lib/themes'
@@ -9,6 +9,7 @@ type ReadingJourneyProps = {
   theme: Theme
   isSpace: boolean
   onStarsAwarded?: (count: number) => void
+  readOnly?: boolean
 }
 
 type Milestone = {
@@ -35,7 +36,7 @@ function todayStr(): string {
   return new Date().toISOString().slice(0, 10)
 }
 
-export default function ReadingJourney({ childId, theme, isSpace, onStarsAwarded }: ReadingJourneyProps) {
+export default function ReadingJourney({ childId, theme, isSpace, onStarsAwarded, readOnly = false }: ReadingJourneyProps) {
   const { t } = useI18n()
   const [books, setBooks] = useState<Book[]>([])
   const [showModal, setShowModal] = useState(false)
@@ -308,12 +309,14 @@ export default function ReadingJourney({ childId, theme, isSpace, onStarsAwarded
             </p>
           </div>
         </div>
-        <button
-          onClick={openAddModal}
-          className={`shrink-0 rounded-xl px-3 py-2 font-display font-bold text-sm text-white transition-all hover:scale-105 active:scale-95 bg-gradient-to-r ${theme.buttonGradient} flex items-center gap-1.5`}
-        >
-          <Plus className="w-4 h-4" /> {t('addBook')}
-        </button>
+        {!readOnly && (
+          <button
+            onClick={openAddModal}
+            className={`shrink-0 rounded-xl px-3 py-2 font-display font-bold text-sm text-white transition-all hover:scale-105 active:scale-95 bg-gradient-to-r ${theme.buttonGradient} flex items-center gap-1.5`}
+          >
+            <Plus className="w-4 h-4" /> {t('addBook')}
+          </button>
+        )}
       </div>
 
       {earnedMilestones.length > 0 && (
@@ -400,24 +403,26 @@ export default function ReadingJourney({ childId, theme, isSpace, onStarsAwarded
                   </p>
                 )}
 
-                <div className="flex gap-1 mt-2">
-                  <button
-                    onClick={() => openEditModal(book)}
-                    className={`flex-1 flex items-center justify-center gap-1 rounded-lg py-1.5 text-xs font-bold transition-all hover:opacity-80 ${
-                      isSpace ? 'bg-white/10 text-slate-300' : 'bg-slate-100 text-slate-600'
-                    }`}
-                  >
-                    <Pencil className="w-3 h-3" /> {t('editBook')}
-                  </button>
-                  <button
-                    onClick={() => deleteBook(book)}
-                    className={`flex items-center justify-center rounded-lg px-2.5 py-1.5 text-xs font-bold transition-all hover:opacity-80 ${
-                      isSpace ? 'bg-rose-500/20 text-rose-400' : 'bg-rose-50 text-rose-500'
-                    }`}
-                  >
-                    <Trash2 className="w-3 h-3" />
-                  </button>
-                </div>
+                {!readOnly && (
+                  <div className="flex gap-1 mt-2">
+                    <button
+                      onClick={() => openEditModal(book)}
+                      className={`flex-1 flex items-center justify-center gap-1 rounded-lg py-1.5 text-xs font-bold transition-all hover:opacity-80 ${
+                        isSpace ? 'bg-white/10 text-slate-300' : 'bg-slate-100 text-slate-600'
+                      }`}
+                    >
+                      <Pencil className="w-3 h-3" /> {t('editBook')}
+                    </button>
+                    <button
+                      onClick={() => deleteBook(book)}
+                      className={`flex items-center justify-center rounded-lg px-2.5 py-1.5 text-xs font-bold transition-all hover:opacity-80 ${
+                        isSpace ? 'bg-rose-500/20 text-rose-400' : 'bg-rose-50 text-rose-500'
+                      }`}
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
+                )}
               </div>
             )
           })}
@@ -701,6 +706,3 @@ function checkMilestoneStars(completedCount: number): number {
   if (completedCount > 5 && completedCount % 5 === 0) stars += 1
   return stars
 }
-
-
-export default ReadingJourney

@@ -9,6 +9,7 @@ import {
 import DictationButton from '../components/DictationButton'
 import SpeakButton from '../components/SpeakButton'
 import SubjectProgress from '../components/SubjectProgress'
+import ReadingJourney from '../components/ReadingJourney'
 import { getTheme } from '../lib/themes'
 
 type Props = {
@@ -260,6 +261,13 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
                     isSpace={c.theme_preference === 'space'}
                     childId={c.id}
                     onTasksChange={fetchAll}
+                    readOnly
+                  />
+                  <h3 className="font-display font-bold text-slate-700 mt-6 mb-3">{c.child_name || c.name} — {t('readingJourney')}</h3>
+                  <ReadingJourney
+                    childId={c.id}
+                    theme={childTheme}
+                    isSpace={c.theme_preference === 'space'}
                     readOnly
                   />
                 </div>
