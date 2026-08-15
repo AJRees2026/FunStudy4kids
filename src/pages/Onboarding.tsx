@@ -107,9 +107,7 @@ export default function Onboarding({ onLinked }: Props) {
         {step === 'language' && (
           <div className="text-center animate-fadeIn">
             <div className="mb-8">
-              <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-br from-indigo-500 to-teal-500 mb-4 shadow-lg shadow-indigo-500/30">
-                <Globe className="w-10 h-10 text-white" />
-              </div>
+              <img src="/logo.png" alt="BrainySpark" className="w-20 h-20 mx-auto mb-4 object-contain" />
               <h1 className="font-display font-extrabold text-3xl text-white mb-2"><BrandName /></h1>
               <p className="text-slate-400 font-semibold">{t('chooseLanguage')}</p>
             </div>
@@ -143,9 +141,7 @@ export default function Onboarding({ onLinked }: Props) {
         {step === 'role' && (
           <div className="text-center animate-fadeIn">
             <div className="mb-8">
-              <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-br from-indigo-500 to-teal-500 mb-4 shadow-lg shadow-indigo-500/30">
-                <Rocket className="w-10 h-10 text-white" />
-              </div>
+              <img src="/logo.png" alt="BrainySpark" className="w-20 h-20 mx-auto mb-4 object-contain" />
               <h1 className="font-display font-extrabold text-3xl text-white mb-2"><BrandName /></h1>
               <p className="text-slate-400 font-semibold">{t('areYouParentOrChild')}</p>
             </div>
