@@ -6,7 +6,7 @@
   - `id` (uuid, primary key)
   - `child_id` (uuid, references profiles.id, cascading delete)
   - `entry_date` (date, not null) — the calendar day this mood is for
-  - `mood` (text, not null) — one of: 'super_happy', 'good', 'okay', 'sad', 'frustrated'
+  - `mood` (text, not null) — one of: 'fantastic', 'good', 'okay', 'sad', 'frustrated'
   - `note` (text, nullable) — optional short journal note
   - `created_at` (timestamptz, default now())
   - `updated_at` (timestamptz, default now())
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS mood_entries (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   child_id uuid NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
   entry_date date NOT NULL,
-  mood text NOT NULL CHECK ( IN ('super_happy', 'good', 'okay', 'sad', 'frustrated')),
+  mood text NOT NULL CHECK ( IN ('fantastic', 'good', 'okay', 'sad', 'frustrated')),
   note text,
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now(),
