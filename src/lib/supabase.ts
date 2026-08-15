@@ -93,7 +93,7 @@ export type Book = {
   updated_at: string
 }
 
-export type MoodType = 'super_happy' | 'good' | 'okay' | 'sad' | 'frustrated'
+export type MoodType = 'fantastic' | 'good' | 'okay' | 'sad' | 'frustrated'
 
 export type MoodEntry = {
   id: string
