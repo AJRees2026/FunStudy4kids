@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react'
-import { BookOpen, Plus, Star, X, Trash2, Pencil, Award, BookMarked } from 'lucide-react'
+import { useState, useEffect, useCallback, useRef } from 'react'
+import { BookOpen, Plus, Star, X, Trash2, Pencil, Award, BookMarked, Camera, Upload, ImageIcon } from 'lucide-react'
 import { useI18n } from '../lib/i18n'
 import { supabase, type Book, type BookStatus } from '../lib/supabase'
 import type { Theme } from '../lib/themes'
@@ -53,6 +53,18 @@ export default function ReadingJourney({ childId, theme, isSpace, onStarsAwarded
     completion_date: '',
   })
 
+  const [coverUrl, setCoverUrl] = useState<string | null>(null)
+  const [coverMode, setCoverMode] = useState<'idle' | 'camera' | 'preview'>('idle')
+  const [coverPreview, setCoverPreview] = useState<string | null>(null)
+  const [coverBlob, setCoverBlob] = useState<Blob | null>(null)
+  const [cameraReady, setCameraReady] = useState(false)
+  const [cameraError, setCameraError] = useState(false)
+
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const streamRef = useRef<MediaStream | null>(null)
+
   const fetchBooks = useCallback(async () => {
     const { data } = await supabase
       .from('books')
@@ -63,6 +75,18 @@ export default function ReadingJourney({ childId, theme, isSpace, onStarsAwarded
   }, [childId])
 
   useEffect(() => { fetchBooks() }, [fetchBooks])
+
+  useEffect(() => {
+    return () => { stopCamera() }
+  }, [])
+
+  const stopCamera = useCallback(() => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((track) => track.stop())
+      streamRef.current = null
+    }
+    setCameraReady(false)
+  }, [])
 
   const showToast = (msg: string) => {
     setToast(msg)
@@ -75,6 +99,10 @@ export default function ReadingJourney({ childId, theme, isSpace, onStarsAwarded
       title: '', author: '', total_pages: '', current_page: '0',
       isbn: '', status: 'want_to_read', start_date: '', completion_date: '',
     })
+    setCoverUrl(null)
+    setCoverMode('idle')
+    setCoverPreview(null)
+    setCoverBlob(null)
     setShowModal(true)
   }
 
@@ -90,7 +118,88 @@ export default function ReadingJourney({ childId, theme, isSpace, onStarsAwarded
       start_date: book.start_date || '',
       completion_date: book.completion_date || '',
     })
+    setCoverUrl(book.cover_url || null)
+    setCoverMode('idle')
+    setCoverPreview(null)
+    setCoverBlob(null)
     setShowModal(true)
+  }
+
+  const startCamera = async () => {
+    setCameraError(false)
+    setCoverMode('camera')
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'environment', width: { ideal: 640 }, height: { ideal: 640 } },
+        audio: false,
+      })
+      streamRef.current = stream
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream
+        await videoRef.current.play()
+      }
+      setCameraReady(true)
+    } catch {
+      setCameraError(true)
+    }
+  }
+
+  const captureCover = () => {
+    const video = videoRef.current
+    const canvas = canvasRef.current
+    if (!video || !canvas) return
+
+    const vw = video.videoWidth
+    const vh = video.videoHeight
+    const size = Math.min(vw, vh)
+    const sx = (vw - size) / 2
+    const sy = (vh - size) / 2
+
+    canvas.width = 400
+    canvas.height = 400
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    ctx.drawImage(video, sx, sy, size, size, 0, 0, canvas.width, canvas.height)
+
+    canvas.toBlob((blob) => {
+      if (blob) {
+        setCoverBlob(blob)
+        setCoverPreview(URL.createObjectURL(blob))
+        setCoverMode('preview')
+      }
+    }, 'image/jpeg', 0.9)
+
+    stopCamera()
+  }
+
+  const handleCoverUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    if (!file.type.startsWith('image/')) return
+    setCoverBlob(file)
+    setCoverPreview(URL.createObjectURL(file))
+    setCoverMode('preview')
+  }
+
+  const removeCover = () => {
+    if (coverPreview) URL.revokeObjectURL(coverPreview)
+    setCoverBlob(null)
+    setCoverPreview(null)
+    setCoverUrl(null)
+    setCoverMode('idle')
+  }
+
+  const uploadCover = async (): Promise<string | null> => {
+    if (!coverBlob) return coverUrl
+    const fileName = `${childId}-${Date.now()}.jpg`
+    const filePath = `${childId}/${fileName}`
+    const { error: uploadError } = await supabase.storage
+      .from('book-covers')
+      .upload(filePath, coverBlob, { contentType: 'image/jpeg', upsert: false })
+    if (uploadError) return coverUrl
+    const { data: urlData } = supabase.storage.from('book-covers').getPublicUrl(filePath)
+    return urlData.publicUrl
   }
 
   const saveBook = async () => {
@@ -108,6 +217,8 @@ export default function ReadingJourney({ childId, theme, isSpace, onStarsAwarded
       if (!completionDate) completionDate = todayStr()
     }
 
+    const finalCoverUrl = await uploadCover()
+
     if (editingBook) {
       const wasCompleted = editingBook.status === 'completed'
       const nowCompleted = status === 'completed'
@@ -118,6 +229,7 @@ export default function ReadingJourney({ childId, theme, isSpace, onStarsAwarded
         total_pages: totalPages,
         current_page: currentPage,
         isbn: form.isbn.trim() || null,
+        cover_url: finalCoverUrl,
         status,
         start_date: startDate,
         completion_date: completionDate,
@@ -144,6 +256,7 @@ export default function ReadingJourney({ childId, theme, isSpace, onStarsAwarded
         total_pages: totalPages,
         current_page: currentPage,
         isbn: form.isbn.trim() || null,
+        cover_url: finalCoverUrl,
         status,
         start_date: startDate,
         completion_date: completionDate,
@@ -163,6 +276,8 @@ export default function ReadingJourney({ childId, theme, isSpace, onStarsAwarded
       }
     }
 
+    if (coverPreview) URL.revokeObjectURL(coverPreview)
+    stopCamera()
     setShowModal(false)
     fetchBooks()
   }
@@ -177,8 +292,12 @@ export default function ReadingJourney({ childId, theme, isSpace, onStarsAwarded
   const totalPagesRead = completedBooks.reduce((sum, b) => sum + b.total_pages, 0)
   const earnedMilestones = MILESTONES.filter((m) => completedBooks.length >= m.threshold)
 
+  const displayCover = coverMode === 'preview' && coverPreview ? coverPreview : coverUrl
+
   return (
     <section className={`rounded-3xl p-4 ${theme.cardBg} border ${theme.cardBorder}`}>
+      <canvas ref={canvasRef} className="hidden" />
+
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <BookMarked className={`w-5 h-5 ${theme.accent}`} />
@@ -242,7 +361,11 @@ export default function ReadingJourney({ childId, theme, isSpace, onStarsAwarded
                 <div className={`relative h-28 rounded-xl mb-2 flex items-center justify-center overflow-hidden ${
                   isSpace ? 'bg-gradient-to-br from-indigo-900/60 to-slate-800' : 'bg-gradient-to-br from-indigo-100 to-slate-100'
                 }`}>
-                  <BookOpen className={`w-8 h-8 ${isSpace ? 'text-indigo-400' : 'text-indigo-300'}`} />
+                  {book.cover_url ? (
+                    <img src={book.cover_url} alt={book.title} className="w-full h-full object-cover" />
+                  ) : (
+                    <BookOpen className={`w-8 h-8 ${isSpace ? 'text-indigo-400' : 'text-indigo-300'}`} />
+                  )}
                   <div className={`absolute top-1.5 right-1.5 flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold ${style.bg} ${style.text}`}>
                     <span className={`w-1.5 h-1.5 rounded-full ${style.dot}`} />
                     {t(style.labelKey)}
@@ -302,7 +425,7 @@ export default function ReadingJourney({ childId, theme, isSpace, onStarsAwarded
       )}
 
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4" onClick={() => setShowModal(false)}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4" onClick={() => { stopCamera(); setShowModal(false) }}>
           <div
             className={`rounded-3xl p-6 max-w-md w-full shadow-2xl animate-pop max-h-[90vh] overflow-y-auto ${
               isSpace ? 'bg-slate-800 border border-slate-700' : 'bg-white'
@@ -313,12 +436,125 @@ export default function ReadingJourney({ childId, theme, isSpace, onStarsAwarded
               <h2 className={`font-display font-extrabold text-lg ${theme.textPrimary}`}>
                 {editingBook ? t('editBook') : t('addBook')}
               </h2>
-              <button onClick={() => setShowModal(false)} className={`p-1.5 rounded-lg transition-colors ${theme.textMuted} hover:opacity-70`}>
+              <button onClick={() => { stopCamera(); setShowModal(false) }} className={`p-1.5 rounded-lg transition-colors ${theme.textMuted} hover:opacity-70`}>
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <div className="space-y-3">
+              {/* Cover Photo Section */}
+              <div>
+                <label className={`text-xs font-bold mb-1.5 block ${theme.textMuted}`}>{t('coverPhoto')}</label>
+
+                {coverMode === 'idle' && !displayCover && (
+                  <div className="flex gap-2">
+                    <button
+                      onClick={startCamera}
+                      className={`flex-1 flex items-center justify-center gap-1.5 rounded-xl py-2.5 text-xs font-bold transition-all hover:scale-[1.02] active:scale-95 bg-gradient-to-r ${theme.buttonGradient} text-white`}
+                    >
+                      <Camera className="w-4 h-4" /> {t('photographCover')}
+                    </button>
+                    <button
+                      onClick={() => fileInputRef.current?.click()}
+                      className={`flex-1 flex items-center justify-center gap-1.5 rounded-xl py-2.5 text-xs font-bold transition-all border-2 ${
+                        isSpace
+                          ? 'border-slate-600 text-slate-200 hover:border-indigo-400 hover:bg-indigo-500/10'
+                          : 'border-slate-300 text-slate-700 hover:border-indigo-400 hover:bg-indigo-50'
+                      }`}
+                    >
+                      <Upload className="w-4 h-4" /> {t('uploadCover')}
+                    </button>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={handleCoverUpload}
+                      className="hidden"
+                    />
+                  </div>
+                )}
+
+                {coverMode === 'camera' && (
+                  <div className="space-y-2">
+                    {cameraError ? (
+                      <div className={`rounded-2xl p-4 text-center ${isSpace ? 'bg-rose-500/10 border border-rose-500/30' : 'bg-rose-50 border border-rose-200'}`}>
+                        <p className={`text-xs font-semibold ${isSpace ? 'text-rose-300' : 'text-rose-600'}`}>{t('cameraUnavailable')}</p>
+                        <button
+                          onClick={() => fileInputRef.current?.click()}
+                          className={`mt-2 w-full font-display font-bold py-2 rounded-xl text-xs transition-all flex items-center justify-center gap-1.5 bg-gradient-to-r ${theme.buttonGradient} text-white`}
+                        >
+                          <Upload className="w-4 h-4" /> {t('uploadCover')}
+                        </button>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="relative rounded-2xl overflow-hidden aspect-square bg-black">
+                          <video ref={videoRef} playsInline muted className="w-full h-full object-cover" />
+                          {!cameraReady && (
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <div className="text-white/60 text-sm font-semibold animate-pulse">...</div>
+                            </div>
+                          )}
+                        </div>
+                        <button
+                          onClick={captureCover}
+                          disabled={!cameraReady}
+                          className={`w-full font-display font-bold py-2.5 rounded-xl text-sm transition-all flex items-center justify-center gap-1.5 bg-gradient-to-r ${theme.buttonGradient} text-white disabled:opacity-50`}
+                        >
+                          <Camera className="w-4 h-4" /> {t('photographCover')}
+                        </button>
+                      </>
+                    )}
+                    <button
+                      onClick={() => { stopCamera(); setCoverMode('idle') }}
+                      className={`w-full text-xs font-semibold py-1.5 rounded-lg ${theme.textMuted}`}
+                    >
+                      {t('cancel')}
+                    </button>
+                  </div>
+                )}
+
+                {(coverMode === 'preview' || (coverMode === 'idle' && displayCover)) && (
+                  <div className="space-y-2">
+                    <div className={`relative rounded-2xl overflow-hidden h-32 flex items-center justify-center ${
+                      isSpace ? 'bg-gradient-to-br from-indigo-900/60 to-slate-800' : 'bg-gradient-to-br from-indigo-100 to-slate-100'
+                    }`}>
+                      {displayCover ? (
+                        <img src={displayCover} alt={t('coverPhoto')} className="w-full h-full object-cover" />
+                      ) : (
+                        <ImageIcon className={`w-8 h-8 ${isSpace ? 'text-indigo-400' : 'text-indigo-300'}`} />
+                      )}
+                    </div>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={startCamera}
+                        className={`flex-1 flex items-center justify-center gap-1.5 rounded-xl py-2 text-xs font-bold transition-all hover:opacity-80 ${
+                          isSpace ? 'bg-white/10 text-slate-300' : 'bg-slate-100 text-slate-600'
+                        }`}
+                      >
+                        <Camera className="w-3.5 h-3.5" /> {t('photographCover')}
+                      </button>
+                      <button
+                        onClick={() => fileInputRef.current?.click()}
+                        className={`flex-1 flex items-center justify-center gap-1.5 rounded-xl py-2 text-xs font-bold transition-all hover:opacity-80 ${
+                          isSpace ? 'bg-white/10 text-slate-300' : 'bg-slate-100 text-slate-600'
+                        }`}
+                      >
+                        <Upload className="w-3.5 h-3.5" /> {t('uploadCover')}
+                      </button>
+                      <button
+                        onClick={removeCover}
+                        className={`flex items-center justify-center rounded-xl px-3 py-2 text-xs font-bold transition-all hover:opacity-80 ${
+                          isSpace ? 'bg-rose-500/20 text-rose-400' : 'bg-rose-50 text-rose-500'
+                        }`}
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+
               <div>
                 <label className={`text-xs font-bold mb-1 block ${theme.textMuted}`}>{t('bookTitle')} *</label>
                 <input
@@ -465,3 +701,6 @@ function checkMilestoneStars(completedCount: number): number {
   if (completedCount > 5 && completedCount % 5 === 0) stars += 1
   return stars
 }
+
+
+export default ReadingJourney

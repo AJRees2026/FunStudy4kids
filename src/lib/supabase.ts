@@ -85,6 +85,7 @@ export type Book = {
   total_pages: number
   current_page: number
   isbn: string | null
+  cover_url: string | null
   status: BookStatus
   start_date: string | null
   completion_date: string | null

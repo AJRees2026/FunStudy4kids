@@ -218,6 +218,11 @@ const en: Dict = {
   bookUpdated: 'Book updated!',
   bookDeleted: 'Book removed.',
   starsAwarded: 'stars awarded!',
+  photographCover: 'Photograph Cover',
+  uploadCover: 'Upload Cover',
+  coverPhoto: 'Cover Photo',
+  removeCover: 'Remove Cover',
+  cameraUnavailable: 'Camera not available. You can upload a photo instead.',
 }
 
 const es: Dict = {
@@ -409,6 +414,11 @@ const es: Dict = {
   bookUpdated: '¡Libro actualizado!',
   bookDeleted: 'Libro eliminado.',
   starsAwarded: '¡estrellas otorgadas!',
+  photographCover: 'Fotografiar Portada',
+  uploadCover: 'Subir Portada',
+  coverPhoto: 'Foto de Portada',
+  removeCover: 'Quitar Portada',
+  cameraUnavailable: 'Cámara no disponible. Puedes subir una foto.',
 }
 
 const fr: Dict = {
@@ -600,6 +610,11 @@ const fr: Dict = {
   bookUpdated: 'Livre mis à jour !',
   bookDeleted: 'Livre supprimé.',
   starsAwarded: 'étoiles attribuées !',
+  photographCover: 'Photographier la Couverture',
+  uploadCover: 'Télécharger la Couverture',
+  coverPhoto: 'Photo de Couverture',
+  removeCover: 'Supprimer la Couverture',
+  cameraUnavailable: 'Caméra non disponible. Vous pouvez télécharger une photo.',
 }
 
 const ja: Dict = {
@@ -791,6 +806,11 @@ const ja: Dict = {
   bookUpdated: '本が更新されました！',
   bookDeleted: '本が削除されました。',
   starsAwarded: 'スターを獲得しました！',
+  photographCover: '表紙を撮影',
+  uploadCover: '表紙をアップロード',
+  coverPhoto: '表紙の写真',
+  removeCover: '表紙を削除',
+  cameraUnavailable: 'カメラが利用できません。写真をアップロードできます。',
 }
 
 const zh: Dict = {
@@ -982,6 +1002,11 @@ const zh: Dict = {
   bookUpdated: '書籍已更新！',
   bookDeleted: '書籍已移除。',
   starsAwarded: '星星已授予！',
+  photographCover: '拍攝封面',
+  uploadCover: '上傳封面',
+  coverPhoto: '封面照片',
+  removeCover: '移除封面',
+  cameraUnavailable: '相機不可用。你可以改為上傳照片。',
 }
 
 const da: Dict = {
@@ -1173,6 +1198,11 @@ const da: Dict = {
   bookUpdated: 'Bog opdateret!',
   bookDeleted: 'Bog fjernet.',
   starsAwarded: 'stjerner tildelt!',
+  photographCover: 'Fotografér Forside',
+  uploadCover: 'Upload Forside',
+  coverPhoto: 'Forsidefoto',
+  removeCover: 'Fjern Forside',
+  cameraUnavailable: 'Kamera ikke tilgængeligt. Du kan uploade et billede i stedet.',
 }
 
 const de: Dict = {
@@ -1364,6 +1394,11 @@ const de: Dict = {
   bookUpdated: 'Buch aktualisiert!',
   bookDeleted: 'Buch entfernt.',
   starsAwarded: 'Sterne vergeben!',
+  photographCover: 'Cover Fotografieren',
+  uploadCover: 'Cover Hochladen',
+  coverPhoto: 'Coverfoto',
+  removeCover: 'Cover Entfernen',
+  cameraUnavailable: 'Kamera nicht verfügbar. Du kannst ein Foto hochladen.',
 }
 
 const translations: Record<LangCode, Dict> = {
