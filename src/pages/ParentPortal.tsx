@@ -4,12 +4,13 @@ import { useI18n, LANGUAGES, type LangCode } from '../lib/i18n'
 import {
   Shield, LogOut, Plus, Check, X, Clock, TrendingUp, BookOpen, Award,
   UserCog, Rocket, Sparkles, Lock, KeyRound, Copy, Bell, Globe,
-  BarChart3, CalendarClock, Trash2, Palette, Gift,
+  BarChart3, CalendarClock, Trash2, Palette, Gift, Smile,
 } from 'lucide-react'
 import DictationButton from '../components/DictationButton'
 import SpeakButton from '../components/SpeakButton'
 import SubjectProgress from '../components/SubjectProgress'
 import ReadingJourney from '../components/ReadingJourney'
+import ParentMoodView from '../components/ParentMoodView'
 import { getTheme } from '../lib/themes'
 
 type Props = {
@@ -17,7 +18,7 @@ type Props = {
   onSwitchProfile: () => void
 }
 
-type Tab = 'overview' | 'tasks' | 'rewards' | 'profiles' | 'approvals'
+type Tab = 'overview' | 'tasks' | 'rewards' | 'profiles' | 'approvals' | 'mood'
 
 export default function ParentPortal({ parent, onSwitchProfile }: Props) {
   const { lang, setLang, t } = useI18n()
@@ -116,6 +117,7 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
     { id: 'tasks', label: t('tasks'), icon: BookOpen },
     { id: 'rewards', label: t('rewards'), icon: Award },
     { id: 'approvals', label: t('approvalRequests'), icon: Bell, badge: approvalRequests.length },
+    { id: 'mood', label: t('moodTracker'), icon: Smile },
     { id: 'profiles', label: t('profiles'), icon: UserCog },
   ]
 
@@ -440,6 +442,30 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
                   )
                 })}
               </div>
+            )}
+          </div>
+        )}
+
+        {/* Mood Tab */}
+        {tab === 'mood' && (
+          <div className="space-y-6 animate-fadeIn">
+            {children.length === 0 ? (
+              <div className="bg-white rounded-2xl p-6 text-center border border-slate-100">
+                <p className="text-slate-400 font-semibold">{t('noChildrenLinkedShort')}</p>
+              </div>
+            ) : (
+              children.map((c) => {
+                const childTheme = getTheme(c.theme_preference)
+                return (
+                  <ParentMoodView
+                    key={`mood_${c.id}`}
+                    childId={c.id}
+                    childName={c.child_name || c.name}
+                    theme={childTheme}
+                    isSpace={c.theme_preference === 'space'}
+                  />
+                )
+              })
             )}
           </div>
         )}

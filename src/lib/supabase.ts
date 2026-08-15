@@ -93,6 +93,18 @@ export type Book = {
   updated_at: string
 }
 
+export type MoodType = 'super_happy' | 'good' | 'okay' | 'sad' | 'frustrated'
+
+export type MoodEntry = {
+  id: string
+  child_id: string
+  entry_date: string
+  mood: MoodType
+  note: string | null
+  created_at: string
+  updated_at: string
+}
+
 export type ApprovalRequest = {
   id: string
   child_id: string
