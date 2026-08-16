@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
-import { PenLine, Plus, X, Trash2, Pencil, Award, BookOpen, Check, Clock, Calendar, Lock, Clock as Unlock, ShieldCheck } from 'lucide-react'
+import { PenLine, Plus, X, Trash2, Pencil, Award, BookOpen, Check, Clock, Calendar, Lock, Clock as Unlock } from 'lucide-react'
 import { useI18n } from '../lib/i18n'
-import { supabase, type BookReflection, type ReflectionStatus, type EditRequestStatus, type WritingRank, WRITING_MILESTONES } from '../lib/supabase'
+import { supabase, type BookReflection, type ReflectionStatus, type WritingRank, WRITING_MILESTONES } from '../lib/supabase'
 import type { Theme } from '../lib/themes'
 
 const GENRES = [
@@ -140,34 +140,6 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
     }).eq('id', reflection.id)
     fetchReflections()
     showToast(t('reflectionApproved'))
-  }
-
-  const requestEditAccess = async (reflection: BookReflection) => {
-    await supabase.from('book_reflections').update({
-      edit_request_status: 'pending' as EditRequestStatus,
-      updated_at: new Date().toISOString(),
-    }).eq('id', reflection.id)
-    fetchReflections()
-    showToast(t('editRequestSent'))
-  }
-
-  const approveEditRequest = async (reflection: BookReflection) => {
-    await supabase.from('book_reflections').update({
-      allow_guardian_edit: true,
-      edit_request_status: 'approved' as EditRequestStatus,
-      updated_at: new Date().toISOString(),
-    }).eq('id', reflection.id)
-    fetchReflections()
-    showToast(t('editRequestApprovedKid'))
-  }
-
-  const denyEditRequest = async (reflection: BookReflection) => {
-    await supabase.from('book_reflections').update({
-      edit_request_status: 'denied' as EditRequestStatus,
-      updated_at: new Date().toISOString(),
-    }).eq('id', reflection.id)
-    fetchReflections()
-    showToast(t('editRequestDeniedKid'))
   }
 
   const toggleGuardianEdit = async (reflection: BookReflection) => {
@@ -344,7 +316,6 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
             const reflectionChars = reflection.character ? reflection.character.split(',').map(c => c.trim()).filter(Boolean) : []
             const reflectionDayCount = calcDayCount(reflection.start_date || '', reflection.end_date || '')
             const canGuardianEdit = readOnly && reflection.allow_guardian_edit
-            const hasPendingRequest = !readOnly && reflection.edit_request_status === 'pending'
             return (
               <div
                 key={reflection.id}
@@ -390,32 +361,6 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
                   </div>
                 </div>
 
-                {/* Guardian edit request banner (kid view) */}
-                {hasPendingRequest && (
-                  <div className={`rounded-xl p-2.5 mb-2 flex items-center gap-2 ${
-                    isSpace ? 'bg-violet-900/40 border border-violet-700/50' : 'bg-violet-50 border border-violet-200'
-                  }`}>
-                    <ShieldCheck className={`w-4 h-4 shrink-0 ${isSpace ? 'text-violet-300' : 'text-violet-500'}`} />
-                    <p className={`text-xs font-bold flex-1 ${isSpace ? 'text-violet-200' : 'text-violet-700'}`}>
-                      {t('guardianEditRequest')}
-                    </p>
-                    <button
-                      onClick={() => approveEditRequest(reflection)}
-                      className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-bold bg-gradient-to-r from-emerald-400 to-teal-500 text-white transition-all hover:opacity-80"
-                    >
-                      <Check className="w-3 h-3" /> {t('approveEditRequest')}
-                    </button>
-                    <button
-                      onClick={() => denyEditRequest(reflection)}
-                      className={`flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-bold transition-all hover:opacity-80 ${
-                        isSpace ? 'bg-slate-700 text-slate-300' : 'bg-slate-100 text-slate-600'
-                      }`}
-                    >
-                      <Lock className="w-3 h-3" /> {t('denyEditRequest')}
-                    </button>
-                  </div>
-                )}
-
                 <div className="flex flex-wrap gap-2 mb-2">
                   {reflectionChars.map((char, idx) => (
                     <span key={idx} className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isSpace ? 'bg-indigo-900/60 text-indigo-300' : 'bg-indigo-100 text-indigo-600'}`}>
@@ -457,21 +402,11 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
                       <Check className="w-3 h-3" /> {t('approveReflection')}
                     </button>
                   )}
-                  {readOnly && !canGuardianEdit && reflection.edit_request_status !== 'pending' && (
-                    <button
-                      onClick={() => requestEditAccess(reflection)}
-                      className={`flex-1 flex items-center justify-center gap-1 rounded-lg py-1.5 text-xs font-bold transition-all hover:opacity-80 ${
-                        isSpace ? 'bg-violet-500/20 text-violet-300' : 'bg-violet-50 text-violet-600'
-                      }`}
-                    >
-                      <Lock className="w-3 h-3" /> {t('requestEditAccess')}
-                    </button>
-                  )}
-                  {readOnly && reflection.edit_request_status === 'pending' && (
+                  {readOnly && !canGuardianEdit && (
                     <div className={`flex-1 flex items-center justify-center gap-1 rounded-lg py-1.5 text-xs font-bold ${
-                      isSpace ? 'bg-amber-500/20 text-amber-300' : 'bg-amber-50 text-amber-600'
+                      isSpace ? 'bg-slate-700/50 text-slate-400' : 'bg-slate-50 text-slate-400'
                     }`}>
-                      <Clock className="w-3 h-3" /> {t('editRequestPending')}
+                      <Lock className="w-3 h-3" /> {t('guardianEditLocked')}
                     </div>
                   )}
                   {readOnly && canGuardianEdit && (
