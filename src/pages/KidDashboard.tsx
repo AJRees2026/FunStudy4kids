@@ -10,10 +10,11 @@ import Confetti from '../components/Confetti'
 import SubjectProgress from '../components/SubjectProgress'
 import ReadingJourney from '../components/ReadingJourney'
 import MoodTracker from '../components/MoodTracker'
+import HeightBoard from '../components/HeightBoard'
 import {
   Star, Flame, Award, LogOut, Play, Check, Lock, ShoppingBag,
   ClipboardList, X, Bell, Clock, BarChart3, Gift, Sparkles,
-  ArrowLeft, BookMarked, ChevronRight, Smile,
+  ArrowLeft, BookMarked, ChevronRight, Smile, Ruler,
 } from 'lucide-react'
 
 type Props = {
@@ -39,7 +40,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
   const cutoffCheckRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const [rewardPreview, setRewardPreview] = useState<Reward | null>(null)
   const [rewardCelebration, setRewardCelebration] = useState(false)
-  const [view, setView] = useState<'home' | 'subjects' | 'reading' | 'tasks' | 'rewards' | 'mood'>('home')
+  const [view, setView] = useState<'home' | 'subjects' | 'reading' | 'tasks' | 'rewards' | 'mood' | 'growth'>('home')
 
   const isSpace = currentChild.theme_preference === 'space'
   const theme: Theme = getTheme(currentChild.theme_preference)
@@ -401,6 +402,20 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
               </button>
 
               <button
+                onClick={() => setView('growth')}
+                className={`group rounded-3xl p-5 ${theme.cardBg} border ${theme.cardBorder} text-left transition-all hover:scale-[1.03] active:scale-95`}
+              >
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
+                  <Ruler className="w-6 h-6 text-white" />
+                </div>
+                <h3 className={`font-display font-extrabold text-lg ${theme.textPrimary} mb-1`}>{t('howMuchIVeGrown')}</h3>
+                <p className={`text-xs font-semibold ${theme.textMuted} leading-snug`}>{t('growthDesc')}</p>
+                <div className={`flex items-center gap-1 mt-3 text-xs font-bold ${theme.accent}`}>
+                  {t('heightBoard')} <ChevronRight className="w-3 h-3" />
+                </div>
+              </button>
+
+              <button
                 onClick={() => setView('rewards')}
                 className={`group rounded-3xl p-5 ${theme.cardBg} border ${theme.cardBorder} text-left transition-all hover:scale-[1.03] active:scale-95 relative`}
               >
@@ -436,6 +451,20 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
         {view === 'mood' && (
           <div className="animate-fadeIn">
             <MoodTracker childId={currentChild.id} theme={theme} isSpace={isSpace} />
+          </div>
+        )}
+
+        {/* Growth / Height Board View */}
+        {view === 'growth' && (
+          <div className="animate-fadeIn -mx-4 -my-6">
+            <HeightBoard
+              childId={currentChild.id}
+              childName={currentChild.child_name || currentChild.name}
+              photoUrl={currentChild.photo_url}
+              isSpace={isSpace}
+              theme={theme}
+              onBack={() => setView('home')}
+            />
           </div>
         )}
 

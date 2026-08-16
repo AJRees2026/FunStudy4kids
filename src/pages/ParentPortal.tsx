@@ -4,13 +4,14 @@ import { useI18n, LANGUAGES, type LangCode } from '../lib/i18n'
 import {
   Shield, LogOut, Plus, Check, X, Clock, TrendingUp, BookOpen, Award,
   UserCog, Rocket, Sparkles, Lock, KeyRound, Copy, Bell, Globe,
-  BarChart3, CalendarClock, Trash2, Palette, Gift, Smile,
+  BarChart3, CalendarClock, Trash2, Palette, Gift, Smile, Ruler,
 } from 'lucide-react'
 import DictationButton from '../components/DictationButton'
 import SpeakButton from '../components/SpeakButton'
 import SubjectProgress from '../components/SubjectProgress'
 import ReadingJourney from '../components/ReadingJourney'
 import ParentMoodView from '../components/ParentMoodView'
+import GrowthTracking from '../components/GrowthTracking'
 import { getTheme } from '../lib/themes'
 
 type Props = {
@@ -18,7 +19,7 @@ type Props = {
   onSwitchProfile: () => void
 }
 
-type Tab = 'overview' | 'tasks' | 'rewards' | 'profiles' | 'approvals' | 'mood'
+type Tab = 'overview' | 'tasks' | 'rewards' | 'profiles' | 'approvals' | 'mood' | 'growth'
 
 export default function ParentPortal({ parent, onSwitchProfile }: Props) {
   const { lang, setLang, t } = useI18n()
@@ -118,6 +119,7 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
     { id: 'rewards', label: t('rewards'), icon: Award },
     { id: 'approvals', label: t('approvalRequests'), icon: Bell, badge: approvalRequests.length },
     { id: 'mood', label: t('moodTracker'), icon: Smile },
+    { id: 'growth', label: t('growth'), icon: Ruler },
     { id: 'profiles', label: t('profiles'), icon: UserCog },
   ]
 
@@ -466,6 +468,19 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
                   />
                 )
               })
+            )}
+          </div>
+        )}
+
+        {/* Growth Tab */}
+        {tab === 'growth' && (
+          <div className="space-y-6 animate-fadeIn">
+            {children.length === 0 ? (
+              <div className="bg-white rounded-2xl p-6 text-center border border-slate-100">
+                <p className="text-slate-400 font-semibold">{t('noChildrenLinkedShort')}</p>
+              </div>
+            ) : (
+              <GrowthTracking children={children} />
             )}
           </div>
         )}

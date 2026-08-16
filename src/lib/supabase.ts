@@ -106,6 +106,16 @@ export type MoodEntry = {
   updated_at: string
 }
 
+export type GrowthEntry = {
+  id: string
+  child_id: string
+  recorded_at: string
+  height_cm: number | null
+  weight_kg: number | null
+  notes: string | null
+  created_at: string
+}
+
 export type ApprovalRequest = {
   id: string
   child_id: string
