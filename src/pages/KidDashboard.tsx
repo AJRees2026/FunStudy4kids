@@ -403,13 +403,13 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                 onClick={() => setView('tasks')}
                 className={`group rounded-3xl p-5 ${theme.cardBg} border ${theme.cardBorder} text-left transition-all hover:scale-[1.03] active:scale-95 relative`}
               >
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-blue-500 flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
-                  <ClipboardList className="w-6 h-6 text-white" />
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-yellow-400 to-amber-500 flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
+                  <Star className="w-6 h-6 text-white fill-white" />
                 </div>
-                <h3 className={`font-display font-extrabold text-lg ${theme.textPrimary} mb-1`}>{t('tasks')}</h3>
+                <h3 className={`font-display font-extrabold text-lg ${theme.textPrimary} mb-1`}>{t('sparkJobs')}</h3>
                 <p className={`text-xs font-semibold ${theme.textMuted} leading-snug`}>{t('tasksDesc')}</p>
                 <div className={`flex items-center gap-1 mt-3 text-xs font-bold ${theme.accent}`}>
-                  {t('tasks')} <ChevronRight className="w-3 h-3" />
+                  {t('sparkJobs')} <ChevronRight className="w-3 h-3" />
                 </div>
                 {pendingTasks.length > 0 && (
                   <span className="absolute top-3 right-3 bg-rose-500 text-white text-xs font-bold rounded-full px-2 py-0.5 min-w-[20px] text-center shadow-md">
