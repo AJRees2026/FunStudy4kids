@@ -6,13 +6,6 @@ export default {
       fontFamily: {
         display: ['Fredoka', 'Inter', 'sans-serif'],
       },
-    },
-  },
-  plugins: [],
-}
-module.exports = {
-  theme: {
-    extend: {
       colors: {
         boy: {
           primary: '#1034A6',
@@ -21,4 +14,5 @@ module.exports = {
       },
     },
   },
+  plugins: [],
 }
