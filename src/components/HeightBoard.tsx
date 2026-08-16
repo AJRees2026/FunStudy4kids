@@ -14,11 +14,11 @@ type Props = {
 }
 
 const MILESTONES = [
-  { height: 40, emoji: '🐧', key: 'tallerThanPenguin' },
-  { height: 60, emoji: '🐕', key: 'tallerThanDog' },
-  { height: 70, emoji: '🐈', key: 'tallerThanCat' },
-  { height: 95, emoji: '🚲', key: 'asTallAsBicycle' },
-  { height: 100, emoji: '🎸', key: 'asTallAsGuitar' },
+  { height: 70, emoji: '🐨', key: 'asTallAsKoala', infoKey: 'koalaInfo' },
+  { height: 90, emoji: '🐕‍🦺', key: 'asTallAsGermanShepherd', infoKey: 'germanShepherdInfo' },
+  { height: 120, emoji: '🐧', key: 'asTallAsEmperorPenguin', infoKey: 'emperorPenguinInfo' },
+  { height: 155, emoji: '🦘', key: 'asTallAsKangaroo', infoKey: 'kangarooInfo' },
+  { height: 200, emoji: '🐻', key: 'asTallAsBrownBear', infoKey: 'brownBearInfo' },
 ]
 
 export default function HeightBoard({ childId, childName, photoUrl, isSpace, theme, onBack }: Props) {
@@ -124,7 +124,7 @@ export default function HeightBoard({ childId, childName, photoUrl, isSpace, the
 
   // Ruler dimensions
   const rulerHeight = 280
-  const rulerMaxCm = 160
+  const rulerMaxCm = 210
   const rulerMinCm = 30
   const pxPerCm = rulerHeight / (rulerMaxCm - rulerMinCm)
   const childMarkerY = rulerHeight - (heightCm - rulerMinCm) * pxPerCm
@@ -274,25 +274,40 @@ export default function HeightBoard({ childId, childName, photoUrl, isSpace, the
           {/* Milestone comparisons */}
           <div className="space-y-2">
             {achievedMilestones.length > 0 && (
-              <p className={`text-sm font-bold ${theme.textSecondary} mb-2`}>
+              <p className={'text-sm font-bold ' + theme.textSecondary + ' mb-2'}>
                 {isSpace ? '🌟' : '✨'} {t('howMuchIVeGrown')}
               </p>
             )}
-            {achievedMilestones.map((m, i) => (
-              <div key={m.key} className={`flex items-center gap-3 p-3 rounded-2xl ${isSpace ? 'bg-indigo-500/20' : 'bg-fuchsia-500/20'} animate-fadeIn`} style={{ animationDelay: `${i * 100}ms` }}>
-                <span className="text-2xl">{m.emoji}</span>
-                <p className={`font-display font-bold ${theme.textPrimary}`}>{t(m.key)}</p>
-                <Check className={`w-4 h-4 ml-auto ${theme.accent}`} />
-              </div>
-            ))}
-            {nextMilestone && (
-              <div className={`flex items-center gap-3 p-3 rounded-2xl border-2 border-dashed ${isSpace ? 'border-indigo-400/40' : 'border-fuchsia-400/40'} opacity-60`}>
-                <span className="text-2xl grayscale">{nextMilestone.emoji}</span>
-                <p className={`font-display font-bold ${theme.textSecondary}`}>
-                  {t(nextMilestone.key)} ({(nextMilestone.height - heightCm).toFixed(0)} cm)
-                </p>
-              </div>
-            )}
+            {MILESTONES.map((m, i) => {
+              const achieved = heightCm >= m.height
+              const isNext = !achieved && nextMilestone?.key === m.key
+              const nextBorder = isSpace ? 'border-indigo-400/40' : 'border-fuchsia-400/40'
+              const itemClass = achieved
+                ? 'bg-yellow-300/90 border-2 border-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.7)]'
+                : isNext
+                  ? 'border-2 border-dashed ' + nextBorder + ' opacity-60'
+                  : 'opacity-40'
+              return (
+                <div
+                  key={m.key}
+                  className={'flex items-center gap-3 p-3 rounded-2xl transition-all animate-fadeIn ' + itemClass}
+                  style={{ animationDelay: String(i * 80) + 'ms' }}
+                >
+                  <span className={'text-2xl ' + (!achieved && !isNext ? 'grayscale' : '')}>{m.emoji}</span>
+                  <div className="flex-1">
+                    <p className={'font-display font-bold ' + (achieved ? 'text-slate-800' : theme.textPrimary)}>{t(m.key)}</p>
+                    <p className={'text-xs ' + (achieved ? 'text-slate-600' : theme.textSecondary) + ' mt-0.5'}>{t(m.infoKey)}</p>
+                  </div>
+                  {achieved ? (
+                    <Check className="w-5 h-5 ml-auto text-slate-800" />
+                  ) : isNext ? (
+                    <span className={'text-xs font-bold ' + theme.textSecondary + ' ml-auto'}>
+                      {m.height - heightCm} cm
+                    </span>
+                  ) : null}
+                </div>
+              )
+            })}
           </div>
         </div>
 
