@@ -10,3 +10,15 @@ export default {
   },
   plugins: [],
 }
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        boy: {
+          primary: '#1034A6',
+          secondary: '#F97316',
+        },
+      },
+    },
+  },
+}
