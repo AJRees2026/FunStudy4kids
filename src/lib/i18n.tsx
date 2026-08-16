@@ -352,6 +352,12 @@ const en: Dict = {
   genreMystery: 'Mystery',
   genreSciFi: 'Science Fiction',
   genrePoetry: 'Poetry',
+  addCharacter: 'Add Character',
+  removeCharacter: 'Remove',
+  characters: 'Characters',
+  dayCount: 'Days',
+  dayCountTracker: 'Day Count',
+  setDatesToCount: 'Set start and end dates to count days',
 }
 
 const es: Dict = {
@@ -675,6 +681,12 @@ const es: Dict = {
   genreMystery: 'Misterio',
   genreSciFi: 'Ciencia Ficción',
   genrePoetry: 'Poesía',
+  addCharacter: 'Añadir Personaje',
+  removeCharacter: 'Quitar',
+  characters: 'Personajes',
+  dayCount: 'Días',
+  dayCountTracker: 'Contador de Días',
+  setDatesToCount: 'Establece fechas de inicio y fin para contar días',
 }
 
 const fr: Dict = {
@@ -998,6 +1010,12 @@ const fr: Dict = {
   genreMystery: 'Mystère',
   genreSciFi: 'Science-Fiction',
   genrePoetry: 'Poésie',
+  addCharacter: 'Ajouter un Personnage',
+  removeCharacter: 'Retirer',
+  characters: 'Personnages',
+  dayCount: 'Jours',
+  dayCountTracker: 'Compteur de Jours',
+  setDatesToCount: 'Définissez les dates de début et de fin pour compter les jours',
 }
 
 const ja: Dict = {
@@ -1321,6 +1339,12 @@ const ja: Dict = {
   genreMystery: 'ミステリー',
   genreSciFi: 'サイエンスフィクション',
   genrePoetry: '詩',
+  addCharacter: 'キャラクターを追加',
+  removeCharacter: '削除',
+  characters: 'キャラクター',
+  dayCount: '日',
+  dayCountTracker: '日数カウンター',
+  setDatesToCount: '開始日と終了日を設定して日数を数える',
 }
 
 const zh: Dict = {
@@ -1644,6 +1668,12 @@ const zh: Dict = {
   genreMystery: '懸疑',
   genreSciFi: '科幻',
   genrePoetry: '詩歌',
+  addCharacter: '添加角色',
+  removeCharacter: '移除',
+  characters: '角色',
+  dayCount: '天',
+  dayCountTracker: '天數計數器',
+  setDatesToCount: '設定開始和結束日期來計算天數',
 }
 
 const da: Dict = {
@@ -1967,6 +1997,12 @@ const da: Dict = {
   genreMystery: 'Mysterium',
   genreSciFi: 'Science Fiction',
   genrePoetry: 'Poesi',
+  addCharacter: 'Tilføj Karakter',
+  removeCharacter: 'Fjern',
+  characters: 'Karakterer',
+  dayCount: 'Dage',
+  dayCountTracker: 'Dagtæller',
+  setDatesToCount: 'Indstil start- og slutdato for at tælle dage',
 }
 
 const de: Dict = {
@@ -2290,6 +2326,12 @@ const de: Dict = {
   genreMystery: 'Mysterie',
   genreSciFi: 'Science Fiction',
   genrePoetry: 'Poesie',
+  addCharacter: 'Charakter Hinzufügen',
+  removeCharacter: 'Entfernen',
+  characters: 'Charaktere',
+  dayCount: 'Tage',
+  dayCountTracker: 'Tagezähler',
+  setDatesToCount: 'Lege Start- und Enddatum fest, um Tage zu zählen',
 }
 
 const ko: Dict = {
@@ -2622,6 +2664,12 @@ const ko: Dict = {
   genreMystery: '미스터리',
   genreSciFi: '과학 소설',
   genrePoetry: '시',
+  addCharacter: '캐릭터 추가',
+  removeCharacter: '제거',
+  characters: '캐릭터',
+  dayCount: '일',
+  dayCountTracker: '일수 카운터',
+  setDatesToCount: '시작일과 종료일을 설정하여 일수를 세세요',
 }
 
 const translations: Record<LangCode, Dict> = {

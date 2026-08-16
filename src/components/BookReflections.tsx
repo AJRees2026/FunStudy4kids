@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { PenLine, Plus, X, Trash2, Pencil, Award, BookOpen, Check, Clock } from 'lucide-react'
+import { PenLine, Plus, X, Trash2, Pencil, Award, BookOpen, Check, Clock, Calendar } from 'lucide-react'
 import { useI18n } from '../lib/i18n'
 import { supabase, type BookReflection, type ReflectionStatus, type WritingRank, WRITING_MILESTONES } from '../lib/supabase'
 import type { Theme } from '../lib/themes'
@@ -41,6 +41,14 @@ function getNextMilestone(totalWords: number): { threshold: number; rank: Writin
   return null
 }
 
+function calcDayCount(startDate: string, endDate: string): number | null {
+  if (!startDate || !endDate) return null
+  const start = new Date(startDate)
+  const end = new Date(endDate)
+  const diff = Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24))
+  return diff >= 0 ? diff + 1 : null
+}
+
 type BookReflectionsProps = {
   childId: string
   theme: Theme
@@ -61,12 +69,13 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
 
   const [form, setForm] = useState({
     book_title: '',
-    character: '',
+    characters: [] as string[],
     genre: '',
     start_date: '',
     end_date: '',
     reflection_text: '',
   })
+  const [newCharacter, setNewCharacter] = useState('')
 
   const fetchReflections = useCallback(async () => {
     const { data } = await supabase
@@ -91,7 +100,8 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
 
   const openAddModal = () => {
     setEditingReflection(null)
-    setForm({ book_title: '', character: '', genre: '', start_date: '', end_date: '', reflection_text: '' })
+    setForm({ book_title: '', characters: [], genre: '', start_date: '', end_date: '', reflection_text: '' })
+    setNewCharacter('')
     setShowModal(true)
   }
 
@@ -99,13 +109,26 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
     setEditingReflection(reflection)
     setForm({
       book_title: reflection.book_title,
-      character: reflection.character || '',
+      characters: reflection.character ? reflection.character.split(',').map(c => c.trim()).filter(Boolean) : [],
       genre: reflection.genre || '',
       start_date: reflection.start_date || '',
       end_date: reflection.end_date || '',
       reflection_text: reflection.reflection_text,
     })
+    setNewCharacter('')
     setShowModal(true)
+  }
+
+  const addCharacter = () => {
+    const name = newCharacter.trim()
+    if (name && !form.characters.includes(name)) {
+      setForm({ ...form, characters: [...form.characters, name] })
+    }
+    setNewCharacter('')
+  }
+
+  const removeCharacter = (name: string) => {
+    setForm({ ...form, characters: form.characters.filter(c => c !== name) })
   }
 
   const approveReflection = async (reflection: BookReflection) => {
@@ -122,6 +145,7 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
 
     const wordCount = countWords(form.reflection_text)
     const prevTotal = totalWords
+    const charactersStr = form.characters.join(', ')
 
     if (editingReflection) {
       const prevReflectionWords = editingReflection.word_count
@@ -129,7 +153,7 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
 
       await supabase.from('book_reflections').update({
         book_title: form.book_title.trim(),
-        character: form.character.trim() || null,
+        character: charactersStr || null,
         genre: form.genre || null,
         start_date: form.start_date || null,
         end_date: form.end_date || null,
@@ -157,17 +181,17 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
     } else {
       const newTotalAfterSave = prevTotal + wordCount
 
-      const { data } = await supabase.from('book_reflections').insert({
+      await supabase.from('book_reflections').insert({
         child_id: childId,
         book_title: form.book_title.trim(),
-        character: form.character.trim() || null,
+        character: charactersStr || null,
         genre: form.genre || null,
         start_date: form.start_date || null,
         end_date: form.end_date || null,
         reflection_text: form.reflection_text.trim(),
         word_count: wordCount,
         status: 'draft' as ReflectionStatus,
-      }).select()
+      })
 
       const prevRank = getRankForWordCount(prevTotal)
       const newRank = getRankForWordCount(newTotalAfterSave)
@@ -204,6 +228,7 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
 
   const liveWordCount = countWords(form.reflection_text)
   const nextMilestone = getNextMilestone(totalWords)
+  const liveDayCount = calcDayCount(form.start_date, form.end_date)
 
   return (
     <section className={`rounded-3xl p-4 ${theme.cardBg} border ${theme.cardBorder}`}>
@@ -274,6 +299,8 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
               ? { bg: 'bg-emerald-100', text: 'text-emerald-600', icon: Check, labelKey: 'reflectionApproved' }
               : { bg: 'bg-amber-100', text: 'text-amber-600', icon: Clock, labelKey: 'reflectionPendingApproval' }
             const StatusIcon = statusStyle.icon
+            const reflectionChars = reflection.character ? reflection.character.split(',').map(c => c.trim()).filter(Boolean) : []
+            const reflectionDayCount = calcDayCount(reflection.start_date || '', reflection.end_date || '')
             return (
               <div
                 key={reflection.id}
@@ -293,11 +320,11 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
                 </div>
 
                 <div className="flex flex-wrap gap-2 mb-2">
-                  {reflection.character && (
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isSpace ? 'bg-indigo-900/60 text-indigo-300' : 'bg-indigo-100 text-indigo-600'}`}>
-                      {reflection.character}
+                  {reflectionChars.map((char, idx) => (
+                    <span key={idx} className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isSpace ? 'bg-indigo-900/60 text-indigo-300' : 'bg-indigo-100 text-indigo-600'}`}>
+                      {char}
                     </span>
-                  )}
+                  ))}
                   {reflection.genre && (
                     <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isSpace ? 'bg-rose-900/60 text-rose-300' : 'bg-rose-100 text-rose-600'}`}>
                       {GENRES.find(g => g.key === reflection.genre) ? t(GENRES.find(g => g.key === reflection.genre)!.labelKey) : reflection.genre}
@@ -306,6 +333,12 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
                   <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isSpace ? 'bg-slate-700 text-slate-300' : 'bg-slate-100 text-slate-600'}`}>
                     {reflection.word_count} {t('wordCount')}
                   </span>
+                  {reflectionDayCount !== null && (
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isSpace ? 'bg-teal-900/60 text-teal-300' : 'bg-teal-100 text-teal-600'}`}>
+                      <Calendar className="w-2.5 h-2.5 inline mr-0.5" />
+                      {reflectionDayCount} {t('dayCount')}
+                    </span>
+                  )}
                 </div>
 
                 <p className={`text-xs ${theme.textSecondary} line-clamp-3 whitespace-pre-wrap`}>{reflection.reflection_text}</p>
@@ -385,16 +418,52 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
                 />
               </div>
 
+              {/* Characters with + button */}
               <div>
-                <label className={`text-xs font-bold mb-1 block ${theme.textMuted}`}>{t('reflectionCharacter')}</label>
-                <input
-                  type="text"
-                  value={form.character}
-                  onChange={(e) => setForm({ ...form, character: e.target.value })}
-                  className={`w-full rounded-xl px-3 py-2.5 text-sm font-semibold outline-none border ${
-                    isSpace ? 'bg-slate-700 border-slate-600 text-white' : 'bg-slate-50 border-slate-200 text-slate-800'
-                  } focus:border-indigo-400`}
-                />
+                <label className={`text-xs font-bold mb-1 block ${theme.textMuted}`}>{t('characters')}</label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={newCharacter}
+                    onChange={(e) => setNewCharacter(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addCharacter() } }}
+                    placeholder={t('addCharacter')}
+                    className={`flex-1 rounded-xl px-3 py-2.5 text-sm font-semibold outline-none border ${
+                      isSpace ? 'bg-slate-700 border-slate-600 text-white' : 'bg-slate-50 border-slate-200 text-slate-800'
+                    } focus:border-indigo-400`}
+                  />
+                  <button
+                    onClick={addCharacter}
+                    disabled={!newCharacter.trim()}
+                    className={`shrink-0 w-10 h-10 rounded-xl flex items-center justify-center font-bold transition-all ${
+                      newCharacter.trim()
+                        ? `bg-gradient-to-r ${theme.buttonGradient} text-white hover:scale-105 active:scale-95`
+                        : isSpace ? 'bg-slate-700 text-slate-600' : 'bg-slate-100 text-slate-300'
+                    }`}
+                  >
+                    <Plus className="w-4 h-4" />
+                  </button>
+                </div>
+                {form.characters.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {form.characters.map((char) => (
+                      <span
+                        key={char}
+                        className={`flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full transition-all animate-pop ${
+                          isSpace ? 'bg-indigo-900/60 text-indigo-300' : 'bg-indigo-100 text-indigo-600'
+                        }`}
+                      >
+                        {char}
+                        <button
+                          onClick={() => removeCharacter(char)}
+                          className={`hover:opacity-70 transition-opacity ${isSpace ? 'text-indigo-400' : 'text-indigo-400'}`}
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div>
@@ -438,6 +507,31 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
                       isSpace ? 'bg-slate-700 border-slate-600 text-white' : 'bg-slate-50 border-slate-200 text-slate-800'
                     } focus:border-indigo-400`}
                   />
+                </div>
+              </div>
+
+              {/* Day Count Tracker */}
+              <div className={`rounded-2xl p-3 flex items-center gap-3 ${
+                liveDayCount !== null
+                  ? isSpace ? 'bg-teal-900/30 border border-teal-700/50' : 'bg-teal-50 border border-teal-200'
+                  : isSpace ? 'bg-slate-700/30 border border-slate-600/50' : 'bg-slate-50 border border-slate-200'
+              }`}>
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                  liveDayCount !== null
+                    ? 'bg-gradient-to-br from-teal-400 to-emerald-500 text-white'
+                    : isSpace ? 'bg-slate-700 text-slate-500' : 'bg-slate-200 text-slate-400'
+                }`}>
+                  <Calendar className="w-5 h-5" />
+                </div>
+                <div className="flex-1">
+                  <p className={`text-xs font-bold uppercase ${theme.textMuted}`}>{t('dayCountTracker')}</p>
+                  {liveDayCount !== null ? (
+                    <p className={`font-display font-extrabold text-lg ${isSpace ? 'text-teal-300' : 'text-teal-600'}`}>
+                      {liveDayCount} {t('dayCount')}
+                    </p>
+                  ) : (
+                    <p className={`text-xs font-semibold ${theme.textMuted}`}>{t('setDatesToCount')}</p>
+                  )}
                 </div>
               </div>
 
