@@ -19,7 +19,7 @@ const MILESTONES = [
   { height: 120, emoji: '🐧', key: 'asTallAsEmperorPenguin', infoKey: 'emperorPenguinInfo' },
   { height: 140, emoji: '🐴', key: 'asTallAsDonkey', infoKey: 'donkeyInfo' },
   { height: 155, emoji: '🦘', key: 'asTallAsKangaroo', infoKey: 'kangarooInfo' },
-  { height: 200, emoji: '🐻', key: 'asTallAsBrownBear', infoKey: 'brownBearInfo' },
+  { height: 170, emoji: '🐎', key: 'asTallAsRidingHorse', infoKey: 'ridingHorseInfo' },
 ]
 
 export default function HeightBoard({ childId, childName, photoUrl, isSpace, theme, onBack }: Props) {
@@ -110,6 +110,13 @@ export default function HeightBoard({ childId, childName, photoUrl, isSpace, the
 
   const achievedMilestones = MILESTONES.filter(m => heightCm >= m.height)
   const nextMilestone = MILESTONES.find(m => heightCm < m.height)
+
+  // Find the single closest milestone to highlight
+  const closestMilestone = MILESTONES.reduce((closest, m) => {
+    const dist = Math.abs(heightCm - m.height)
+    const closestDist = Math.abs(heightCm - closest.height)
+    return dist < closestDist ? m : closest
+  }, MILESTONES[0])
 
   const lastEntryDate = latestEntry ? new Date(latestEntry.recorded_at) : null
   const nextCheckup = lastEntryDate ? new Date(lastEntryDate) : null
@@ -221,30 +228,28 @@ export default function HeightBoard({ childId, childName, photoUrl, isSpace, the
             )}
             {MILESTONES.map((m, i) => {
               const achieved = heightCm >= m.height
-              const isNext = !achieved && nextMilestone?.key === m.key
-              const nextBorder = isSpace ? 'border-indigo-400/40' : 'border-fuchsia-400/40'
-              const itemClass = achieved
+              const isClosest = m.key === closestMilestone.key
+              const softColor = isSpace ? 'bg-blue-200/50 border border-blue-300/50' : 'bg-pink-200/50 border border-pink-300/50'
+              const itemClass = isClosest
                 ? 'bg-yellow-300/90 border-2 border-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.7)]'
-                : isNext
-                  ? 'border-2 border-dashed ' + nextBorder + ' opacity-60'
-                  : 'opacity-40'
+                : softColor
               return (
                 <div
                   key={m.key}
                   className={'flex items-center gap-3 p-3 rounded-2xl transition-all animate-fadeIn ' + itemClass}
                   style={{ animationDelay: String(i * 80) + 'ms' }}
                 >
-                  <span className={'text-2xl ' + (!achieved && !isNext ? 'grayscale' : '')}>{m.emoji}</span>
+                  <span className={'text-2xl ' + (isClosest ? '' : 'opacity-70')}>{m.emoji}</span>
                   <div className="flex-1">
-                    <p className={'font-display font-bold ' + (achieved ? 'text-slate-800' : theme.textPrimary)}>{t(m.key)}</p>
-                    <p className={'text-xs ' + (achieved ? 'text-slate-600' : theme.textSecondary) + ' mt-0.5'}>{t(m.infoKey)}</p>
+                    <p className={'font-display font-bold ' + (isClosest ? 'text-slate-800' : theme.textPrimary)}>{t(m.key)}</p>
+                    <p className={'text-xs ' + (isClosest ? 'text-slate-600' : theme.textSecondary) + ' mt-0.5'}>{t(m.infoKey)}</p>
                   </div>
                   {achieved ? (
                     <div className="flex items-center gap-2 ml-auto">
                       <Check className="w-5 h-5 text-slate-800" />
                     </div>
                   ) : (
-                    <span className={'text-xs font-bold ' + theme.textSecondary + ' ml-auto whitespace-nowrap'}>
+                    <span className={'text-xs font-bold ' + (isClosest ? 'text-slate-700' : theme.textSecondary) + ' ml-auto whitespace-nowrap'}>
                       {m.height - heightCm} {t('cmToGo')}
                     </span>
                   )}
