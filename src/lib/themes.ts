@@ -34,8 +34,8 @@ export const spaceTheme: Theme = {
 
 export const unicornTheme: Theme = {
   name: 'unicorn',
-  bg: 'bg-rose-50',
-  bgGradient: 'bg-gradient-to-b from-rose-50 via-fuchsia-50 to-violet-50',
+  bg: 'bg-[#FFB7B2]',
+  bgGradient: 'bg-gradient-to-b from-[#FFB7B2] via-pink-100 to-rose-50',
   cardBg: 'bg-white',
   cardBorder: 'border-rose-100',
   textPrimary: 'text-slate-800',
