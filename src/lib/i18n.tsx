@@ -359,6 +359,19 @@ const en: Dict = {
   dayCount: 'Days',
   dayCountTracker: 'Day Count',
   setDatesToCount: 'Set start and end dates to count days',
+  allowGuardianEdit: 'Let my guardian help edit this book',
+  guardianEditAllowed: 'Guardian can edit',
+  guardianEditLocked: 'Guardian edit locked',
+  requestEditAccess: 'Request edit access',
+  editRequestPending: 'Edit request pending',
+  editRequestSent: 'Edit request sent! Waiting for the author to approve.',
+  approveEditRequest: 'Allow guardian to edit',
+  denyEditRequest: 'Keep edit locked',
+  editRequestApproved: 'You can now edit this book!',
+  editRequestDenied: 'The author kept edit locked.',
+  editRequestApprovedKid: 'Guardian can now edit your book.',
+  editRequestDeniedKid: 'Guardian edit stays locked.',
+  guardianEditRequest: 'Guardian wants to edit your book',
 }
 
 const es: Dict = {
@@ -690,6 +703,19 @@ const es: Dict = {
   dayCount: 'Días',
   dayCountTracker: 'Contador de Días',
   setDatesToCount: 'Establece fechas de inicio y fin para contar días',
+  allowGuardianEdit: 'Dejar que mi tutor ayude a editar este libro',
+  guardianEditAllowed: 'El tutor puede editar',
+  guardianEditLocked: 'Edición del tutor bloqueada',
+  requestEditAccess: 'Solicitar acceso para editar',
+  editRequestPending: 'Solicitud de edición pendiente',
+  editRequestSent: '¡Solicitud enviada! Esperando la aprobación del autor.',
+  approveEditRequest: 'Permitir al tutor editar',
+  denyEditRequest: 'Mantener bloqueada',
+  editRequestApproved: '¡Ahora puedes editar este libro!',
+  editRequestDenied: 'El autor mantuvo la edición bloqueada.',
+  editRequestApprovedKid: 'El tutor ya puede editar tu libro.',
+  editRequestDeniedKid: 'La edición del tutor sigue bloqueada.',
+  guardianEditRequest: 'El tutor quiere editar tu libro',
 }
 
 const fr: Dict = {
@@ -1021,6 +1047,19 @@ const fr: Dict = {
   dayCount: 'Jours',
   dayCountTracker: 'Compteur de Jours',
   setDatesToCount: 'Définissez les dates de début et de fin pour compter les jours',
+  allowGuardianEdit: 'Laisser mon tuteur aider à éditer ce livre',
+  guardianEditAllowed: 'Le tuteur peut éditer',
+  guardianEditLocked: 'Édition du tuteur verrouillée',
+  requestEditAccess: 'Demander l\'accès en édition',
+  editRequestPending: 'Demande d\'édition en attente',
+  editRequestSent: 'Demande envoyée ! En attente de l\'approbation de l\'auteur.',
+  approveEditRequest: 'Autoriser le tuteur à éditer',
+  denyEditRequest: 'Garder verrouillé',
+  editRequestApproved: 'Vous pouvez maintenant éditer ce livre !',
+  editRequestDenied: 'L\'auteur a gardé l\'édition verrouillée.',
+  editRequestApprovedKid: 'Le tuteur peut maintenant éditer ton livre.',
+  editRequestDeniedKid: 'L\'édition du tuteur reste verrouillée.',
+  guardianEditRequest: 'Le tuteur veut éditer ton livre',
 }
 
 const ja: Dict = {
@@ -1352,6 +1391,19 @@ const ja: Dict = {
   dayCount: '日',
   dayCountTracker: '日数カウンター',
   setDatesToCount: '開始日と終了日を設定して日数を数える',
+  allowGuardianEdit: '保護者がこの本を編集するのを許可する',
+  guardianEditAllowed: '保護者が編集可能',
+  guardianEditLocked: '保護者の編集はロック中',
+  requestEditAccess: '編集アクセスをリクエスト',
+  editRequestPending: '編集リクエスト待機中',
+  editRequestSent: 'リクエストを送信しました！著者の承認を待っています。',
+  approveEditRequest: '保護者の編集を許可',
+  denyEditRequest: 'ロックを維持',
+  editRequestApproved: 'この本を編集できるようになりました！',
+  editRequestDenied: '著者は編集をロックしたままにしました。',
+  editRequestApprovedKid: '保護者があなたの本を編集できるようになりました。',
+  editRequestDeniedKid: '保護者の編集はロックされたままです。',
+  guardianEditRequest: '保護者があなたの本を編集したいそうです',
 }
 
 const zh: Dict = {
@@ -1683,6 +1735,19 @@ const zh: Dict = {
   dayCount: '天',
   dayCountTracker: '天數計數器',
   setDatesToCount: '設定開始和結束日期來計算天數',
+  allowGuardianEdit: '讓我的監護人幫忙編輯這本書',
+  guardianEditAllowed: '監護人可以編輯',
+  guardianEditLocked: '監護人編輯已鎖定',
+  requestEditAccess: '請求編輯權限',
+  editRequestPending: '編輯請求待處理',
+  editRequestSent: '請求已送出！等待作者批准。',
+  approveEditRequest: '允許監護人編輯',
+  denyEditRequest: '保持鎖定',
+  editRequestApproved: '你現在可以編輯這本書了！',
+  editRequestDenied: '作者保持編輯鎖定。',
+  editRequestApprovedKid: '監護人現在可以編輯你的書了。',
+  editRequestDeniedKid: '監護人編輯保持鎖定。',
+  guardianEditRequest: '監護人想編輯你的書',
 }
 
 const da: Dict = {
@@ -2014,6 +2079,19 @@ const da: Dict = {
   dayCount: 'Dage',
   dayCountTracker: 'Dagtæller',
   setDatesToCount: 'Indstil start- og slutdato for at tælle dage',
+  allowGuardianEdit: 'Lad min værge hjælpe med at redigere denne bog',
+  guardianEditAllowed: 'Værge kan redigere',
+  guardianEditLocked: 'Værges redigering låst',
+  requestEditAccess: 'Anmod om redigeringsadgang',
+  editRequestPending: 'Redigeringsanmodning afventer',
+  editRequestSent: 'Anmodning sendt! Venter på forfatterens godkendelse.',
+  approveEditRequest: 'Tillad værge at redigere',
+  denyEditRequest: 'Behold låst',
+  editRequestApproved: 'Du kan nu redigere denne bog!',
+  editRequestDenied: 'Forfatteren holdt redigering låst.',
+  editRequestApprovedKid: 'Værge kan nu redigere din bog.',
+  editRequestDeniedKid: 'Værges redigering forbliver låst.',
+  guardianEditRequest: 'Værge vil redigere din bog',
 }
 
 const de: Dict = {
@@ -2345,6 +2423,19 @@ const de: Dict = {
   dayCount: 'Tage',
   dayCountTracker: 'Tagezähler',
   setDatesToCount: 'Lege Start- und Enddatum fest, um Tage zu zählen',
+  allowGuardianEdit: 'Mein Vormund darf dieses Buch bearbeiten',
+  guardianEditAllowed: 'Vormund kann bearbeiten',
+  guardianEditLocked: 'Vormund-Bearbeitung gesperrt',
+  requestEditAccess: 'Bearbeitung anfragen',
+  editRequestPending: 'Bearbeitungsanfrage ausstehend',
+  editRequestSent: 'Anfrage gesendet! Warte auf Zustimmung des Autors.',
+  approveEditRequest: 'Vormund bearbeiten lassen',
+  denyEditRequest: 'Gesperrt lassen',
+  editRequestApproved: 'Du kannst dieses Buch jetzt bearbeiten!',
+  editRequestDenied: 'Der Autor hat die Bearbeitung gesperrt gelassen.',
+  editRequestApprovedKid: 'Der Vormund kann dein Buch jetzt bearbeiten.',
+  editRequestDeniedKid: 'Vormund-Bearbeitung bleibt gesperrt.',
+  guardianEditRequest: 'Dein Vormund möchte dein Buch bearbeiten',
 }
 
 const ko: Dict = {
@@ -2684,6 +2775,19 @@ const ko: Dict = {
   dayCount: '일',
   dayCountTracker: '일수 카운터',
   setDatesToCount: '시작일과 종료일을 설정하여 일수를 세세요',
+  allowGuardianEdit: '보호자가 이 책을 편집하도록 허용하기',
+  guardianEditAllowed: '보호자 편집 가능',
+  guardianEditLocked: '보호자 편집 잠김',
+  requestEditAccess: '편집 권한 요청',
+  editRequestPending: '편집 요청 대기 중',
+  editRequestSent: '요청이 전송되었습니다! 작가의 승인을 기다리는 중.',
+  approveEditRequest: '보호자 편집 허용',
+  denyEditRequest: '잠금 유지',
+  editRequestApproved: '이제 이 책을 편집할 수 있습니다!',
+  editRequestDenied: '작가가 편집을 잠가두었습니다.',
+  editRequestApprovedKid: '보호자가 이제 당신의 책을 편집할 수 있습니다.',
+  editRequestDeniedKid: '보호자 편집은 잠겨 있습니다.',
+  guardianEditRequest: '보호자가 당신의 책을 편집하고 싶어합니다',
 }
 
 const translations: Record<LangCode, Dict> = {

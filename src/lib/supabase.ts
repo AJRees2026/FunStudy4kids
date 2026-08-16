@@ -118,6 +118,7 @@ export type GrowthEntry = {
 }
 
 export type ReflectionStatus = 'draft' | 'approved'
+export type EditRequestStatus = 'pending' | 'approved' | 'denied'
 
 export type BookReflection = {
   id: string
@@ -130,6 +131,8 @@ export type BookReflection = {
   reflection_text: string
   word_count: number
   status: ReflectionStatus
+  allow_guardian_edit: boolean
+  edit_request_status: EditRequestStatus | null
   created_at: string
   updated_at: string
 }
