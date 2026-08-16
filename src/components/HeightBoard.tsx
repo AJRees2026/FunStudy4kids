@@ -199,7 +199,7 @@ export default function HeightBoard({ childId, childName, photoUrl, isSpace, the
                 {photoUrl ? (
                   <img src={photoUrl} alt={childName} className="w-full h-full object-cover" />
                 ) : (
-                  <span className="text-3xl">{isSpace ? '🚀' : '🦄'}</span>
+                  <span className="text-5xl">{isSpace ? '🚀' : '🦄'}</span>
                 )}
               </div>
               <p className={'text-xs font-bold ' + theme.textSecondary + ' mt-1'}>{childName}</p>
@@ -207,12 +207,12 @@ export default function HeightBoard({ childId, childName, photoUrl, isSpace, the
 
             <div className="text-center">
               <Ruler className="w-6 h-6 text-indigo-500 mx-auto mb-1" />
-              <p className={'text-3xl font-display font-extrabold ' + theme.accent}>{heightCm.toFixed(0)}</p>
+              <p className={'text-4xl font-display font-extrabold ' + theme.accent}>{heightCm.toFixed(0)}</p>
               <p className={'text-xs font-bold ' + theme.textSecondary}>{t('height')} ({t('cm')})</p>
             </div>
             <div className="text-center">
               <Scale className="w-6 h-6 text-teal-500 mx-auto mb-1" />
-              <p className={'text-3xl font-display font-extrabold ' + theme.accent}>{weightKg.toFixed(1)}</p>
+              <p className={'text-4xl font-display font-extrabold ' + theme.accent}>{weightKg.toFixed(1)}</p>
               <p className={'text-xs font-bold ' + theme.textSecondary}>{t('weight')} ({t('kg')})</p>
             </div>
           </div>
