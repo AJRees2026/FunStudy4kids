@@ -457,7 +457,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
         {/* Growth / Growth Chart View */}
         {view === 'growth' && (
           <div className="animate-fadeIn -mx-4 -my-6">
-            <GrowthChart
+            <HeightBoard
               childId={currentChild.id}
               childName={currentChild.child_name || currentChild.name}
               photoUrl={currentChild.photo_url}
