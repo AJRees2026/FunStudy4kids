@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from 'react'
 import { supabase, type GrowthEntry } from '../lib/supabase'
 import { useI18n } from '../lib/i18n'
 import { getTheme, type Theme } from '../lib/themes'
-import { ArrowLeft, Ruler, Sparkles, Check, Plus, X, Scale, Calendar } from 'lucide-react'
+import ScatterPlot from './ScatterPlot'
+import { ArrowLeft, Ruler, Sparkles, Check, Plus, X, Scale, Calendar, TrendingUp } from 'lucide-react'
 
 type Props = {
   childId: string
@@ -14,9 +15,9 @@ type Props = {
 }
 
 const MILESTONES = [
-  { height: 70, emoji: '🐨', key: 'asTallAsKoala', infoKey: 'koalaInfo' },
   { height: 90, emoji: '🐕‍🦺', key: 'asTallAsGermanShepherd', infoKey: 'germanShepherdInfo' },
   { height: 120, emoji: '🐧', key: 'asTallAsEmperorPenguin', infoKey: 'emperorPenguinInfo' },
+  { height: 140, emoji: '🐴', key: 'asTallAsDonkey', infoKey: 'donkeyInfo' },
   { height: 155, emoji: '🦘', key: 'asTallAsKangaroo', infoKey: 'kangarooInfo' },
   { height: 200, emoji: '🐻', key: 'asTallAsBrownBear', infoKey: 'brownBearInfo' },
 ]
@@ -50,7 +51,6 @@ export default function HeightBoard({ childId, childName, photoUrl, isSpace, the
         }
         prevEntryCount.current = data.length
 
-        // Monthly reminder check
         if (data.length > 0) {
           const firstEntry = data[0]
           const lastEntry = data[data.length - 1]
@@ -58,10 +58,8 @@ export default function HeightBoard({ childId, childName, photoUrl, isSpace, the
           const monthsSinceLast = (Date.now() - lastDate.getTime()) / (30.44 * 24 * 3600 * 1000)
           const firstDate = new Date(firstEntry.recorded_at)
           const monthsSinceFirst = (Date.now() - firstDate.getTime()) / (30.44 * 24 * 3600 * 1000)
-          // Show reminder if it's been ~1 month since last measurement
-          // and at least 1 month since the first ever measurement
           if (monthsSinceLast >= 1 && monthsSinceFirst >= 1) {
-            const reminderKey = `growthReminder_${childId}_${lastEntry.recorded_at}`
+            const reminderKey = 'growthReminder_' + childId + '_' + lastEntry.recorded_at
             if (!localStorage.getItem(reminderKey)) {
               setShowReminder(true)
             }
@@ -76,7 +74,7 @@ export default function HeightBoard({ childId, childName, photoUrl, isSpace, the
     setShowReminder(false)
     if (entries.length > 0) {
       const lastEntry = entries[entries.length - 1]
-      localStorage.setItem(`growthReminder_${childId}_${lastEntry.recorded_at}`, '1')
+      localStorage.setItem('growthReminder_' + childId + '_' + lastEntry.recorded_at, '1')
     }
   }
 
@@ -92,7 +90,6 @@ export default function HeightBoard({ childId, childName, photoUrl, isSpace, the
     setShowForm(false)
     setFormData({ recorded_at: new Date().toISOString().slice(0, 10), height: '', weight: '', notes: '' })
     setShowReminder(false)
-    // Refetch
     const { data } = await supabase
       .from('growth_entries')
       .select('*')
@@ -114,7 +111,6 @@ export default function HeightBoard({ childId, childName, photoUrl, isSpace, the
   const achievedMilestones = MILESTONES.filter(m => heightCm >= m.height)
   const nextMilestone = MILESTONES.find(m => heightCm < m.height)
 
-  // Next check-up calculation
   const lastEntryDate = latestEntry ? new Date(latestEntry.recorded_at) : null
   const nextCheckup = lastEntryDate ? new Date(lastEntryDate) : null
   if (nextCheckup) nextCheckup.setMonth(nextCheckup.getMonth() + 1)
@@ -122,15 +118,8 @@ export default function HeightBoard({ childId, childName, photoUrl, isSpace, the
     ? Math.ceil((nextCheckup.getTime() - Date.now()) / (24 * 3600 * 1000))
     : null
 
-  // Ruler dimensions
-  const rulerHeight = 280
-  const rulerMaxCm = 210
-  const rulerMinCm = 30
-  const pxPerCm = rulerHeight / (rulerMaxCm - rulerMinCm)
-  const childMarkerY = rulerHeight - (heightCm - rulerMinCm) * pxPerCm
-
   return (
-    <div className={`min-h-screen ${theme.bgGradient} pb-8`}>
+    <div className={'min-h-screen ' + theme.bgGradient + ' pb-8'}>
       <div className="sticky top-0 z-20 bg-white/80 backdrop-blur-md border-b border-slate-200">
         <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -152,7 +141,6 @@ export default function HeightBoard({ childId, childName, photoUrl, isSpace, the
       </div>
 
       <div className="max-w-3xl mx-auto px-4 py-6 space-y-4">
-        {/* Celebration badge */}
         {showBadge && (
           <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-gradient-to-r from-amber-400 to-orange-500 text-white font-display font-bold px-6 py-3 rounded-2xl shadow-xl animate-pop flex items-center gap-2">
             <Sparkles className="w-5 h-5" />
@@ -160,7 +148,6 @@ export default function HeightBoard({ childId, childName, photoUrl, isSpace, the
           </div>
         )}
 
-        {/* Monthly reminder */}
         {showReminder && (
           <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-300 rounded-3xl p-5 animate-fadeIn flex items-start gap-3">
             <div className="w-10 h-10 rounded-2xl bg-amber-400 flex items-center justify-center shrink-0">
@@ -186,88 +173,42 @@ export default function HeightBoard({ childId, childName, photoUrl, isSpace, the
           </div>
         )}
 
-        {/* Next check-up info */}
         {daysUntilCheckup != null && daysUntilCheckup > 0 && !showReminder && (
-          <div className={`rounded-2xl p-3 ${theme.cardBg} border ${theme.cardBorder} flex items-center gap-2`}>
-            <Calendar className={`w-4 h-4 ${theme.accent}`} />
-            <p className={`text-sm font-bold ${theme.textSecondary}`}>
+          <div className={'rounded-2xl p-3 ' + theme.cardBg + ' border ' + theme.cardBorder + ' flex items-center gap-2'}>
+            <Calendar className={'w-4 h-4 ' + theme.accent} />
+            <p className={'text-sm font-bold ' + theme.textSecondary}>
               {t('nextCheckup')} {daysUntilCheckup} {t('days')}
             </p>
           </div>
         )}
 
-        {/* Height Board */}
-        <div className={`rounded-3xl p-6 ${theme.cardBg} border ${theme.cardBorder} shadow-lg`}>
-          <h2 className={`font-display font-extrabold text-2xl ${theme.textPrimary} text-center mb-6`}>
+        {/* Current height + weight + avatar */}
+        <div className={'rounded-3xl p-6 ' + theme.cardBg + ' border ' + theme.cardBorder + ' shadow-lg'}>
+          <h2 className={'font-display font-extrabold text-2xl ' + theme.textPrimary + ' text-center mb-6'}>
             {t('howMuchIVeGrown')}
           </h2>
 
-          <div className="flex items-end justify-center gap-4 mb-6">
-            {/* Avatar */}
-            <div className="flex flex-col items-center" style={{ height: `${rulerHeight + 40}px`, justifyContent: 'flex-end' }}>
-              <div className="transition-all duration-1000 ease-out" style={{ marginBottom: `${childMarkerY}px` }}>
-                <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-400 to-teal-400 flex items-center justify-center overflow-hidden shadow-lg">
-                  {photoUrl ? (
-                    <img src={photoUrl} alt={childName} className="w-full h-full object-cover" />
-                  ) : (
-                    <span className="text-3xl">{isSpace ? '🚀' : '🦄'}</span>
-                  )}
-                </div>
-                <div className="text-center mt-1">
-                  <p className={`text-xs font-bold ${theme.textSecondary}`}>{childName}</p>
-                </div>
+          <div className="flex items-center justify-center gap-6 mb-6">
+            <div className="flex flex-col items-center">
+              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-400 to-teal-400 flex items-center justify-center overflow-hidden shadow-lg">
+                {photoUrl ? (
+                  <img src={photoUrl} alt={childName} className="w-full h-full object-cover" />
+                ) : (
+                  <span className="text-3xl">{isSpace ? '🚀' : '🦄'}</span>
+                )}
               </div>
+              <p className={'text-xs font-bold ' + theme.textSecondary + ' mt-1'}>{childName}</p>
             </div>
 
-            {/* Wooden Ruler */}
-            <div className="relative" style={{ height: `${rulerHeight}px` }}>
-              <svg width="60" height={rulerHeight} viewBox={`0 0 60 ${rulerHeight}`}>
-                <defs>
-                  <linearGradient id="woodGrad" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stopColor="#92400e" />
-                    <stop offset="50%" stopColor="#b45309" />
-                    <stop offset="100%" stopColor="#92400e" />
-                  </linearGradient>
-                </defs>
-                <rect x="10" y="0" width="40" height={rulerHeight} rx="6" fill="url(#woodGrad)" />
-                {Array.from({ length: Math.floor((rulerMaxCm - rulerMinCm) / 10) + 1 }).map((_, i) => {
-                  const cm = rulerMinCm + i * 10
-                  const y = rulerHeight - (cm - rulerMinCm) * pxPerCm
-                  return (
-                    <g key={cm}>
-                      <line x1="30" y1={y} x2="50" y2={y} stroke="#fef3c7" strokeWidth="2" />
-                      <text x="28" y={y + 4} textAnchor="end" fontSize="10" fill="#fef3c7" fontWeight="bold">{cm}</text>
-                    </g>
-                  )
-                })}
-                {Array.from({ length: Math.floor((rulerMaxCm - rulerMinCm) / 5) + 1 }).map((_, i) => {
-                  const cm = rulerMinCm + i * 5
-                  if (cm % 10 === 0) return null
-                  const y = rulerHeight - (cm - rulerMinCm) * pxPerCm
-                  return <line key={cm} x1="35" y1={y} x2="50" y2={y} stroke="#fef3c7" strokeWidth="1" opacity="0.6" />
-                })}
-              </svg>
-              <div className="absolute left-0 right-0 transition-all duration-1000 ease-out" style={{ top: `${childMarkerY}px` }}>
-                <div className="flex items-center gap-1">
-                  <div className="w-2 h-2 rounded-full bg-indigo-500"></div>
-                  <div className="flex-1 h-0.5 bg-indigo-500"></div>
-                  <span className="text-xs font-bold text-indigo-500 bg-white/80 px-2 py-0.5 rounded-full">{heightCm.toFixed(0)} cm</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Current height + weight */}
-          <div className="flex justify-center gap-8 mb-6">
             <div className="text-center">
               <Ruler className="w-6 h-6 text-indigo-500 mx-auto mb-1" />
-              <p className={`text-3xl font-display font-extrabold ${theme.accent}`}>{heightCm.toFixed(0)}</p>
-              <p className={`text-xs font-bold ${theme.textSecondary}`}>{t('height')} ({t('cm')})</p>
+              <p className={'text-3xl font-display font-extrabold ' + theme.accent}>{heightCm.toFixed(0)}</p>
+              <p className={'text-xs font-bold ' + theme.textSecondary}>{t('height')} ({t('cm')})</p>
             </div>
             <div className="text-center">
               <Scale className="w-6 h-6 text-teal-500 mx-auto mb-1" />
-              <p className={`text-3xl font-display font-extrabold ${theme.accent}`}>{weightKg.toFixed(1)}</p>
-              <p className={`text-xs font-bold ${theme.textSecondary}`}>{t('weight')} ({t('kg')})</p>
+              <p className={'text-3xl font-display font-extrabold ' + theme.accent}>{weightKg.toFixed(1)}</p>
+              <p className={'text-xs font-bold ' + theme.textSecondary}>{t('weight')} ({t('kg')})</p>
             </div>
           </div>
 
@@ -299,32 +240,48 @@ export default function HeightBoard({ childId, childName, photoUrl, isSpace, the
                     <p className={'text-xs ' + (achieved ? 'text-slate-600' : theme.textSecondary) + ' mt-0.5'}>{t(m.infoKey)}</p>
                   </div>
                   {achieved ? (
-                    <Check className="w-5 h-5 ml-auto text-slate-800" />
-                  ) : isNext ? (
-                    <span className={'text-xs font-bold ' + theme.textSecondary + ' ml-auto'}>
-                      {m.height - heightCm} cm
+                    <div className="flex items-center gap-2 ml-auto">
+                      <Check className="w-5 h-5 text-slate-800" />
+                    </div>
+                  ) : (
+                    <span className={'text-xs font-bold ' + theme.textSecondary + ' ml-auto whitespace-nowrap'}>
+                      {m.height - heightCm} {t('cmToGo')}
                     </span>
-                  ) : null}
+                  )}
                 </div>
               )
             })}
           </div>
         </div>
 
+        {/* Height vs Weight scatter plot */}
+        {entries.filter(e => e.height_cm != null && e.weight_kg != null).length > 0 && (
+          <div className={'rounded-3xl p-5 ' + theme.cardBg + ' border ' + theme.cardBorder + ' shadow-lg'}>
+            <div className="flex items-center gap-2 mb-3">
+              <TrendingUp className="w-5 h-5 text-indigo-500" />
+              <h3 className={'font-display font-bold ' + theme.textPrimary}>{t('heightVsWeight')}</h3>
+            </div>
+            <p className={'text-sm ' + theme.textSecondary + ' mb-3'}>{t('scatterPlotDesc')}</p>
+            <div className="bg-white rounded-2xl p-4">
+              <ScatterPlot entries={entries} />
+            </div>
+          </div>
+        )}
+
         {/* Growth history */}
         {entries.length > 0 && (
-          <div className={`rounded-3xl p-5 ${theme.cardBg} border ${theme.cardBorder}`}>
-            <h3 className={`font-display font-bold ${theme.textPrimary} mb-3`}>{t('measurementDate')}</h3>
+          <div className={'rounded-3xl p-5 ' + theme.cardBg + ' border ' + theme.cardBorder}>
+            <h3 className={'font-display font-bold ' + theme.textPrimary + ' mb-3'}>{t('measurementDate')}</h3>
             <div className="space-y-2">
               {entries.slice().reverse().map(e => (
-                <div key={e.id} className={`flex items-center gap-3 p-2 rounded-xl ${isSpace ? 'bg-slate-800/40' : 'bg-white/60'}`}>
+                <div key={e.id} className={'flex items-center gap-3 p-2 rounded-xl ' + (isSpace ? 'bg-slate-800/40' : 'bg-white/60')}>
                   <span className="text-lg">{isSpace ? '📏' : '🌈'}</span>
-                  <span className={`text-sm font-bold ${theme.textPrimary}`}>
-                    {e.height_cm ? `${Number(e.height_cm).toFixed(0)} cm` : '—'}
+                  <span className={'text-sm font-bold ' + theme.textPrimary}>
+                    {e.height_cm ? Number(e.height_cm).toFixed(0) + ' cm' : '—'}
                     {' · '}
-                    {e.weight_kg ? `${Number(e.weight_kg).toFixed(1)} kg` : '—'}
+                    {e.weight_kg ? Number(e.weight_kg).toFixed(1) + ' kg' : '—'}
                   </span>
-                  <span className={`text-xs ${theme.textSecondary} ml-auto`}>{e.recorded_at}</span>
+                  <span className={'text-xs ' + theme.textSecondary + ' ml-auto'}>{e.recorded_at}</span>
                 </div>
               ))}
             </div>
