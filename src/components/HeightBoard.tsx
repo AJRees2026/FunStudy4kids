@@ -108,8 +108,6 @@ export default function HeightBoard({ childId, childName, photoUrl, isSpace, the
   const heightCm = latestHeight ? Number(latestHeight) : 100
   const weightKg = latestWeight ? Number(latestWeight) : 20
 
-  const achievedMilestones = MILESTONES.filter(m => heightCm >= m.height)
-  const nextMilestone = MILESTONES.find(m => heightCm < m.height)
 
   // Find the single closest milestone to highlight
   const closestMilestone = MILESTONES.reduce((closest, m) => {
@@ -221,11 +219,9 @@ export default function HeightBoard({ childId, childName, photoUrl, isSpace, the
 
           {/* Milestone comparisons */}
           <div className="space-y-2">
-            {achievedMilestones.length > 0 && (
-              <p className={'text-sm font-bold ' + theme.textSecondary + ' mb-2'}>
-                {isSpace ? '🌟' : '✨'} {t('howMuchIVeGrown')}
-              </p>
-            )}
+            <p className={'text-sm font-bold ' + theme.textSecondary + ' mb-2'}>
+              {isSpace ? '🌟' : '✨'} {t('iAmNowAsTallAs')}
+            </p>
             {MILESTONES.map((m, i) => {
               const achieved = heightCm >= m.height
               const isClosest = m.key === closestMilestone.key
@@ -242,7 +238,6 @@ export default function HeightBoard({ childId, childName, photoUrl, isSpace, the
                   <span className={'text-2xl ' + (isClosest ? '' : 'opacity-70')}>{m.emoji}</span>
                   <div className="flex-1">
                     <p className={'font-display font-bold ' + (isClosest ? 'text-slate-800' : theme.textPrimary)}>{t(m.key)}</p>
-                    <p className={'text-xs ' + (isClosest ? 'text-slate-600' : theme.textSecondary) + ' mt-0.5'}>{t(m.infoKey)}</p>
                   </div>
                   {achieved ? (
                     <div className="flex items-center gap-2 ml-auto">
