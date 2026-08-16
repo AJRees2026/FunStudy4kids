@@ -454,7 +454,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
           </div>
         )}
 
-        {/* Growth / Height Board View */}
+        {/* Growth / Growth Chart View */}
         {view === 'growth' && (
           <div className="animate-fadeIn -mx-4 -my-6">
             <HeightBoard
