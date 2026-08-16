@@ -2,7 +2,8 @@ import { useState, useEffect, useCallback } from 'react'
 import { supabase, type Profile, type GrowthEntry } from '../lib/supabase'
 import { useI18n } from '../lib/i18n'
 import GrowthChart from './GrowthChart'
-import { Plus, Ruler, Weight, Trash2, Download, X } from 'lucide-react'
+import ScatterPlot from './ScatterPlot'
+import { Plus, Ruler, Weight, Trash2, Download, X, CreditCard as Edit3, ScatterChart, BarChart3 } from 'lucide-react'
 
 type Props = {
   children: Profile[]
@@ -14,7 +15,9 @@ export default function GrowthTracking({ children }: Props) {
   const [entries, setEntries] = useState<GrowthEntry[]>([])
   const [showAddModal, setShowAddModal] = useState(false)
   const [metric, setMetric] = useState<'height' | 'weight'>('height')
+  const [chartMode, setChartMode] = useState<'percentile' | 'scatter'>('percentile')
   const [unitSystem, setUnitSystem] = useState<'metric' | 'imperial'>('metric')
+  const [editingEntry, setEditingEntry] = useState<GrowthEntry | null>(null)
   const [formData, setFormData] = useState({
     recorded_at: new Date().toISOString().slice(0, 10),
     height: '',
@@ -69,6 +72,36 @@ export default function GrowthTracking({ children }: Props) {
   const handleDelete = async (id: string) => {
     await supabase.from('growth_entries').delete().eq('id', id)
     fetchEntries()
+  }
+
+  const handleEditSave = async () => {
+    if (!editingEntry) return
+    const heightCm = unitSystem === 'metric'
+      ? (formData.height ? parseFloat(formData.height) : null)
+      : (formData.height ? parseFloat(formData.height) * 2.54 : null)
+    const weightKg = unitSystem === 'metric'
+      ? (formData.weight ? parseFloat(formData.weight) : null)
+      : (formData.weight ? parseFloat(formData.weight) * 0.453592 : null)
+    await supabase.from('growth_entries').update({
+      recorded_at: formData.recorded_at,
+      height_cm: heightCm,
+      weight_kg: weightKg,
+      notes: formData.notes || null,
+    }).eq('id', editingEntry.id)
+    setEditingEntry(null)
+    setFormData({ recorded_at: new Date().toISOString().slice(0, 10), height: '', weight: '', notes: '' })
+    fetchEntries()
+  }
+
+  const startEdit = (e: GrowthEntry) => {
+    setEditingEntry(e)
+    setUnitSystem('metric')
+    setFormData({
+      recorded_at: e.recorded_at,
+      height: e.height_cm ? String(Number(e.height_cm).toFixed(1)) : '',
+      weight: e.weight_kg ? String(Number(e.weight_kg).toFixed(1)) : '',
+      notes: e.notes || '',
+    })
   }
 
   // Calculate metrics
@@ -244,30 +277,58 @@ export default function GrowthTracking({ children }: Props) {
             </div>
           </div>
 
-          {/* Chart toggle */}
+          {/* Chart mode toggle */}
           <div className="flex gap-2 mb-2">
             <button
-              onClick={() => setMetric('height')}
+              onClick={() => setChartMode('percentile')}
               className={`px-4 py-2 rounded-xl font-display font-bold text-sm transition-all ${
-                metric === 'height' ? 'bg-indigo-500 text-white' : 'bg-white border border-slate-200 text-slate-600'
+                chartMode === 'percentile' ? 'bg-indigo-500 text-white' : 'bg-white border border-slate-200 text-slate-600'
               }`}
             >
-              {t('heightForAge')}
+              <BarChart3 className="w-4 h-4 inline mr-1" /> {t('heightForAge')}
             </button>
             <button
-              onClick={() => setMetric('weight')}
+              onClick={() => setChartMode('scatter')}
               className={`px-4 py-2 rounded-xl font-display font-bold text-sm transition-all ${
-                metric === 'weight' ? 'bg-teal-500 text-white' : 'bg-white border border-slate-200 text-slate-600'
+                chartMode === 'scatter' ? 'bg-teal-500 text-white' : 'bg-white border border-slate-200 text-slate-600'
               }`}
             >
-              {t('weightForAge')}
+              <ScatterChart className="w-4 h-4 inline mr-1" /> {t('scatterPlot')}
             </button>
           </div>
 
           {/* Chart */}
-          <div className="bg-white rounded-3xl p-5 shadow-sm border border-slate-100">
-            <GrowthChart entries={entries} childAgeYears={childAgeYears} metric={metric} />
-          </div>
+          {chartMode === 'percentile' ? (
+            <>
+              {/* Metric toggle */}
+              <div className="flex gap-2 mb-2">
+                <button
+                  onClick={() => setMetric('height')}
+                  className={`px-4 py-2 rounded-xl font-display font-bold text-sm transition-all ${
+                    metric === 'height' ? 'bg-indigo-500 text-white' : 'bg-white border border-slate-200 text-slate-600'
+                  }`}
+                >
+                  {t('heightForAge')}
+                </button>
+                <button
+                  onClick={() => setMetric('weight')}
+                  className={`px-4 py-2 rounded-xl font-display font-bold text-sm transition-all ${
+                    metric === 'weight' ? 'bg-teal-500 text-white' : 'bg-white border border-slate-200 text-slate-600'
+                  }`}
+                >
+                  {t('weightForAge')}
+                </button>
+              </div>
+              <div className="bg-white rounded-3xl p-5 shadow-sm border border-slate-100">
+                <GrowthChart entries={entries} childAgeYears={childAgeYears} metric={metric} />
+              </div>
+            </>
+          ) : (
+            <div className="bg-white rounded-3xl p-5 shadow-sm border border-slate-100">
+              <p className="text-sm text-slate-500 font-semibold mb-2">{t('scatterPlotDesc')}</p>
+              <ScatterPlot entries={entries} />
+            </div>
+          )}
 
           {/* History table */}
           <div className="bg-white rounded-3xl p-5 shadow-sm border border-slate-100">
@@ -285,6 +346,12 @@ export default function GrowthTracking({ children }: Props) {
                     </p>
                   </div>
                   <button
+                    onClick={() => startEdit(e)}
+                    className="p-2 rounded-lg text-slate-400 hover:text-indigo-500 transition-colors"
+                  >
+                    <Edit3 className="w-4 h-4" />
+                  </button>
+                  <button
                     onClick={() => handleDelete(e.id)}
                     className="p-2 rounded-lg text-slate-400 hover:text-rose-500 transition-colors"
                   >
@@ -298,7 +365,7 @@ export default function GrowthTracking({ children }: Props) {
       )}
 
       {/* Add Measurement Modal */}
-      {showAddModal && (
+      {showAddModal && !editingEntry && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 animate-fadeIn" onClick={() => setShowAddModal(false)}>
           <div className="bg-white rounded-3xl p-6 max-w-md w-full" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
@@ -380,6 +447,66 @@ export default function GrowthTracking({ children }: Props) {
                 className="w-full bg-gradient-to-r from-indigo-500 to-teal-500 text-white font-display font-bold text-lg py-3 rounded-2xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
               >
                 {t('saveMeasurement')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Measurement Modal */}
+      {editingEntry && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 animate-fadeIn" onClick={() => { setEditingEntry(null); setFormData({ recorded_at: new Date().toISOString().slice(0, 10), height: '', weight: '', notes: '' }) }}>
+          <div className="bg-white rounded-3xl p-6 max-w-md w-full" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-display font-extrabold text-xl text-slate-800">{t('editMeasurement')}</h3>
+              <button onClick={() => { setEditingEntry(null); setFormData({ recorded_at: new Date().toISOString().slice(0, 10), height: '', weight: '', notes: '' }) }} className="text-slate-400 hover:text-slate-600">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <label className="text-xs text-slate-400 font-bold uppercase tracking-wider">{t('measurementDate')}</label>
+                <input
+                  type="date"
+                  value={formData.recorded_at}
+                  onChange={e => setFormData({ ...formData, recorded_at: e.target.value })}
+                  className="w-full bg-slate-100 text-slate-700 rounded-xl px-4 py-3 mt-1 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                />
+              </div>
+              <div>
+                <label className="text-xs text-slate-400 font-bold uppercase tracking-wider">{t('heightCm')}</label>
+                <input
+                  type="number"
+                  step="0.1"
+                  value={formData.height}
+                  onChange={e => setFormData({ ...formData, height: e.target.value })}
+                  className="w-full bg-slate-100 text-slate-700 rounded-xl px-4 py-3 mt-1 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                />
+              </div>
+              <div>
+                <label className="text-xs text-slate-400 font-bold uppercase tracking-wider">{t('weightKg')}</label>
+                <input
+                  type="number"
+                  step="0.1"
+                  value={formData.weight}
+                  onChange={e => setFormData({ ...formData, weight: e.target.value })}
+                  className="w-full bg-slate-100 text-slate-700 rounded-xl px-4 py-3 mt-1 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                />
+              </div>
+              <div>
+                <label className="text-xs text-slate-400 font-bold uppercase tracking-wider">{t('measurementNotes')}</label>
+                <textarea
+                  value={formData.notes}
+                  onChange={e => setFormData({ ...formData, notes: e.target.value })}
+                  rows={2}
+                  className="w-full bg-slate-100 text-slate-700 rounded-xl px-4 py-3 mt-1 focus:outline-none focus:ring-2 focus:ring-indigo-400 resize-none"
+                />
+              </div>
+              <button
+                onClick={handleEditSave}
+                className="w-full bg-gradient-to-r from-indigo-500 to-teal-500 text-white font-display font-bold text-lg py-3 rounded-2xl hover:scale-[1.02] active:scale-95 transition-all"
+              >
+                {t('saveEdit')}
               </button>
             </div>
           </div>
