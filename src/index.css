@@ -80,3 +80,7 @@ select option {
   background: white;
   color: #334155;
 }
+:root {
+  --color-boy-primary: #1034a6;
+  --color-boy-secondary: #f97316;
+}
