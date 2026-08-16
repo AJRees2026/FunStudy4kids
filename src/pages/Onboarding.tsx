@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import { supabase, generatePairCode, type Profile } from '../lib/supabase'
 import { useI18n, LANGUAGES, type LangCode } from '../lib/i18n'
-import { Rocket, Sparkles, Users, KeyRound, ArrowRight, Check, Globe, Mic, Copy } from 'lucide-react'
+import { Rocket, Sparkles, Users, KeyRound, ArrowRight, Check, Mic, Copy } from 'lucide-react'
 import DictationButton from '../components/DictationButton'
 
 type Props = {
   onLinked: (profile: Profile) => void
 }
 
-type Step = 'language' | 'role' | 'parent-setup' | 'parent-created' | 'child-link'
+type Step = 'role' | 'language' | 'parent-setup' | 'parent-created' | 'child-link'
 
 
 function BrandName() {
@@ -22,7 +22,7 @@ function BrandName() {
 
 export default function Onboarding({ onLinked }: Props) {
   const { lang, setLang, t } = useI18n()
-  const [step, setStep] = useState<Step>('language')
+  const [step, setStep] = useState<Step>('role')
   const [parentName, setParentName] = useState('')
   const [childName, setChildName] = useState('')
   const [pairCode, setPairCode] = useState('')
@@ -52,6 +52,7 @@ export default function Onboarding({ onLinked }: Props) {
         require_pin_for_tasks: true,
         require_pin_for_rewards: true,
         task_approval_mode: 'off',
+        language: lang,
       })
       .select()
       .single()
@@ -78,6 +79,9 @@ export default function Onboarding({ onLinked }: Props) {
       return
     }
 
+    const parentLang = (parent as Profile).language || 'en-US'
+    setLang(parentLang as LangCode)
+
     const { data: child, error: childErr } = await supabase
       .from('profiles')
       .insert({
@@ -90,6 +94,7 @@ export default function Onboarding({ onLinked }: Props) {
         require_pin_for_tasks: true,
         require_pin_for_rewards: true,
         task_approval_mode: 'off',
+        language: parentLang,
       })
       .select()
       .single()
@@ -129,7 +134,7 @@ export default function Onboarding({ onLinked }: Props) {
               ))}
             </div>
             <button
-              onClick={() => setStep('role')}
+              onClick={() => setStep('parent-setup')}
               className="w-full mt-6 bg-gradient-to-r from-indigo-500 to-teal-500 text-white font-display font-bold text-lg py-3 rounded-2xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
             >
               {t('welcome')} <ArrowRight className="w-5 h-5" />
@@ -147,7 +152,7 @@ export default function Onboarding({ onLinked }: Props) {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <button
-                onClick={() => setStep('parent-setup')}
+                onClick={() => setStep('language')}
                 className="group bg-slate-800/80 border border-slate-700 rounded-3xl p-6 hover:border-indigo-500 hover:scale-105 active:scale-95 transition-all"
               >
                 <Users className="w-10 h-10 text-indigo-400 mx-auto mb-3 group-hover:scale-110 transition-transform" />
@@ -163,19 +168,13 @@ export default function Onboarding({ onLinked }: Props) {
                 <p className="text-xs text-slate-400 mt-1">{t('linkToParent')}</p>
               </button>
             </div>
-            <button
-              onClick={() => setStep('language')}
-              className="mt-6 text-slate-400 hover:text-white text-sm font-semibold flex items-center gap-1.5 mx-auto"
-            >
-              <Globe className="w-4 h-4" /> {LANGUAGES.find(l => l.code === lang)?.flag} {LANGUAGES.find(l => l.code === lang)?.label}
-            </button>
           </div>
         )}
 
         {/* Step 2a: Parent Setup */}
         {step === 'parent-setup' && (
           <div className="bg-slate-800/80 border border-slate-700 rounded-3xl p-8 animate-fadeIn">
-            <button onClick={() => setStep('role')} className="text-slate-400 hover:text-white text-sm font-semibold mb-4">
+            <button onClick={() => setStep('language')} className="text-slate-400 hover:text-white text-sm font-semibold mb-4">
               ← {t('cancel')}
             </button>
             <h2 className="font-display font-extrabold text-2xl text-white mb-2">{t('guardianSetup')}</h2>

@@ -35,6 +35,7 @@ export type Profile = {
   active_subjects: string[] | null
   daily_cutoff_time: string
   auto_archive_daily: boolean
+  language: string
 }
 
 export type Outfit = {

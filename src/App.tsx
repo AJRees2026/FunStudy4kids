@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
 import { supabase, type Profile } from './lib/supabase'
-import { I18nProvider } from './lib/i18n'
+import { I18nProvider, useI18n, type LangCode } from './lib/i18n'
 import Onboarding from './pages/Onboarding'
 import KidDashboard from './pages/KidDashboard'
 import ParentPortal from './pages/ParentPortal'
 import ChildProfileSetup from './pages/ChildProfileSetup'
 
-export default function App() {
+function AppInner() {
+  const { setLang } = useI18n()
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
   const [needsProfileSetup, setNeedsProfileSetup] = useState(false)
@@ -19,6 +20,7 @@ export default function App() {
         if (data) {
           const p = data as Profile
           setProfile(p)
+          if (p.language) setLang(p.language as LangCode)
           if (!p.photo_url) {
             setNeedsProfileSetup(true)
           }
@@ -36,7 +38,7 @@ export default function App() {
   }
 
   return (
-    <I18nProvider>
+    <>
       {loading ? (
         <div className="min-h-screen bg-gradient-to-b from-slate-950 via-indigo-950 to-slate-950 flex items-center justify-center">
           <div className="text-white font-display font-bold text-xl animate-pulse">Loading...</div>
@@ -61,6 +63,14 @@ export default function App() {
       ) : (
         <KidDashboard child={profile} onSwitchProfile={handleSwitchProfile} />
       )}
+    </>
+  )
+}
+
+export default function App() {
+  return (
+    <I18nProvider>
+      <AppInner />
     </I18nProvider>
   )
 }
