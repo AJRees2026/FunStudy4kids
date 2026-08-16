@@ -133,7 +133,7 @@ export default function HeightBoard({ childId, childName, photoUrl, isSpace, the
             </button>
             <h1 className="font-display font-extrabold text-xl text-slate-800 flex items-center gap-2">
               <Ruler className="w-5 h-5 text-indigo-500" />
-              {t('heightBoard')}
+              {t('growthChart')}
             </h1>
           </div>
           <button
