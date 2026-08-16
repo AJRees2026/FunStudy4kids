@@ -17,20 +17,19 @@ export type Theme = {
 
 export const spaceTheme: Theme = {
   name: 'space',
-  bg: 'bg-boy-primary',
-  bg: 'bg-boy-secondary'
-  bgGradient: 'bg-gradient-to-r from-[#1034A6] to-[#F97316]',
+  bg: 'bg-[#1034A6]',
+  bgGradient: 'bg-gradient-to-b from-[#1034A6] via-[#1034A6]/80 to-[#0F172A]',
   cardBg: 'bg-slate-800/80',
-  cardBorder: 'border-slate-700',
+  cardBorder: 'border-[#1034A6]',
   textPrimary: 'text-white',
   textSecondary: 'text-slate-300',
   textMuted: 'text-slate-400',
-  accent: 'text-indigo-400',
-  accentLight: 'bg-indigo-500/20',
-  accentGradient: 'from-indigo-500 to-teal-500',
+  accent: 'text-[#F97316]',
+  accentLight: 'bg-[#F97316]/20',
+  accentGradient: 'from-[#1034A6] to-[#F97316]',
   starLabel: 'Fuel Cells',
   emoji: '🚀',
-  buttonGradient: 'from-indigo-500 to-teal-500',
+  buttonGradient: 'from-[#1034A6] to-[#F97316]',
 }
 
 export const unicornTheme: Theme = {
