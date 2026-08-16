@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { PenLine, Plus, X, Trash2, Pencil, Award, BookOpen, Check, Clock, Calendar, Lock, Clock as Unlock } from 'lucide-react'
+import { PenLine, Plus, X, Trash2, Pencil, Award, BookOpen, Calendar, Lock, Clock as Unlock } from 'lucide-react'
 import { useI18n } from '../lib/i18n'
 import { supabase, type BookReflection, type ReflectionStatus, type WritingRank, WRITING_MILESTONES } from '../lib/supabase'
 import type { Theme } from '../lib/themes'
@@ -133,15 +133,6 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
     setForm({ ...form, characters: form.characters.filter(c => c !== name) })
   }
 
-  const approveReflection = async (reflection: BookReflection) => {
-    await supabase.from('book_reflections').update({
-      status: 'approved' as ReflectionStatus,
-      updated_at: new Date().toISOString(),
-    }).eq('id', reflection.id)
-    fetchReflections()
-    showToast(t('reflectionApproved'))
-  }
-
   const toggleGuardianEdit = async (reflection: BookReflection) => {
     const newValue = !reflection.allow_guardian_edit
     await supabase.from('book_reflections').update({
@@ -203,7 +194,7 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
         end_date: form.end_date || null,
         reflection_text: form.reflection_text.trim(),
         word_count: wordCount,
-        status: 'draft' as ReflectionStatus,
+        status: 'approved' as ReflectionStatus,
         allow_guardian_edit: form.allow_guardian_edit,
       })
 
@@ -309,10 +300,6 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
       ) : (
         <div className="space-y-3">
           {reflections.map((reflection) => {
-            const statusStyle = reflection.status === 'approved'
-              ? { bg: 'bg-emerald-100', text: 'text-emerald-600', icon: Check, labelKey: 'reflectionApproved' }
-              : { bg: 'bg-amber-100', text: 'text-amber-600', icon: Clock, labelKey: 'reflectionPendingApproval' }
-            const StatusIcon = statusStyle.icon
             const reflectionChars = reflection.character ? reflection.character.split(',').map(c => c.trim()).filter(Boolean) : []
             const reflectionDayCount = calcDayCount(reflection.start_date || '', reflection.end_date || '')
             const canGuardianEdit = readOnly && reflection.allow_guardian_edit
@@ -354,10 +341,6 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
                           : <><Lock className="w-3 h-3" /> {t('guardianEditLocked')}</>}
                       </button>
                     )}
-                    <div className={`flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold ${statusStyle.bg} ${statusStyle.text}`}>
-                      <StatusIcon className="w-3 h-3" />
-                      {t(statusStyle.labelKey)}
-                    </div>
                   </div>
                 </div>
 
@@ -394,14 +377,6 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
                 )}
 
                 <div className="flex gap-1 mt-2">
-                  {readOnly && reflection.status === 'draft' && (
-                    <button
-                      onClick={() => approveReflection(reflection)}
-                      className={`flex-1 flex items-center justify-center gap-1 rounded-lg py-1.5 text-xs font-bold transition-all hover:opacity-80 bg-gradient-to-r from-emerald-400 to-teal-500 text-white`}
-                    >
-                      <Check className="w-3 h-3" /> {t('approveReflection')}
-                    </button>
-                  )}
                   {readOnly && !canGuardianEdit && (
                     <div className={`flex-1 flex items-center justify-center gap-1 rounded-lg py-1.5 text-xs font-bold ${
                       isSpace ? 'bg-slate-700/50 text-slate-400' : 'bg-slate-50 text-slate-400'
