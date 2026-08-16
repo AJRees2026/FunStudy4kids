@@ -13,10 +13,11 @@ export const LANGUAGES: LangInfo[] = [
   { code: 'fr-FR', label: 'Français', flag: '🇫🇷' },
   { code: 'zh-TW', label: '繁體中文', flag: '🇹🇼' },
   { code: 'ja-JP', label: '日本語', flag: '🇯🇵' },
+  { code: 'ko-KR', label: '한국어', flag: '🇰🇷' },
   { code: 'de-DE', label: 'Deutsch', flag: '🇩🇪' },
   { code: 'es-ES', label: 'Español', flag: '🇪🇸' },
   { code: 'da-DK', label: 'Dansk', flag: '🇩🇰' },
-  { code: 'ko-KR', label: '한국어', flag: '🇰🇷' },
+
 ]
 
 type Dict = Record<string, string>
