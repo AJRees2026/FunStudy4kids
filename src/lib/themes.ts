@@ -34,19 +34,19 @@ export const spaceTheme: Theme = {
 
 export const unicornTheme: Theme = {
   name: 'unicorn',
-  bg: 'bg-[#FFB7B2]',
-  bgGradient: 'bg-gradient-to-b from-[#FFB7B2] via-pink-100 to-rose-50',
-  cardBg: 'bg-white',
-  cardBorder: 'border-rose-100',
+  bg: 'bg-[#eed5ff]',
+  bgGradient: 'bg-gradient-to-b from-[#eed5ff] via-[#fff9c1] to-[#cfebd2]',
+  cardBg: 'bg-white/80',
+  cardBorder: 'border-[#ffc0d7]',
   textPrimary: 'text-slate-800',
   textSecondary: 'text-slate-600',
   textMuted: 'text-slate-400',
-  accent: 'text-fuchsia-500',
-  accentLight: 'bg-fuchsia-100',
-  accentGradient: 'from-fuchsia-500 to-amber-400',
+  accent: 'text-[#ffc0d7]',
+  accentLight: 'bg-[#ffc0d7]/30',
+  accentGradient: 'from-[#eed5ff] to-[#ffc0d7]',
   starLabel: 'Sparkles',
   emoji: '🦄',
-  buttonGradient: 'from-fuchsia-500 to-amber-400',
+  buttonGradient: 'from-[#eed5ff] to-[#ffc0d7]',
 }
 
 export function getTheme(pref: 'space' | 'unicorn'): Theme {
