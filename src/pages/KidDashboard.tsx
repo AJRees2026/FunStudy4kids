@@ -22,7 +22,7 @@ import BookReflections from '../components/BookReflections'
 import MoodTracker from '../components/MoodTracker'
 import HeightBoard from '../components/HeightBoard'
 import {
-  Star, Flame, Award, LogOut, Play, Check, Lock, Gift,
+  Star, Flame, Award, LogOut, Play, Check, Lock, Gift, Trophy,
   ClipboardList, X, Bell, Clock, BarChart3, Sparkles,
   ArrowLeft, BookMarked, ChevronRight, Smile, Ruler, PenLine,
 } from 'lucide-react'
@@ -375,8 +375,8 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                 onClick={() => setView('subjects')}
                 className={`group rounded-3xl p-5 ${theme.cardBg} border ${theme.cardBorder} text-left transition-all hover:scale-[1.03] active:scale-95`}
               >
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-teal-500 flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
-                  <BarChart3 className="w-6 h-6 text-white" />
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-500 to-blue-600 flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
+                  <Trophy className="w-6 h-6 text-white" />
                 </div>
                 <h3 className={`font-display font-extrabold text-lg ${theme.textPrimary} mb-1`}>{t('subjectProgress')}</h3>
                 <p className={`text-xs font-semibold ${theme.textMuted} leading-snug`}>{t('progressBySubjectDesc')}</p>
