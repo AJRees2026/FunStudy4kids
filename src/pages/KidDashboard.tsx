@@ -436,7 +436,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                 onClick={() => setView('rewards')}
                 className={`group rounded-3xl p-5 ${theme.cardBg} border ${theme.cardBorder} text-left transition-all hover:scale-[1.03] active:scale-95 relative`}
               >
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
                   <Gift className="w-6 h-6 text-white" />
                 </div>
                 <h3 className={`font-display font-extrabold text-lg ${theme.textPrimary} mb-1`}>{t('rewardShop')}</h3>
@@ -445,7 +445,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                   {t('rewardShop')} <ChevronRight className="w-3 h-3" />
                 </div>
                 {availableRewards.length > 0 && (
-                  <span className="absolute top-3 right-3 bg-amber-400 text-white text-xs font-bold rounded-full px-2 py-0.5 min-w-[20px] text-center shadow-md">
+                  <span className="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold rounded-full px-2 py-0.5 min-w-[20px] text-center shadow-md">
                     {availableRewards.length}
                   </span>
                 )}
@@ -640,7 +640,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
         <>
         <section className="animate-fadeIn">
           <h2 className={`font-display font-extrabold text-xl ${theme.textPrimary} mb-3 flex items-center gap-2`}>
-            <Gift className="w-5 h-5 text-amber-400" />
+            <Gift className="w-5 h-5 text-red-500" />
             {t('rewardShop')}
             <SpeakButton text={t('rewardShop')} iconSize={16} />
           </h2>
@@ -797,7 +797,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
               <div className={`inline-flex items-center justify-center w-20 h-20 rounded-3xl mb-4 ${
                 rewardCelebration ? 'bg-gradient-to-br from-amber-400 to-orange-500 scale-110 animate-pulse' : 'bg-amber-500/20'
               } transition-all duration-500`}>
-                <Gift className={`w-10 h-10 ${rewardCelebration ? 'text-white' : 'text-amber-400'}`} />
+                <Gift className={`w-10 h-10 ${rewardCelebration ? 'text-white' : 'text-red-500'}`} />
               </div>
               <p className={`text-xs font-bold uppercase tracking-wider mb-2 ${isSpace ? 'text-amber-400' : 'text-amber-500'}`}>
                 {t('previewReward')}
