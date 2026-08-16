@@ -8,9 +8,7 @@ const GENRES = [
   { key: 'fantasy', labelKey: 'genreFantasy' },
   { key: 'reality', labelKey: 'genreReality' },
   { key: 'comedy', labelKey: 'genreComedy' },
-  { key: 'mystery', labelKey: 'genreMystery' },
   { key: 'scifi', labelKey: 'genreSciFi' },
-  { key: 'poetry', labelKey: 'genrePoetry' },
 ]
 
 const RANK_META: Record<WritingRank, { labelKey: string; emoji: string; color: string }> = {
