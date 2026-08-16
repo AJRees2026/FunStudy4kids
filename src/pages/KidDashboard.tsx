@@ -22,8 +22,8 @@ import BookReflections from '../components/BookReflections'
 import MoodTracker from '../components/MoodTracker'
 import HeightBoard from '../components/HeightBoard'
 import {
-  Star, Flame, Award, LogOut, Play, Check, Lock, ShoppingBag,
-  ClipboardList, X, Bell, Clock, BarChart3, Gift, Sparkles,
+  Star, Flame, Award, LogOut, Play, Check, Lock, Gift,
+  ClipboardList, X, Bell, Clock, BarChart3, Sparkles,
   ArrowLeft, BookMarked, ChevronRight, Smile, Ruler, PenLine,
 } from 'lucide-react'
 
@@ -437,7 +437,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                 className={`group rounded-3xl p-5 ${theme.cardBg} border ${theme.cardBorder} text-left transition-all hover:scale-[1.03] active:scale-95 relative`}
               >
                 <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
-                  <ShoppingBag className="w-6 h-6 text-white" />
+                  <Gift className="w-6 h-6 text-white" />
                 </div>
                 <h3 className={`font-display font-extrabold text-lg ${theme.textPrimary} mb-1`}>{t('rewardShop')}</h3>
                 <p className={`text-xs font-semibold ${theme.textMuted} leading-snug`}>{t('rewardShopDesc')}</p>
@@ -640,7 +640,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
         <>
         <section className="animate-fadeIn">
           <h2 className={`font-display font-extrabold text-xl ${theme.textPrimary} mb-3 flex items-center gap-2`}>
-            <ShoppingBag className="w-5 h-5 text-amber-400" />
+            <Gift className="w-5 h-5 text-amber-400" />
             {t('rewardShop')}
             <SpeakButton text={t('rewardShop')} iconSize={16} />
           </h2>
