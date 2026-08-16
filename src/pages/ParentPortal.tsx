@@ -10,6 +10,7 @@ import DictationButton from '../components/DictationButton'
 import SpeakButton from '../components/SpeakButton'
 import SubjectProgress from '../components/SubjectProgress'
 import ReadingJourney from '../components/ReadingJourney'
+import BookReflections from '../components/BookReflections'
 import ParentMoodView from '../components/ParentMoodView'
 import GrowthTracking from '../components/GrowthTracking'
 import { getTheme } from '../lib/themes'
@@ -269,6 +270,13 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
                   />
                   <h3 className="font-display font-bold text-slate-700 mt-6 mb-3">{c.child_name || c.name} — {t('readingJourney')}</h3>
                   <ReadingJourney
+                    childId={c.id}
+                    theme={childTheme}
+                    isSpace={c.theme_preference === 'space'}
+                    readOnly
+                  />
+                  <h3 className="font-display font-bold text-slate-700 mt-6 mb-3">{c.child_name || c.name} — {t('iWriteMyBook')}</h3>
+                  <BookReflections
                     childId={c.id}
                     theme={childTheme}
                     isSpace={c.theme_preference === 'space'}

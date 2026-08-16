@@ -36,6 +36,7 @@ export type Profile = {
   daily_cutoff_time: string
   auto_archive_daily: boolean
   language: string
+  writing_rank: WritingRank | null
 }
 
 export type Outfit = {
@@ -115,6 +116,34 @@ export type GrowthEntry = {
   notes: string | null
   created_at: string
 }
+
+export type ReflectionStatus = 'draft' | 'approved'
+
+export type BookReflection = {
+  id: string
+  child_id: string
+  book_title: string
+  character: string | null
+  genre: string | null
+  start_date: string | null
+  end_date: string | null
+  reflection_text: string
+  word_count: number
+  status: ReflectionStatus
+  created_at: string
+  updated_at: string
+}
+
+export type WritingRank = 'junior_author' | 'storyteller' | 'master_storyteller' | 'master_wordsmith' | 'grand_chronicler' | 'epic_author'
+
+export const WRITING_MILESTONES: { threshold: number; rank: WritingRank; points: number }[] = [
+  { threshold: 50, rank: 'junior_author', points: 5 },
+  { threshold: 200, rank: 'storyteller', points: 5 },
+  { threshold: 500, rank: 'master_storyteller', points: 8 },
+  { threshold: 1000, rank: 'master_wordsmith', points: 8 },
+  { threshold: 2500, rank: 'grand_chronicler', points: 10 },
+  { threshold: 5000, rank: 'epic_author', points: 10 },
+]
 
 export type ApprovalRequest = {
   id: string

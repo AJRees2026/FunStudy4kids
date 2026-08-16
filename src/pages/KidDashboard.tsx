@@ -1,5 +1,14 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { supabase, type Profile, type Task, type Reward, type ApprovalRequest } from '../lib/supabase'
+import { supabase, type Profile, type Task, type Reward, type ApprovalRequest, type WritingRank } from '../lib/supabase'
+
+const RANK_LABEL_KEYS: Record<WritingRank, string> = {
+  junior_author: 'rankJuniorAuthor',
+  storyteller: 'rankStoryteller',
+  master_storyteller: 'rankMasterStoryteller',
+  master_wordsmith: 'rankMasterWordsmith',
+  grand_chronicler: 'rankGrandChronicler',
+  epic_author: 'rankEpicAuthor',
+}
 import { getTheme, type Theme } from '../lib/themes'
 import { speak } from '../lib/speech'
 import { useI18n } from '../lib/i18n'
@@ -9,12 +18,13 @@ import FocusTimer from '../components/FocusTimer'
 import Confetti from '../components/Confetti'
 import SubjectProgress from '../components/SubjectProgress'
 import ReadingJourney from '../components/ReadingJourney'
+import BookReflections from '../components/BookReflections'
 import MoodTracker from '../components/MoodTracker'
 import HeightBoard from '../components/HeightBoard'
 import {
   Star, Flame, Award, LogOut, Play, Check, Lock, ShoppingBag,
   ClipboardList, X, Bell, Clock, BarChart3, Gift, Sparkles,
-  ArrowLeft, BookMarked, ChevronRight, Smile, Ruler,
+  ArrowLeft, BookMarked, ChevronRight, Smile, Ruler, PenLine,
 } from 'lucide-react'
 
 type Props = {
@@ -41,6 +51,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
   const [rewardPreview, setRewardPreview] = useState<Reward | null>(null)
   const [rewardCelebration, setRewardCelebration] = useState(false)
   const [view, setView] = useState<'home' | 'subjects' | 'reading' | 'tasks' | 'rewards' | 'mood' | 'growth'>('home')
+  const [milestoneCelebration, setMilestoneCelebration] = useState<WritingRank | null>(null)
 
   const isSpace = currentChild.theme_preference === 'space'
   const theme: Theme = getTheme(currentChild.theme_preference)
@@ -309,8 +320,14 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
               {currentChild.photo_url ? <img src={currentChild.photo_url} alt={currentChild.child_name || currentChild.name} className="w-full h-full object-cover" /> : theme.emoji}
             </div>
             <div>
-              <p className={`font-display font-bold ${theme.textPrimary} text-lg leading-none`}>
+              <p className={`font-display font-bold ${theme.textPrimary} text-lg leading-none flex items-center gap-2`}>
                 {currentChild.child_name || currentChild.name}
+                {currentChild.writing_rank && ['master_storyteller', 'master_wordsmith', 'grand_chronicler', 'epic_author'].includes(currentChild.writing_rank) && (
+                  <span className="inline-flex items-center gap-0.5 text-xs font-bold rounded-full bg-gradient-to-r from-amber-400 to-orange-500 text-white px-2 py-0.5 shadow-sm">
+                    <PenLine className="w-3 h-3" />
+                    {t(RANK_LABEL_KEYS[currentChild.writing_rank as WritingRank])}
+                  </span>
+                )}
               </p>
               <div className="flex items-center gap-2 mt-1">
                 <span className={`flex items-center gap-1 text-xs font-bold ${theme.accent}`}>
@@ -477,7 +494,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
 
         {/* Reading Journey View */}
         {view === 'reading' && (
-          <div className="animate-fadeIn">
+          <div className="animate-fadeIn space-y-4">
             <ReadingJourney childId={currentChild.id} theme={theme} isSpace={isSpace} onStarsAwarded={(count) => {
               const newPoints = currentChild.points + count
               supabase.from('profiles').update({ points: newPoints }).eq('id', currentChild.id)
@@ -486,6 +503,22 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
               setTimeout(() => setConfetti(false), 100)
               showToast(`${t('greatJob')}! ${count} ${isSpace ? t('fuelCells') : t('sparkles')}!`)
             }} />
+            <BookReflections
+              childId={currentChild.id}
+              theme={theme}
+              isSpace={isSpace}
+              onPointsAwarded={(count) => {
+                const newPoints = currentChild.points + count
+                supabase.from('profiles').update({ points: newPoints }).eq('id', currentChild.id)
+                setCurrentChild({ ...currentChild, points: newPoints })
+              }}
+              onMilestoneReached={(rank) => {
+                setConfetti(true)
+                setTimeout(() => setConfetti(false), 100)
+                setMilestoneCelebration(rank)
+                setTimeout(() => setMilestoneCelebration(null), 4000)
+              }}
+            />
           </div>
         )}
 
@@ -800,6 +833,31 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {milestoneCelebration && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-fadeIn" onClick={() => setMilestoneCelebration(null)}>
+          <div className={`rounded-3xl p-8 max-w-sm w-full mx-4 text-center shadow-2xl animate-pop ${isSpace ? 'bg-slate-800 border border-slate-700' : 'bg-white'}`}>
+            <div className="text-5xl mb-3">
+              {milestoneCelebration === 'junior_author' && '📝'}
+              {milestoneCelebration === 'storyteller' && '📖'}
+              {milestoneCelebration === 'master_storyteller' && '✒️'}
+              {milestoneCelebration === 'master_wordsmith' && '🌟'}
+              {milestoneCelebration === 'grand_chronicler' && '🏅'}
+              {milestoneCelebration === 'epic_author' && '🏆'}
+            </div>
+            <h2 className={`font-display font-extrabold text-xl ${theme.textPrimary} mb-2`}>{t('milestoneUnlocked')}</h2>
+            <p className={`font-display font-bold text-lg ${theme.accent}`}>
+              {t(RANK_LABEL_KEYS[milestoneCelebration])}
+            </p>
+            <button
+              onClick={() => setMilestoneCelebration(null)}
+              className={`mt-6 w-full font-display font-bold py-3 rounded-2xl text-white bg-gradient-to-r ${theme.buttonGradient} hover:scale-[1.02] active:scale-95 transition-all`}
+            >
+              {t('continueToApp')}
+            </button>
           </div>
         </div>
       )}
