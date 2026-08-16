@@ -19,7 +19,7 @@ export const spaceTheme: Theme = {
   name: 'space',
   bg: 'bg-[#0a173b]',
   bgGradient: 'bg-gradient-to-b from-[#0a173b] via-[#050b14]/90 to-[#ff6700]',
-  cardBg: 'bg-[#EEEEEE]',
+  cardBg: 'bg-[#000000]',
   cardBorder: 'border-slate-300',
   textPrimary: 'text-[#000000]',
   textSecondary: 'text-[#000000]/90',
