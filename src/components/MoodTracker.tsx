@@ -193,7 +193,7 @@ export default function MoodTracker({ childId, theme, isSpace }: Props) {
       {selectedDate && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4" onClick={() => setSelectedDate(null)}>
           <div
-            className={`rounded-3xl p-6 max-w-sm w-full shadow-2xl animate-pop ${isSpace ? 'bg-slate-800 border border-slate-700' : 'bg-white'}`}
+            className={`rounded-3xl p-5 max-w-sm w-full shadow-2xl animate-pop ${isSpace ? 'bg-slate-800 border border-slate-700' : 'bg-white'}`}
             onClick={(e) => e.stopPropagation()}
           >
             <h3 className={`font-display font-extrabold text-lg mb-1 ${isSpace ? 'text-white' : 'text-slate-800'}`}>
