@@ -132,7 +132,7 @@ export default function MoodTracker({ childId, theme, isSpace }: Props) {
         <button onClick={prevMonth} className={`p-2 rounded-xl ${isSpace ? 'hover:bg-white/10' : 'hover:bg-slate-100'} ${theme.textSecondary} transition-colors`}>
           <ArrowLeft className="w-4 h-4" />
         </button>
-        <span className={`font-display font-bold text-sm ${theme.textPrimary}`}>{monthLabel}</span>
+        <span className={`font-display font-bold text-m ${theme.textPrimary}`}>{monthLabel}</span>
         <button onClick={nextMonth} className={`p-2 rounded-xl ${isSpace ? 'hover:bg-white/10' : 'hover:bg-slate-100'} ${theme.textSecondary} transition-colors`}>
           <ArrowRight className="w-4 h-4" />
         </button>
