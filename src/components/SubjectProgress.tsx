@@ -102,10 +102,9 @@ export default function SubjectProgress({ tasks, theme, isSpace, childId, onTask
           <h2 className={`font-display font-extrabold text-xl ${theme.textPrimary}`}>{t('subjectProgress')}</h2>
           <p className={`text-xs font-semibold mt-1 ${theme.textMuted}`}>{t('weeklySubjectGoals')}</p>
         </div>
-        <div className={`flex items-center gap-1 text-sm font-bold ${theme.accent}`}>
-          <Star className="w-4 h-4 fill-current" />
-          {t('oneStarPerTask')}
-        </div>
+        <span className={`text-xs font-semibold ${isSpace ? 'text-amber-400' : 'text-pink-600'}`}>
+          ★ 1 star / task
+        </span>
       </div>
 
       <div className="space-y-5">
