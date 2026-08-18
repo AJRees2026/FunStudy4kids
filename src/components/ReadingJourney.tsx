@@ -433,7 +433,7 @@ export default function ReadingJourney({ childId, theme, isSpace, onStarsAwarded
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4" onClick={() => { stopCamera(); setShowModal(false) }}>
           <div
             className={`rounded-3xl p-6 max-w-md w-full shadow-2xl animate-pop max-h-[90vh] overflow-y-auto ${
-              isSpace ? 'bg-slate-800 border border-slate-700' : 'bg-white'
+              isSpace ? 'bg-slate-100 border border-slate-700' : 'bg-black'
             }`}
             onClick={(e) => e.stopPropagation()}
           >
