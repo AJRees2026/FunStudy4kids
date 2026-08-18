@@ -6,8 +6,6 @@ import {
   UserCog, Rocket, Sparkles, Lock, KeyRound, Copy, Bell, Globe,
   BarChart3, CalendarClock, Trash2, Palette, Gift, Smile, Ruler,
 } from 'lucide-react'
-import DictationButton from '../components/DictationButton'
-import SpeakButton from '../components/SpeakButton'
 import SubjectProgress from '../components/SubjectProgress'
 import ReadingJourney from '../components/ReadingJourney'
 import BookReflections from '../components/BookReflections'
@@ -183,7 +181,6 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
               <div className="flex items-center gap-2 mb-4">
                 <KeyRound className="w-5 h-5" />
                 <h3 className="font-display font-extrabold text-lg">{t('familyPairCodeLabel')}</h3>
-                <SpeakButton text={currentParent.family_pair_code || ''} iconSize={16} className="text-white/80" />
               </div>
               <p className="text-indigo-100 text-sm font-semibold mb-3">{t('shareCodeHelp')}</p>
               <div className="flex items-center gap-3">
@@ -319,7 +316,6 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-1.5">
                           <h3 className="font-display font-bold text-slate-700 truncate">{task.title}</h3>
-                          <SpeakButton text={task.title} iconSize={14} />
                         </div>
                         <div className="flex items-center gap-2 mt-1">
                           <span className="text-xs font-bold text-slate-400">{child?.child_name || child?.name}</span>
@@ -383,7 +379,6 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
                       </div>
                       <div className="flex items-center gap-1">
                         <h3 className="font-display font-bold text-slate-700 text-sm">{reward.title}</h3>
-                        <SpeakButton text={reward.title} iconSize={12} />
                       </div>
                       <p className="text-xs text-slate-400 font-semibold mt-1">{child?.child_name || child?.name} · {reward.point_cost} pts</p>
                       <span className={`text-xs font-bold mt-2 px-2 py-0.5 rounded-full ${
@@ -431,7 +426,6 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
                       </div>
                       <div className="flex items-center gap-1.5 mb-3">
                         <p className="font-display font-bold text-slate-800">{req.task_title}</p>
-                        <SpeakButton text={req.task_title} iconSize={14} />
                       </div>
                       <p className="text-xs font-bold text-indigo-500 mb-3">+{req.point_value} {t('pointsLower')}</p>
                       <div className="flex gap-2">
@@ -783,7 +777,6 @@ function AddTaskModal({ children, rewards, lang, t, onClose, onAdd }: {
             <label className="text-xs text-slate-400 font-bold uppercase">{t('taskTitle')}</label>
             <div className="flex items-center gap-2 mt-1">
               <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder={t('taskTitle')} lang={lang} spellCheck={true} className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-400" autoFocus />
-              <DictationButton onTranscribe={setTitle} />
             </div>
           </div>
           <div className="grid grid-cols-3 gap-3">
@@ -854,7 +847,6 @@ function AddRewardModal({ children, lang, t, onClose, onAdd }: {
             <label className="text-xs text-slate-400 font-bold uppercase">{t('rewardTitle')}</label>
             <div className="flex items-center gap-2 mt-1">
               <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder={t('rewardTitle')} lang={lang} spellCheck={true} className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-400" autoFocus />
-              <DictationButton onTranscribe={setTitle} />
             </div>
           </div>
           <div>
@@ -890,7 +882,6 @@ function AddChildModal({ parentId, lang, t, onClose, onAdd }: {
             <label className="text-xs text-slate-400 font-bold uppercase">{t('childName')}</label>
             <div className="flex items-center gap-2 mt-1">
               <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder={t('childName')} lang={lang} spellCheck={true} className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-400" autoFocus />
-              <DictationButton onTranscribe={setName} />
             </div>
           </div>
           <div>

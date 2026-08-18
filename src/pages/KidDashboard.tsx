@@ -10,9 +10,7 @@ const RANK_LABEL_KEYS: Record<WritingRank, string> = {
   epic_author: 'rankEpicAuthor',
 }
 import { getTheme, type Theme } from '../lib/themes'
-import { speak } from '../lib/speech'
 import { useI18n } from '../lib/i18n'
-import SpeakButton from '../components/SpeakButton'
 import PinPrompt from '../components/PinPrompt'
 import FocusTimer from '../components/FocusTimer'
 import Confetti from '../components/Confetti'
@@ -106,7 +104,6 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
         if (pending.length > 0) {
           setCutoffNotified(true)
           const msg = t('homeworkIncomplete')
-          speak(msg, lang)
           showToast(msg)
         }
       }
@@ -134,7 +131,6 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
     setTimeout(() => setConfetti(false), 100)
 
     const congrats = `${t('greatJob')}, ${currentChild.child_name || currentChild.name}! ${t('youEarned')} ${task.point_value} ${isSpace ? t('fuelCells') : t('sparkles')}!`
-    speak(congrats, lang)
     showToast(congrats)
   }
 
@@ -167,7 +163,6 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
         })
       }
       showToast(t('approvalSent'))
-      speak(t('approvalSent'), lang)
 
       const startTime = Date.now()
       const checkApproval = setInterval(async () => {
@@ -246,7 +241,6 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
           <div className="flex items-center gap-2 mb-2">
             <BarChart3 className={`w-4 h-4 ${theme.accent}`} />
             <span className={`text-sm font-bold ${theme.textSecondary}`}>{progressPct}%</span>
-            <SpeakButton text={`${progressPct} percent`} iconSize={14} />
           </div>
           <div className={`h-3 rounded-full overflow-hidden ${isSpace ? 'bg-slate-700' : 'bg-slate-200'}`}>
             <div
@@ -266,7 +260,6 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
             <span className={`font-display font-bold text-lg ${theme.textPrimary}`}>
               {completedCount} {t('ofDone')} {totalTasks} {t('done')}
             </span>
-            <SpeakButton text={`${completedCount} ${t('ofDone')} ${totalTasks} ${t('done')}`} iconSize={14} />
           </div>
           <div className={`h-2 rounded-full overflow-hidden mt-2 ${isSpace ? 'bg-slate-700' : 'bg-slate-200'}`}>
             <div
@@ -287,7 +280,6 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
           <span className="text-lg">{gaugeEmoji}</span>
           <span className={`text-sm font-bold ${theme.textSecondary}`}>{gaugeLabel}</span>
           <span className={`text-sm font-bold ${theme.accent} ml-auto`}>{progressPct}%</span>
-          <SpeakButton text={`${gaugeLabel} ${progressPct} percent`} iconSize={14} />
         </div>
         <div className={`h-4 rounded-full overflow-hidden ${isSpace ? 'bg-slate-800 border border-slate-700' : 'bg-slate-100 border border-slate-200'}`}>
           {isSpace ? (
@@ -532,7 +524,6 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
             <span className={`text-sm font-bold ${theme.textMuted} bg-white/5 px-2 py-0.5 rounded-full`}>
               {pendingTasks.length}
             </span>
-            <SpeakButton text={t('tasks')} iconSize={16} />
           </h2>
           {pendingTasks.length === 0 ? (
             <div className={`rounded-2xl p-6 text-center ${theme.cardBg} border ${theme.cardBorder}`}>
@@ -542,9 +533,6 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
             <div className="space-y-3">
               {pendingTasks.map((task) => {
                 const linkedReward = task.reward_id ? rewards.find((r) => r.id === task.reward_id) : null
-                const speakText = linkedReward
-                  ? `${task.title}. ${t('youWillEarn')} ${linkedReward.title}`
-                  : task.title
                 return (
                 <div key={task.id} className={`rounded-2xl p-4 ${theme.cardBg} border ${theme.cardBorder}`}>
                   <div className="flex items-center gap-3">
@@ -553,7 +541,6 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                         <h3 className={`font-display font-bold ${theme.textPrimary} text-lg truncate`}>
                           {task.title}
                         </h3>
-                        <SpeakButton text={speakText} iconSize={16} />
                       </div>
                       <div className="flex items-center gap-2 mt-1">
                         <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
@@ -622,7 +609,6 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                     <h3 className={`font-display font-bold ${theme.textSecondary} text-sm truncate`}>
                       {task.title}
                     </h3>
-                    <SpeakButton text={task.title} iconSize={14} />
                   </div>
                   <span className={`text-xs font-bold ${theme.accent} flex items-center gap-0.5`}>
                     +{task.point_value} <Star className="w-3 h-3" />
@@ -642,7 +628,6 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
           <h2 className={`font-display font-extrabold text-xl ${theme.textPrimary} mb-3 flex items-center gap-2`}>
             <Gift className="w-5 h-5 text-red-500" />
             {t('rewardShop')}
-            <SpeakButton text={t('rewardShop')} iconSize={16} />
           </h2>
           {availableRewards.length === 0 ? (
             <div className={`rounded-2xl p-6 text-center ${theme.cardBg} border ${theme.cardBorder}`}>
@@ -661,7 +646,6 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                       <h3 className={`font-display font-bold ${theme.textPrimary} text-sm`}>
                         {reward.title}
                       </h3>
-                      <SpeakButton text={reward.title} iconSize={14} />
                     </div>
                     <p className={`text-xs font-bold ${theme.accent} flex items-center gap-0.5 mb-3`}>
                       <Star className="w-3 h-3" /> {reward.point_cost}
@@ -698,7 +682,6 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                     <h3 className={`font-display font-bold ${theme.textSecondary} text-sm truncate`}>
                       {reward.title}
                     </h3>
-                    <SpeakButton text={reward.title} iconSize={14} />
                   </div>
                 </div>
               ))}
@@ -816,7 +799,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
               </div>
               <div className="flex gap-2">
                 <button
-                  onClick={() => { speak(`${t('youWillEarn')} ${rewardPreview.title}`, lang); setRewardCelebration(true); setTimeout(() => setRewardCelebration(false), 2000) }}
+                  onClick={() => { setRewardCelebration(true); setTimeout(() => setRewardCelebration(false), 2000) }}
                   className={`flex-1 font-display font-bold py-3 rounded-2xl transition-all flex items-center justify-center gap-1.5 ${
                     isSpace
                       ? 'bg-amber-500/20 text-amber-300 hover:bg-amber-500/30'

@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { supabase, generatePairCode, type Profile } from '../lib/supabase'
 import { useI18n, LANGUAGES, type LangCode } from '../lib/i18n'
-import { Rocket, Sparkles, Users, KeyRound, ArrowRight, Check, Mic, Copy } from 'lucide-react'
-import DictationButton from '../components/DictationButton'
+import { Rocket, Sparkles, Users, KeyRound, ArrowRight, Check, Copy } from 'lucide-react'
 
 type Props = {
   onLinked: (profile: Profile) => void
@@ -190,7 +189,6 @@ export default function Onboarding({ onLinked }: Props) {
                 className="flex-1 bg-slate-900/60 text-white rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-400 placeholder-slate-500"
                 autoFocus
               />
-              <DictationButton onTranscribe={setParentName} />
             </div>
             <button
               onClick={handleParentSetup}
@@ -255,7 +253,6 @@ export default function Onboarding({ onLinked }: Props) {
                     className="flex-1 bg-slate-900/60 text-white rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-teal-400 placeholder-slate-500"
                     autoFocus
                   />
-                  <DictationButton onTranscribe={setChildName} />
                 </div>
               </div>
               <div>
