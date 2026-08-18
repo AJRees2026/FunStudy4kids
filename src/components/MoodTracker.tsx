@@ -172,7 +172,7 @@ export default function MoodTracker({ childId, theme, isSpace }: Props) {
                 {mood ? mood.emoji : day}
               </span>
               {mood && (
-                <span className={`text-s font-bold mt-0.5 ${mood.textClass} opacity-80`}>{day}</span>
+                <span className={`text-xs font-bold mt-0.5 ${mood.textClass} opacity-80`}>{day}</span>
               )}
             </button>
           )
@@ -211,8 +211,8 @@ export default function MoodTracker({ childId, theme, isSpace }: Props) {
                     ${selectedMood === m.key ? `${m.bgClass} scale-110 ring-2 ring-white/50` : isSpace ? 'bg-white/5 hover:bg-white/10' : 'bg-slate-50 hover:bg-slate-100'}
                   `}
                 >
-                  <span className="text-3xl">{m.emoji}</span>
-                  <span className={`text-[10px] xs:text-xs font-semibold text-center truncate w-full ${selectedMood === m.key ? m.textClass : isSpace ? 'text-slate-400' : 'text-slate-500'}`}>
+                  <span className="text-10xl">{m.emoji}</span>
+                  <span className={`text-sm font-bold ${selectedMood === m.key ? m.textClass : isSpace ? 'text-slate-400' : 'text-slate-500'}`}>
                     {t(`mood${m.key.charAt(0).toUpperCase() + m.key.slice(1)}`)}
                   </span>
                 </button>
