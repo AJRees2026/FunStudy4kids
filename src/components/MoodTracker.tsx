@@ -168,11 +168,11 @@ export default function MoodTracker({ childId, theme, isSpace }: Props) {
                 ${isToday ? 'ring-2 ring-offset-1 ring-offset-transparent ' + (isSpace ? 'ring-white/60' : 'ring-slate-400') : ''}
               `}
             >
-              <span className={`text-lg leading-none ${mood ? mood.textClass : theme.textMuted}`}>
+              <span className={`leading-none ${mood ? `text-2xl ${mood.textClass}` : `text-sm font-bold ${theme.textMuted}`}`}>
                 {mood ? mood.emoji : day}
               </span>
               {mood && (
-                <span className={`text-l font-bold mt-0.5 ${mood.textClass} opacity-80`}>{day}</span>
+                <span className={`text-xs font-bold mt-0.5 ${mood.textClass} opacity-80`}>{day}</span>
               )}
             </button>
           )
