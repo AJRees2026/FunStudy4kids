@@ -447,7 +447,7 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
                   value={form.book_title}
                   onChange={(e) => setForm({ ...form, book_title: e.target.value })}
                   className={`w-full rounded-xl px-3 py-2.5 text-sm font-semibold outline-none border ${
-                    isSpace ? 'bg-slate-700 border-slate-600 text-white' : 'bg-slate-50 border-slate-200 text-slate-800'
+                    isSpace ? 'bg-slate-50 border-slate-600 text-white' : 'bg-slate-50 border-slate-200 text-slate-800'
                   } focus:border-indigo-400`}
                 />
               </div>
