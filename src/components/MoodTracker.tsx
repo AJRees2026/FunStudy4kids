@@ -172,7 +172,7 @@ export default function MoodTracker({ childId, theme, isSpace }: Props) {
                 {mood ? mood.emoji : day}
               </span>
               {mood && (
-                <span className={`text-[9px] font-bold mt-0.5 ${mood.textClass} opacity-80`}>{day}</span>
+                <span className={`text-xl font-bold mt-0.5 ${mood.textClass} opacity-80`}>{day}</span>
               )}
             </button>
           )
