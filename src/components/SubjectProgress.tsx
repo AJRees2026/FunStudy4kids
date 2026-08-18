@@ -68,7 +68,7 @@ export default function SubjectProgress({ tasks, theme, isSpace, childId, onTask
     const title = (newTask[subject.key] || '').trim()
     if (!title) return
     setAdding(subject.key)
-    await supabase.from('tasks').insert({
+    const { error } = await supabase.from('tasks').insert({
       child_id: childId,
       title,
       subject: subject.dbSubject,
@@ -77,6 +77,10 @@ export default function SubjectProgress({ tasks, theme, isSpace, childId, onTask
       status: 'pending',
       reward_id: null,
     })
+    if (error) {
+      setAdding(null)
+      return
+    }
     setNewTask((prev) => ({ ...prev, [subject.key]: '' }))
     setAdding(null)
     onTasksChange()
