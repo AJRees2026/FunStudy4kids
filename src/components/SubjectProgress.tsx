@@ -236,7 +236,7 @@ export default function SubjectProgress({ tasks, theme, isSpace, childId, onTask
           ) : (
             <button
               onClick={() => setShowAddSubject(true)}
-              className={`w-full flex items-center justify-center gap-2 rounded-xl py-2 text-sm font-bold transition-all hover:opacity-80 ${theme.textMuted}`}
+              className={`w-full flex items-center justify-center gap-2 rounded-xl py-2 text-sm font-bold transition-all hover:opacity-80 ${text-pink-500}`}
             >
               <Plus className="w-4 h-4" /> {t('addSubject')}
             </button>
