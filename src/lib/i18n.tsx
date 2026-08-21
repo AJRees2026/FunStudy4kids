@@ -167,7 +167,7 @@ const en: Dict = {
   rewardManagement: 'Reward Management',
   attachReward: 'Attach a Reward',
   attachRewardDesc: 'Link a reward the child earns upon completing this task',
-  noRewardLinked: 'No reward linked',
+  noRewardLinked: 'Oops! No reward linked',
   selectReward: 'Select Reward',
   rewardBadge: 'Reward',
   previewReward: 'Preview Reward',
