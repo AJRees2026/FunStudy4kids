@@ -312,7 +312,7 @@ export default function ChildProfileSetup({ profile, onDone }: Props) {
                 disabled={saving}
                 className={`flex-1 font-display font-bold py-3 rounded-2xl transition-all flex items-center justify-center gap-2 border-2 ${
                   isSpace
-                    ? 'border-slate-600 text-red hover:border-indigo-400 hover:bg-indigo-500/10'
+                    ? 'border-slate-600 text-red-500 hover:border-indigo-400 hover:bg-indigo-500/10'
                     : 'border-slate-300 text-slate-700 hover:border-indigo-400 hover:bg-indigo-50'
                 } disabled:opacity-50`}
               >
