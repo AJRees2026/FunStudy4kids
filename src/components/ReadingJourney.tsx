@@ -563,7 +563,7 @@ export default function ReadingJourney({ childId, theme, isSpace, onStarsAwarded
                   value={form.title}
                   onChange={(e) => setForm({ ...form, title: e.target.value })}
                   className={`w-full rounded-xl px-3 py-2.5 text-sm font-semibold outline-none border ${
-                    isSpace ? 'bg-[#B0C4DE] border-slate-600 text-white' : 'bg-slate-50 border-slate-200 text-black'
+                    isSpace ? 'bg-[#B0C4DE] border-slate-600 text-black' : 'bg-slate-50 border-slate-200 text-black'
                   } focus:border-indigo-400`}
                 />
               </div>
@@ -575,7 +575,7 @@ export default function ReadingJourney({ childId, theme, isSpace, onStarsAwarded
                   value={form.author}
                   onChange={(e) => setForm({ ...form, author: e.target.value })}
                   className={`w-full rounded-xl px-3 py-2.5 text-sm font-semibold outline-none border ${
-                    isSpace ? 'bg-[#B0C4DE] border-slate-600 text-white' : 'bg-slate-50 border-slate-200 text-black'
+                    isSpace ? 'bg-[#B0C4DE] border-slate-600 text-black' : 'bg-slate-50 border-slate-200 text-black'
                   } focus:border-indigo-400`}
                 />
               </div>
@@ -589,7 +589,7 @@ export default function ReadingJourney({ childId, theme, isSpace, onStarsAwarded
                     value={form.total_pages}
                     onChange={(e) => setForm({ ...form, total_pages: e.target.value })}
                     className={`w-full rounded-xl px-3 py-2.5 text-sm font-semibold outline-none border ${
-                      isSpace ? 'bg-[#B0C4DE] border-slate-600 text-white' : 'bg-slate-50 border-slate-200 text-black'
+                      isSpace ? 'bg-[#B0C4DE] border-slate-600 text-black' : 'bg-slate-50 border-slate-200 text-black'
                     } focus:border-indigo-400`}
                   />
                 </div>
@@ -601,7 +601,7 @@ export default function ReadingJourney({ childId, theme, isSpace, onStarsAwarded
                     value={form.current_page}
                     onChange={(e) => setForm({ ...form, current_page: e.target.value })}
                     className={`w-full rounded-xl px-3 py-2.5 text-sm font-semibold outline-none border ${
-                      isSpace ? 'bg-s[#B0C4DE] border-slate-600 text-white' : 'bg-slate-50 border-slate-200 text-black'
+                      isSpace ? 'bg-[#B0C4DE] border-slate-600 text-black' : 'bg-slate-50 border-slate-200 text-black'
                     } focus:border-indigo-400`}
                   />
                 </div>
@@ -614,7 +614,7 @@ export default function ReadingJourney({ childId, theme, isSpace, onStarsAwarded
                   value={form.isbn}
                   onChange={(e) => setForm({ ...form, isbn: e.target.value })}
                   className={`w-full rounded-xl px-3 py-2.5 text-sm font-semibold outline-none border ${
-                    isSpace ? 'bg-[#B0C4DE] border-slate-600 text-white' : 'bg-slate-50 border-slate-200 text-black'
+                    isSpace ? 'bg-[#B0C4DE] border-slate-600 text-black' : 'bg-slate-50 border-slate-200 text-black'
                   } focus:border-indigo-400`}
                 />
               </div>
@@ -649,7 +649,7 @@ export default function ReadingJourney({ childId, theme, isSpace, onStarsAwarded
                     value={form.start_date}
                     onChange={(e) => setForm({ ...form, start_date: e.target.value })}
                     className={`w-full rounded-xl px-3 py-2.5 text-sm font-semibold outline-none border ${
-                      isSpace ? 'bg-[#B0C4DE] border-slate-600 text-white' : 'bg-slate-50 border-slate-200 text-black'
+                      isSpace ? 'bg-[#B0C4DE] border-slate-600 text-black' : 'bg-slate-50 border-slate-200 text-black'
                     } focus:border-indigo-400`}
                   />
                 </div>
@@ -660,7 +660,7 @@ export default function ReadingJourney({ childId, theme, isSpace, onStarsAwarded
                     value={form.completion_date}
                     onChange={(e) => setForm({ ...form, completion_date: e.target.value })}
                     className={`w-full rounded-xl px-3 py-2.5 text-sm font-semibold outline-none border ${
-                      isSpace ? 'bg-[#B0C4DE] border-slate-600 text-white' : 'bg-slate-50 border-slate-200 text-black'
+                      isSpace ? 'bg-[#B0C4DE] border-slate-600 text-black' : 'bg-slate-50 border-slate-200 text-black'
                     } focus:border-indigo-400`}
                   />
                 </div>
