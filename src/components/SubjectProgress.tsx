@@ -130,7 +130,7 @@ export default function SubjectProgress({ tasks, theme, isSpace, childId, onTask
                   <div className={`h-full rounded-full transition-all duration-500 ${subject.barColor}`} style={{ width: `${percentage}%` }} />
                 </div>
                 <span className={`w-10 text-right text-xs font-bold ${theme.textSecondary}`}>{percentage}%</span>
-                <span className={`w-14 flex items-center justify-end gap-1 text-xs font-bold ${theme.accent}`}>
+                <span className="w-14 flex items-center justify-end gap-1 text-xs font-bold text-orange-500">
                   <Star className="w-3.5 h-3.5 fill-current" /> {stars}
                 </span>
               </div>
