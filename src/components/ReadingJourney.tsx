@@ -563,7 +563,7 @@ export default function ReadingJourney({ childId, theme, isSpace, onStarsAwarded
                   value={form.title}
                   onChange={(e) => setForm({ ...form, title: e.target.value })}
                   className={`w-full rounded-xl px-3 py-2.5 text-sm font-semibold outline-none border ${
-                    isSpace ? 'bg-[#C5E0B4] border-slate-600 text-white' : 'bg-slate-50 border-slate-200 text-slate-800'
+                    isSpace ? 'bg-[#B0C4DE] border-slate-600 text-white' : 'bg-slate-50 border-slate-200 text-slate-800'
                   } focus:border-indigo-400`}
                 />
               </div>
