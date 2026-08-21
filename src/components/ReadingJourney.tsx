@@ -455,13 +455,13 @@ export default function ReadingJourney({ childId, theme, isSpace, onStarsAwarded
                   <div className="flex gap-2">
                     <button
                       onClick={startCamera}
-                      className={`flex-1 flex items-center justify-center gap-1.5 rounded-xl py-2.5 text-xs font-bold transition-all hover:scale-[1.02] active:scale-95 bg-[#1D4ED8] text-black`}
+                      className={`flex-1 flex items-center justify-center gap-1.5 rounded-xl py-2.5 text-xs font-bold transition-all hover:scale-[1.02] active:scale-95 bg-[#1D4ED8] text-white`}
                     >
                       <Camera className="w-4 h-4" /> {t('photographCover')}
                     </button>
                     <button
                       onClick={() => fileInputRef.current?.click()}
-                      className={`flex-1 flex items-center justify-center gap-1.5 rounded-xl py-2.5 text-xs font-bold transition-all hover:scale-[1.02] active:scale-95 bg-gradient-to-r ${theme.buttonGradient} text-black`}
+                      className={`flex-1 flex items-center justify-center gap-1.5 rounded-xl py-2.5 text-xs font-bold transition-all hover:scale-[1.02] active:scale-95 bg-[#E64A19] text-white`}
                     >
                       <Upload className="w-4 h-4" /> {t('uploadCover')}
                     </button>
