@@ -216,7 +216,7 @@ export default function ChildProfileSetup({ profile, onDone }: Props) {
               onClick={() => fileInputRef.current?.click()}
               className={`w-full font-display font-bold text-lg py-4 rounded-2xl transition-all flex items-center justify-center gap-2 border-2 ${
                 isSpace
-                  ? 'border-slate-600 text-slate-200 hover:border-indigo-400 hover:bg-indigo-500/10'
+                  ? 'border-slate-600 text-black hover:border-indigo-400 hover:bg-indigo-500/10'
                   : 'border-slate-300 text-slate-700 hover:border-indigo-400 hover:bg-indigo-50'
               }`}
             >
