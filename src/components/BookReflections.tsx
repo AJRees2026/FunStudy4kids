@@ -250,7 +250,7 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
         {!readOnly && (
           <button
             onClick={openAddModal}
-            className={`shrink-0 rounded-xl px-3 py-2 font-display font-bold text-sm text-[#710193] transition-all hover:scale-105 active:scale-95 bg-gradient-to-r ${theme.buttonGradient} flex items-center gap-1.5`}
+            className={`shrink-0 rounded-xl px-3 py-2 font-display font-bold text-sm text-[#710193] hover:scale-105 active:scale-95 bg-gradient-to-r ${theme.buttonGradient} flex items-center gap-1.5`}
           >
             <Plus className="w-4 h-4" /> {t('writeReflection')}
           </button>
