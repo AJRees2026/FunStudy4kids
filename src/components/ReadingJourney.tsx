@@ -684,7 +684,7 @@ export default function ReadingJourney({ childId, theme, isSpace, onStarsAwarded
 
       {toast && (
         <div className="fixed bottom-4 right-4 z-40 max-w-xs">
-          <div className={`bg-gradient-to-r ${theme.buttonGradient} text-white font-display font-bold px-5 py-3 rounded-2xl shadow-2xl animate-pop flex items-center gap-2`}>
+          <div className={`bg-gradient-to-r ${theme.buttonGradient} text-black font-display font-bold px-5 py-3 rounded-2xl shadow-2xl animate-pop flex items-center gap-2`}>
             <Star className="w-4 h-4 fill-current" />
             {toast}
           </div>
