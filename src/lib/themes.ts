@@ -40,7 +40,7 @@ export const unicornTheme: Theme = {
   cardBorder: 'border-[#ffc0d7]',
   textPrimary: 'text-[#c11c84]',
   textSecondary: 'text-[#c11c84]',
-  textMuted: 'text-slate-400',
+  textMuted: 'text-black',
   accent: 'text-[#ffc0d7]',
   accentLight: 'bg-[#ffc0d7]/30',
   accentGradient: 'from-[#eed5ff] to-[#ffc0d7]',
