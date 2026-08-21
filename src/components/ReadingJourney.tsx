@@ -461,7 +461,7 @@ export default function ReadingJourney({ childId, theme, isSpace, onStarsAwarded
                     </button>
                     <button
                       onClick={() => fileInputRef.current?.click()}
-                      className={`flex-1 flex items-center justify-center gap-1.5 rounded-xl py-2.5 text-xs font-bold transition-all hover:scale-[1.02] active:scale-95 bg-[#ff6700] text-white`}
+                      className={`flex-1 flex items-center justify-center gap-1.5 rounded-xl py-2.5 text-sm font-bold transition-all hover:scale-[1.02] active:scale-95 bg-[#ff6700] text-white`}
                     >
                       <Upload className="w-4 h-4" /> {t('uploadCover')}
                     </button>
