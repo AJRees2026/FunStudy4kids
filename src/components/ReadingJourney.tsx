@@ -312,7 +312,7 @@ export default function ReadingJourney({ childId, theme, isSpace, onStarsAwarded
         {!readOnly && (
           <button
             onClick={openAddModal}
-            className={`shrink-0 rounded-xl px-3 py-2 font-display font-bold text-sm text-[#1B365D] transition-500 hover:scale-105 active:scale-95 bg-[#87CEEB] flex items-center gap-1.5`}
+            className={`shrink-0 rounded-xl px-3 py-2 font-display font-bold text-sm text-[#172554] transition-500 hover:scale-105 active:scale-95 bg-[#87CEEB] flex items-center gap-1.5`}
           >
             <Plus className="w-4 h-4" /> {t('addBook')}
           </button>
