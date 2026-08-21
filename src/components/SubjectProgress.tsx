@@ -159,7 +159,7 @@ export default function SubjectProgress({ tasks, theme, isSpace, childId, onTask
                         }`}>
                           {done && <Check className="w-3.5 h-3.5 text-white" />}
                         </span>
-                        <span className={`text-lg font-semibold truncate text-left ${
+                        <span className={`text-sm font-semibold truncate text-left ${
                           done
                             ? 'line-through opacity-60 ' + theme.textMuted
                             : theme.textPrimary
