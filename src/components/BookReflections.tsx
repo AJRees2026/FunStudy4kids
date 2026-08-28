@@ -270,7 +270,7 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
                 className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold transition-all ${
                   earned
                     ? `bg-gradient-to-r ${meta.color} text-white shadow-md`
-                    : 'bg-white text-slate-400'
+                    : 'bg-white text-black'
                 }`}
               >
                 <span className={earned ? '' : 'opacity-50'}>{meta.emoji}</span>
