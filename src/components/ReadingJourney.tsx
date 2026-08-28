@@ -332,7 +332,7 @@ export default function ReadingJourney({ childId, theme, isSpace, onStarsAwarded
                   className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold transition-all ${
                     earned
                       ? `bg-gradient-to-r ${m.color} text-white shadow-md`
-                      : isSpace ? 'bg-slate-700/50 text-slate-500' : 'bg-slate-100 text-slate-400'
+                      : 'bg-white text-slate-400'
                   }`}
                 >
                   <Icon className={`w-3.5 h-3.5 ${earned ? 'fill-current' : ''}`} />
