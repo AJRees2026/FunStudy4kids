@@ -242,7 +242,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
             <BarChart3 className={`w-4 h-4 ${theme.accent}`} />
             <span className={`text-sm font-bold ${theme.textSecondary}`}>{progressPct}%</span>
           </div>
-          <div className={`h-3 rounded-full overflow-hidden ${isSpace ? 'bg-slate-700' : 'bg-slate-200'}`}>
+          <div className={`h-3 rounded-full overflow-hidden ${isSpace ? 'bg-[#8d7bea]/30' : 'bg-slate-200'}`}>
             <div
               className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-teal-500 transition-all duration-500"
               style={{ width: `${progressPct}%` }}
@@ -261,7 +261,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
               {completedCount} {t('ofDone')} {totalTasks} {t('done')}
             </span>
           </div>
-          <div className={`h-2 rounded-full overflow-hidden mt-2 ${isSpace ? 'bg-slate-700' : 'bg-slate-200'}`}>
+          <div className={`h-2 rounded-full overflow-hidden mt-2 ${isSpace ? 'bg-[#8d7bea]/30' : 'bg-slate-200'}`}>
             <div
               className="h-full rounded-full bg-gradient-to-r from-teal-400 to-green-400 transition-all duration-500"
               style={{ width: `${progressPct}%` }}
@@ -281,7 +281,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
           <span className={`text-sm font-bold ${theme.textSecondary}`}>{gaugeLabel}</span>
           <span className={`text-sm font-bold ${theme.accent} ml-auto`}>{progressPct}%</span>
         </div>
-        <div className={`h-4 rounded-full overflow-hidden ${isSpace ? 'bg-slate-800 border border-slate-700' : 'bg-slate-100 border border-slate-200'}`}>
+        <div className={`h-4 rounded-full overflow-hidden ${isSpace ? 'bg-[#8d7bea]/30 border border-[#8d7bea]/40' : 'bg-slate-100 border border-slate-200'}`}>
           {isSpace ? (
             <div
               className="h-full rounded-full bg-gradient-to-r from-cyan-400 via-indigo-500 to-purple-500 transition-all duration-500 flex items-center justify-end pr-1"
@@ -304,8 +304,12 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
   }
 
   return (
-    <div className={`min-h-screen ${theme.bgGradient} pb-24`}>
-      <header className="sticky top-0 z-30 backdrop-blur-md bg-black/20 border-b border-white/5">
+    <div
+      className={`min-h-screen ${theme.bgGradient} pb-24 relative`}
+      style={isSpace ? { backgroundImage: 'url(/bg-space2.png)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' } : undefined}
+    >
+      {isSpace && <div className="absolute inset-0 bg-[#1d173b]/40 pointer-events-none" />}
+      <header className={`sticky top-0 z-30 backdrop-blur-md border-b relative ${isSpace ? 'bg-[#1d173b]/60 border-white/10' : 'bg-black/20 border-white/5'}`}>
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-indigo-500 to-teal-500 flex items-center justify-center text-xl shadow-lg overflow-hidden">
@@ -337,7 +341,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto px-4 py-6 space-y-6">
+      <main className="max-w-2xl mx-auto px-4 py-6 space-y-6 relative z-10">
         {/* Progress Display */}
         {renderProgress()}
 
@@ -544,7 +548,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                       </div>
                       <div className="flex items-center gap-2 mt-1">
                         <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
-                          isSpace ? 'bg-indigo-900/60 text-indigo-300' : 'bg-indigo-100 text-indigo-600'
+                          isSpace ? 'bg-indigo-100 text-indigo-600' : 'bg-indigo-100 text-indigo-600'
                         }`}>
                           {task.subject}
                         </span>
@@ -705,17 +709,17 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
       {approvalWaiting && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4">
           <div className={`rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl animate-pop ${
-            isSpace ? 'bg-slate-800 border border-slate-700' : 'bg-white'
+            isSpace ? 'bg-[#fffaf2] border border-[#8d7bea]/60' : 'bg-white'
           }`}>
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-amber-500/20 mb-4">
               <Bell className="w-8 h-8 text-amber-400 animate-pulse" />
             </div>
-            <h2 className={`font-display font-extrabold text-xl mb-2 ${isSpace ? 'text-white' : 'text-slate-800'}`}>
+            <h2 className={`font-display font-extrabold text-xl mb-2 ${theme.textPrimary}`}>
               {t('approvalPending')}
             </h2>
             <div className="flex items-center justify-center gap-2 mt-4">
-              <Clock className={`w-5 h-5 animate-pulse ${isSpace ? 'text-slate-400' : 'text-slate-500'}`} />
-              <p className={`text-sm font-semibold ${isSpace ? 'text-slate-400' : 'text-slate-500'}`}>...</p>
+              <Clock className={`w-5 h-5 animate-pulse ${theme.textMuted}`} />
+              <p className={`text-sm font-semibold ${theme.textMuted}`}>...</p>
             </div>
           </div>
         </div>
@@ -751,7 +755,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4" onClick={() => setRewardPreview(null)}>
           <div
             className={`rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl animate-pop relative overflow-hidden ${
-              isSpace ? 'bg-slate-800 border border-slate-700' : 'bg-white'
+              isSpace ? 'bg-[#fffaf2] border border-[#8d7bea]/60' : 'bg-white'
             }`}
             onClick={(e) => e.stopPropagation()}
           >
@@ -782,14 +786,14 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
               } transition-all duration-500`}>
                 <Gift className={`w-10 h-10 ${rewardCelebration ? 'text-white' : 'text-red-500'}`} />
               </div>
-              <p className={`text-xs font-bold uppercase tracking-wider mb-2 ${isSpace ? 'text-amber-400' : 'text-amber-500'}`}>
+              <p className={`text-xs font-bold uppercase tracking-wider mb-2 ${isSpace ? 'text-amber-500' : 'text-amber-500'}`}>
                 {t('previewReward')}
               </p>
-              <h2 className={`font-display font-extrabold text-2xl mb-3 ${isSpace ? 'text-white' : 'text-slate-800'}`}>
+              <h2 className={`font-display font-extrabold text-2xl mb-3 ${theme.textPrimary}`}>
                 {rewardPreview.title}
               </h2>
-              <p className={`text-sm font-semibold mb-4 ${isSpace ? 'text-slate-400' : 'text-slate-500'}`}>
-                {t('youWillEarn')} <span className={`font-bold ${isSpace ? 'text-amber-300' : 'text-amber-600'}`}>{rewardPreview.title}</span>
+              <p className={`text-sm font-semibold mb-4 ${theme.textMuted}`}>
+                {t('youWillEarn')} <span className={`font-bold ${isSpace ? 'text-amber-600' : 'text-amber-600'}`}>{rewardPreview.title}</span>
                 <br />{t('forCompleting')} {t('tasks').toLowerCase()}
               </p>
               <div className="flex items-center justify-center gap-2 mb-6">
@@ -802,7 +806,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                   onClick={() => { setRewardCelebration(true); setTimeout(() => setRewardCelebration(false), 2000) }}
                   className={`flex-1 font-display font-bold py-3 rounded-2xl transition-all flex items-center justify-center gap-1.5 ${
                     isSpace
-                      ? 'bg-amber-500/20 text-amber-300 hover:bg-amber-500/30'
+                      ? 'bg-amber-100 text-amber-600 hover:bg-amber-200'
                       : 'bg-amber-50 text-amber-600 hover:bg-amber-100'
                   }`}
                 >
@@ -822,7 +826,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
 
       {milestoneCelebration && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-fadeIn" onClick={() => setMilestoneCelebration(null)}>
-          <div className={`rounded-3xl p-8 max-w-sm w-full mx-4 text-center shadow-2xl animate-pop ${isSpace ? 'bg-slate-800 border border-slate-700' : 'bg-white'}`}>
+          <div className={`rounded-3xl p-8 max-w-sm w-full mx-4 text-center shadow-2xl animate-pop ${isSpace ? 'bg-[#fffaf2] border border-[#8d7bea]/60' : 'bg-white'}`}>
             <div className="text-5xl mb-3">
               {milestoneCelebration === 'junior_author' && '📝'}
               {milestoneCelebration === 'storyteller' && '📖'}
