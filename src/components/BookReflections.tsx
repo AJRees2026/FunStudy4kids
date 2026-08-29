@@ -346,7 +346,7 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
 
                 <div className="flex flex-wrap gap-2 mb-2">
                   {reflectionChars.map((char, idx) => (
-                    <span key={idx} className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isSpace ? 'bg-white text-indigo-800' : 'bg-white text-indigo-600'}`}>
+                    <span key={idx} className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isSpace ? 'bg-white text-black' : 'bg-white text-indigo-600'}`}>
                       {char}
                     </span>
                   ))}
