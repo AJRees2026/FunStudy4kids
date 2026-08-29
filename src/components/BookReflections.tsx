@@ -484,7 +484,7 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
                       <span
                         key={char}
                         className={`flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full transition-all animate-pop ${
-                          isSpace ? 'bg-indigo-900/60 text-indigo-300' : 'bg-indigo-100 text-indigo-600'
+                          isSpace ? 'bg-[#b0c4de] text-indigo-300' : 'bg-indigo-100 text-indigo-600'
                         }`}
                       >
                         {char}
