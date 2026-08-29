@@ -501,7 +501,7 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
               </div>
 
               <div>
-                <label className={`text-sm font-bold mb-1 block ${theme.textMuted}`}>{t('reflectionGenre')}</label>
+                <label className={`text-xs font-bold mb-1 block ${theme.textMuted}`}>{t('reflectionGenre')}</label>
                 <div className="grid grid-cols-2 gap-2">
                   {GENRES.map((g) => (
                     <button
