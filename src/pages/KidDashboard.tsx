@@ -349,8 +349,8 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
         {view === 'home' && (
           <section className="animate-fadeIn">
             <div className="text-center mb-6">
-              <h2 className={`font-display font-extrabold text-2xl ${isSpace ? 'text-slate-200' : 'text-fuchsia-400'} mb-1`}>{t('exploreActivities')}</h2>
-              <p className={`text-sm font-semibold ${isSpace ? 'text-slate-200' : 'text-fuchsia-400'}`}>{t('chooseActivity')}</p>
+              <h2 className={`font-display font-extrabold text-2xl ${theme.textPrimary} mb-1`}>{t('exploreActivities')}</h2>
+              <p className={`text-sm font-semibold ${theme.textMuted}`}>{t('chooseActivity')}</p>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <button

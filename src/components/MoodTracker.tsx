@@ -183,7 +183,7 @@ export default function MoodTracker({ childId, theme, isSpace }: Props) {
       <div className="flex flex-wrap justify-center gap-2 mt-4">
         {MOODS.map((m) => (
           <div key={m.key} className="flex items-center gap-1.5">
-            <span className={`w-7 h-7 rounded-lg ${m.bgClass} flex items-center justify-center text-2xl`}>{m.emoji}</span>
+            <span className={`w-7 h-7 rounded-lg ${m.bgClass} flex items-center justify-center text-xl`}>{m.emoji}</span>
             <span className={`text-sm font-bold`}>{t(`mood${m.key.charAt(0).toUpperCase() + m.key.slice(1)}`)}</span>
           </div>
         ))}
@@ -208,11 +208,11 @@ export default function MoodTracker({ childId, theme, isSpace }: Props) {
                   onClick={() => setSelectedMood(m.key)}
                   className={`
                     flex flex-col items-center gap-1 rounded-2xl py-3 transition-all
-                    ${selectedMood === m.key ? `${m.bgClass} scale-130 ring-2 ring-white/50` : isSpace ? 'bg-white/85 hover:bg-white/10' : 'bg-slate-50 hover:bg-slate-100'}
+                    ${selectedMood === m.key ? `${m.bgClass} scale-110 ring-2 ring-white/50` : isSpace ? 'bg-white/85 hover:bg-white/10' : 'bg-slate-50 hover:bg-slate-100'}
                   `}
                 >
-                  <span className="text-5xl">{m.emoji}</span>
-                  <span className={`text-xs font-bold ${selectedMood === m.key ? m.textClass : isSpace ? 'text-slate-400' : 'text-slate-500'}`}>
+                  <span className="text-10lg">{m.emoji}</span>
+                  <span className={`text-s font-bold ${selectedMood === m.key ? m.textClass : isSpace ? 'text-slate-400' : 'text-slate-500'}`}>
                     {t(`mood${m.key.charAt(0).toUpperCase() + m.key.slice(1)}`)}
                   </span>
                 </button>
@@ -227,7 +227,7 @@ export default function MoodTracker({ childId, theme, isSpace }: Props) {
               rows={2}
               className={`
                 w-full rounded-2xl p-3 text-sm font-semibold outline-none resize-none mb-4
-                ${isSpace ? 'bg-white text-black placeholder:text-slate-500' : 'bg-slate-50 text-slate-700 placeholder:text-slate-400'}
+                ${isSpace ? 'bg-slate-700/50 text-white placeholder:text-slate-500' : 'bg-slate-50 text-slate-700 placeholder:text-slate-400'}
               `}
             />
 
