@@ -189,7 +189,7 @@ export default function HeightBoard({ childId, childName, photoUrl, isSpace, the
 
         {/* Current height + weight + avatar */}
         <div className={'rounded-3xl p-6 ' + theme.cardBg + ' border ' + theme.cardBorder + ' shadow-lg'}>
-          <h2 className={'font-display font-extrabold text-2xl ' + theme.textPrimary + ' text-center mb-6'}>
+          <h2 className={'font-display font-extrabold text-xl ' + theme.textPrimary + ' text-center mb-6'}>
             {t('howMuchIVeGrown')}
           </h2>
 
