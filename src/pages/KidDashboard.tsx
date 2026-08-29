@@ -374,7 +374,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                 <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-500 to-blue-600 flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
                   <Trophy className="w-6 h-6 text-white" />
                 </div>
-                <h3 className={`font-display font-extrabold text-lg text-[#df5a00] mb-1`}>{t('subjectProgress')}</h3>
+                <h3 className={`font-display font-extrabold text-xl text-[#df5a00] mb-1`}>{t('subjectProgress')}</h3>
                 <p className={`text-sm font-semibold text-[#4169e1] leading-snug`}>{t('progressBySubjectDesc')}</p>
                  <div className="hidden">
                   {t('subjectProgress')} <ChevronRight className="w-3 h-3" />
