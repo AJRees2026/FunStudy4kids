@@ -312,7 +312,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
       <header className={`sticky top-0 z-30 backdrop-blur-md border-b relative ${isSpace ? 'bg-[#1d173b]/60 border-white/10' : 'bg-black/20 border-white/5'}`}>
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-13 h-13 rounded-2xl bg-gradient-to-br from-indigo-500 to-teal-500 flex items-center justify-center text-xl shadow-lg overflow-hidden">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-teal-500 flex items-center justify-center text-xl shadow-lg overflow-hidden">
               {currentChild.photo_url ? <img src={currentChild.photo_url} alt={currentChild.child_name || currentChild.name} className="w-full h-full object-cover" /> : theme.emoji}
             </div>
             <div>
