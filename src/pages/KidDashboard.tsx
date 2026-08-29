@@ -306,7 +306,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
   return (
     <div
       className={`min-h-screen ${theme.bgGradient} pb-24 relative`}
-      style={isSpace ? { backgroundImage: 'url(/bg-space2.png)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' } : undefined}
+      style={{ backgroundImage: `url(${isSpace ? '/bg-space2.png' : '/bg-unicorn1.png'})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' }}
     >
       {isSpace && <div className="absolute inset-0 bg-[#1d173b]/40 pointer-events-none" />}
       <header className={`sticky top-0 z-30 backdrop-blur-md border-b relative ${isSpace ? 'bg-[#1d173b]/60 border-white/10' : 'bg-black/20 border-white/5'}`}>
