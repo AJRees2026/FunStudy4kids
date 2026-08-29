@@ -605,7 +605,9 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
             <h2 className={`font-display font-extrabold text-lg ${theme.textPrimary} mb-3 flex items-center gap-2`}>
               <Check className="w-5 h-5 text-teal-400" />
               {t('completed')}
-              
+              <span className={`text-sm font-bold ${theme.textMuted} bg-white/5 px-2 py-0.5 rounded-full`}>
+                {completedTasks.length}
+              </span>
             </h2>
             <div className="space-y-2">
               {completedTasks.map((task) => (
