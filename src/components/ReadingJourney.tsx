@@ -672,7 +672,7 @@ export default function ReadingJourney({ childId, theme, isSpace, onStarsAwarded
                 className={`w-full font-display font-bold py-3 rounded-2xl text-black ${
                   form.title.trim() && form.author.trim() && form.total_pages
                     ? `text-white hover:scale-[1.02] active:scale-95 bg-gradient-to-r ${theme.buttonGradient}`
-                    : 'opacity-50 cursor-allowed'
+                    : 'opacity-80 cursor-not-allowed'
                 }`}
               >
                 {t('saveBook')}
