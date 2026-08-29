@@ -319,7 +319,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
               <p className={`font-display font-bold ${isSpace ? 'text-white' : theme.textPrimary} text-lg leading-none flex items-center gap-2`}>
                 {currentChild.child_name || currentChild.name}
                 {currentChild.writing_rank && ['master_storyteller', 'master_wordsmith', 'grand_chronicler', 'epic_author'].includes(currentChild.writing_rank) && (
-                  <span className="inline-flex items-center gap-0.5 text-xs font-bold rounded-full bg-gradient-to-r from-amber-400 to-orange-500 text-white px-2 py-0.5 shadow-sm">
+                  <span className="inline-flex items-center gap-0.5 text-sm font-bold rounded-full bg-gradient-to-r from-amber-400 to-orange-500 text-white px-2 py-0.5 shadow-sm">
                     <PenLine className="w-7 h-7" />
                     {t(RANK_LABEL_KEYS[currentChild.writing_rank as WritingRank])}
                   </span>
