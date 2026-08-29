@@ -358,7 +358,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                 className={`group rounded-3xl p-5 ${theme.cardBg} border ${theme.cardBorder} text-left transition-all hover:scale-[1.03] active:scale-95`}
               >
                 <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-yellow-400 to-rose-500 flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
-                  <Smile className="w-6 h-6 text-black" />
+                  <Smile className="w-6 h-6 text-white" />
                 </div>
                 <h3 className={`font-display font-extrabold text-lg ${theme.textPrimary} mb-1`}>{t('moodTracker')}</h3>
                 <p className={`text-xs font-semibold ${theme.textMuted} leading-snug`}>{t('moodTrackerDesc')}</p>
