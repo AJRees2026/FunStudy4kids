@@ -21,7 +21,7 @@ export const spaceTheme: Theme = {
   bgGradient: 'bg-[#1d173b]',
   cardBg: 'bg-[#fffaf2]',
   cardBorder: 'border-[#8d7bea]/30',
-  textPrimary: 'text-[#ff6700]',
+  textPrimary: 'text-white',
   textSecondary: 'text-red-300',
   textMuted: 'text-[#dcdcdc]',
   accent: 'text-[#ef684d]',
