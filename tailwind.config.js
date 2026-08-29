@@ -5,6 +5,7 @@ export default {
     extend: {
       fontFamily: {
         display: ['Fredoka', 'Inter', 'sans-serif'],
+        nunito: ['Nunito', 'sans-serif'],
       },
       colors: {
         boy: {
