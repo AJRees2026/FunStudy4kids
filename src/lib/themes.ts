@@ -18,7 +18,7 @@ export type Theme = {
 export const spaceTheme: Theme = {
   name: 'space',
   bg: 'bg-[#1d173b]',
-  bgGradient: 'bg-[#1d173b]',
+ bgGradient: "bg-[url('/bg-space2.png')] bg-cover bg-center bg-no-repeat bg-fixed" ',
   cardBg: 'bg-[#fffaf2]/95',
   cardBorder: 'border-[#8d7bea]/60',
   textPrimary: 'text-white',
