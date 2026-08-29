@@ -40,7 +40,7 @@ export default function FocusTimer({ durationMins, onDone, onClose, isSpace }: P
         <button onClick={onClose} className={`float-right ${isSpace ? 'text-slate-400 hover:text-white' : 'text-slate-400 hover:text-slate-600'}`}>
           <X className="w-6 h-6" />
         </button>
-        <h2 className={`font-display font-extrabold text-2xl mb-6 ${isSpace ? 'text-white' : 'text-slate-800'}`}>
+        <h2 className={`font-display font-extrabold text-xl mb-6 ${isSpace ? 'text-white' : 'text-slate-800'}`}>
           Focus Time!
         </h2>
         <div className="relative w-48 h-48 mx-auto mb-6">
