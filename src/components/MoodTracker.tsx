@@ -211,7 +211,7 @@ export default function MoodTracker({ childId, theme, isSpace }: Props) {
                     ${selectedMood === m.key ? `${m.bgClass} scale-110 ring-2 ring-white/50` : isSpace ? 'bg-white/85 hover:bg-white/10' : 'bg-slate-50 hover:bg-slate-100'}
                   `}
                 >
-                  <span className="text-10lg">{m.emoji}</span>
+                  <span className="text-2xl">{m.emoji}</span>
                   <span className={`text-s font-bold ${selectedMood === m.key ? m.textClass : isSpace ? 'text-slate-400' : 'text-slate-500'}`}>
                     {t(`mood${m.key.charAt(0).toUpperCase() + m.key.slice(1)}`)}
                   </span>
