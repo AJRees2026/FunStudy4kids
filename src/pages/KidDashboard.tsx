@@ -362,7 +362,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                   <Smile className="w-6 h-6 text-white" />
                 </div>
                 <h3 className={`font-display font-extrabold text-xl text-[#df5a00] mb-1`}>{t('moodTracker')}</h3>
-                <p className={`text-lg font-semibold text-[#4169e1] leading-snug`}>{t('moodTrackerDesc')}</p>
+                <p className={`text-sm font-semibold text-[#4169e1] leading-snug`}>{t('moodTrackerDesc')}</p>
                  <div className="hidden">
                   {t('moodTracker')} <ChevronRight className="w-3 h-3" />
                 </div>
