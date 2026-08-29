@@ -439,7 +439,6 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
   {t('rewardShop')}
 </h3>
                 <p className={`text-xs font-semibold ${theme.textMuted} leading-snug`}>{t('rewardShopDesc')}</p>
-               
                   {t('rewardShop')} <ChevronRight className="w-3 h-3" />
                 </div>
                 {availableRewards.length > 0 && (
