@@ -57,7 +57,7 @@ export const unicornTheme: Theme = {
   textPrimary: 'text-[#c11c84]',
   textSecondary: 'text-[#c11c84]',
   textMuted: 'text-[#1f0a40]',
-  accent: 'text-[#ffc0d7]',
+  accent: 'text-[#44a9aa]',
   accentLight: 'bg-[#ffc0d7]/30',
   accentGradient: 'from-[#eed5ff] to-[#ffc0d7]',
   starLabel: 'Star Drops',
