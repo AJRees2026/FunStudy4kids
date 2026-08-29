@@ -438,7 +438,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
 <h3 className="sparkle-title font-display font-extrabold text-lg mb-1">
   {t('rewardShop')}
 </h3>
-                <p className={`text-xs font-semibold text-[#4169e1] leading-snug font-nunito`}>{t('rewardShopDesc')}</p>
+                <p className={`text-s font-semibold text-[#4169e1] leading-snug font-nunito`}>{t('rewardShopDesc')}</p>
                 <div className="hidden">
                   {t('rewardShop')} <ChevronRight className="w-3 h-3" />
                 </div>
