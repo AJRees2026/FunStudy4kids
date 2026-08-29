@@ -39,7 +39,7 @@ export const spaceTheme: Theme = {
   emoji: '🚀',
   buttonGradient: 'from-[#6f5bd3] to-[#ef684d]',
   actionButtonBg: 'bg-[#87CEEB]',
-  actionButtonText: 'text-[#E64A19]'
+  actionButtonText: 'text-[#E64A19]',
   inputBg: 'bg-white',
   inputBorder: 'border-sky-300',
   inputText: 'text-slate-800',
@@ -64,7 +64,7 @@ export const unicornTheme: Theme = {
   emoji: '🦄',
   buttonGradient: 'from-[#eed5ff] to-[#ffc0d7]',
   actionButtonBg: 'bg-[#F4C2C2]',
-  actionButtonText: 'text-[#E64A19]'
+  actionButtonText: 'text-[#E64A19]',
   inputBg: 'bg-slate-50',
   inputBorder: 'border-slate-200',
   inputText: 'text-slate-800',
