@@ -57,6 +57,11 @@ function AppInner() {
             setProfile(updated)
             setNeedsProfileSetup(false)
           }}
+          onBack={() => {
+            localStorage.removeItem('activeProfileId')
+            setProfile(null)
+            setNeedsProfileSetup(false)
+          }}
         />
       ) : profile.role === 'parent' ? (
         <ParentPortal parent={profile} onSwitchProfile={handleSwitchProfile} />

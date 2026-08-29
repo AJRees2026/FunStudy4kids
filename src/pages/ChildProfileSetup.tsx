@@ -3,14 +3,15 @@ import { supabase, type Profile } from '../lib/supabase'
 import { getTheme, type Theme } from '../lib/themes'
 import { useI18n } from '../lib/i18n'
 import PhotoCropper, { type Transform } from '../components/PhotoCropper'
-import { Camera, Upload, Check, RefreshCw, ArrowRight, CircleAlert as AlertCircle } from 'lucide-react'
+import { Camera, Upload, Check, RefreshCw, ArrowRight, ArrowLeft, CircleAlert as AlertCircle } from 'lucide-react'
 
 type Props = {
   profile: Profile
   onDone: (updated: Profile) => void
+  onBack: () => void
 }
 
-export default function ChildProfileSetup({ profile, onDone }: Props) {
+export default function ChildProfileSetup({ profile, onDone, onBack }: Props) {
   const { t } = useI18n()
   const theme: Theme = getTheme(profile.theme_preference)
   const isSpace = profile.theme_preference === 'space'
@@ -188,7 +189,13 @@ export default function ChildProfileSetup({ profile, onDone }: Props) {
   }
 
   return (
-    <div className={`min-h-screen ${theme.bgGradient} flex items-center justify-center p-4`}>
+    <div className={`min-h-screen ${theme.bgGradient} flex items-center justify-center p-4 relative`}>
+      <button
+        onClick={onBack}
+        className={`absolute top-4 left-4 z-10 flex items-center gap-1.5 rounded-xl px-3 py-2 font-display font-bold text-sm ${theme.cardBg} border ${theme.cardBorder} ${theme.textSecondary} transition-all hover:scale-105 active:scale-95 shadow-md`}
+      >
+        <ArrowLeft className="w-4 h-4" /> {t('backToSetup')}
+      </button>
       <div className={`max-w-md w-full rounded-3xl p-8 shadow-2xl animate-pop ${theme.cardBg} border ${theme.cardBorder}`}>
         <div className="text-center mb-6">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-teal-500 mb-4 shadow-lg">
