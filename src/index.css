@@ -84,3 +84,30 @@ select option {
   --color-boy-primary: #1034a6;
   --color-boy-secondary: #f97316;
 }
+@layer components {
+  /* Define the sparkle effect class */
+  .sparkle-title {
+    color: #ff6700; /* Set text to orange */
+    background-image: linear-gradient(
+      -45deg,
+      #ff6700 30%,    /* Core orange */
+      #fff 45%,       /* Shimmer highlight */
+      #ffd700 55%,    /* Gold sparkle */
+      #ff6700 70%     /* Back to orange */
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: sparkle-shimmer 2.5s linear infinite;
+  }
+
+  /* Define the animation keyframes */
+  @keyframes sparkle-shimmer {
+    0% {
+      background-position: 0% 50%;
+    }
+    100% {
+      background-position: 100% 50%;
+    }
+  }
+}
