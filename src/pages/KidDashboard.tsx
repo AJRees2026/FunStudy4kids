@@ -375,7 +375,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                   <Trophy className="w-6 h-6 text-white" />
                 </div>
                 <h3 className={`font-display font-extrabold text-lg text-[#df5a00] mb-1`}>{t('subjectProgress')}</h3>
-                <p className={`text-xs font-semibold ${theme.textMuted} leading-snug`}>{t('progressBySubjectDesc')}</p>
+                <p className={`text-xs font-semibold text-[#4169e1] leading-snug`}>{t('progressBySubjectDesc')}</p>
                  <div className="hidden">
                   {t('subjectProgress')} <ChevronRight className="w-3 h-3" />
                 </div>
@@ -389,7 +389,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                   <BookMarked className="w-6 h-6 text-white" />
                 </div>
                 <h3 className={`font-display font-extrabold text-lg text-[#df5a00] mb-1`}>{t('readingJourney')}</h3>
-                <p className={`text-xs font-semibold ${theme.textMuted} leading-snug`}>{t('readingJourneyDesc')}</p>
+                <p className={`text-xs font-semibold text-[#4169e1] leading-snug`}>{t('readingJourneyDesc')}</p>
                   <div className="hidden">
                   {t('readingJourney')} <ChevronRight className="w-3 h-3" />
                 </div>
