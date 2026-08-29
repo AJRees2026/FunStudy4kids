@@ -671,7 +671,7 @@ export default function ReadingJourney({ childId, theme, isSpace, onStarsAwarded
                 disabled={!form.title.trim() || !form.author.trim() || !form.total_pages}
                 className={`w-full font-display font-bold py-3 rounded-2xl text-white ${
                   form.title.trim() && form.author.trim() && form.total_pages
-                    ? `text-white hover:scale-[1.02] active:scale-95 bg-gradient-to-r ${theme.buttonGradient}`
+                    ? `text-[#c11c84] hover:scale-[1.02] active:scale-95 bg-gradient-to-r ${theme.buttonGradient}`
                     : 'opacity-50 cursor-not-allowed'
                 }`}
               >
