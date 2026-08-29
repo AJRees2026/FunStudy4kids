@@ -329,7 +329,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                 <span className={`flex items-center gap-1 text-xs font-bold ${theme.accent}`}>
                   <Star className="w-3 h-3" /> {currentChild.points} {isSpace ? t('fuelCells') : t('sparkles')}
                 </span>
-                <span className={`flex items-center gap-1 text-xs font-bold ${theme.textMuted}`}>
+                <span className={`flex items-center gap-1 text-sm font-bold ${theme.textMuted}`}>
                   <Flame className="w-3 h-3" /> {currentChild.streak || 0} {t('dayStreak')}
                 </span>
               </div>
