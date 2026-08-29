@@ -389,7 +389,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                   <BookMarked className="w-6 h-6 text-white" />
                 </div>
                 <h3 className={`font-display font-extrabold text-lg text-[#df5a00] mb-1`}>{t('readingJourney')}</h3>
-                <p className={`text-xs font-semibold text-[#4169e1] leading-snug font-nunito`}>{t('readingJourneyDesc')}</p>
+                <p className={`text-s font-semibold text-[#4169e1] leading-snug font-nunito`}>{t('readingJourneyDesc')}</p>
                   <div className="hidden">
                   {t('readingJourney')} <ChevronRight className="w-3 h-3" />
                 </div>
@@ -403,7 +403,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                   <Star className="w-6 h-6 text-white fill-white" />
                 </div>
                 <h3 className={`font-display font-extrabold text-lg text-[#df5a00] mb-1`}>{t('sparkJobs')}</h3>
-                <p className={`text-xs font-semibold text-[#4169e1] leading-snug font-nunito`}>{t('tasksDesc')}</p>
+                <p className={`text-s font-semibold text-[#4169e1] leading-snug font-nunito`}>{t('tasksDesc')}</p>
                   <div className="hidden">
                   {t('sparkJobs')} <ChevronRight className="w-3 h-3" />
                 </div>
