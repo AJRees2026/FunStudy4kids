@@ -193,13 +193,13 @@ export default function MoodTracker({ childId, theme, isSpace }: Props) {
       {selectedDate && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-md p-4" onClick={() => setSelectedDate(null)}>
           <div
-            className={`rounded-3xl p-5 max-w-sm w-full shadow-2xl animate-pop ${isSpace ? 'bg-slate-800 border border-slate-700' : 'bg-white'}`}
+            className={`rounded-3xl p-5 max-w-sm w-full shadow-2xl animate-pop ${isSpace ? 'bg-[#B0C4DE] border border-slate-700' : 'bg-[#fffaf2]'}`}
             onClick={(e) => e.stopPropagation()}
           >
-            <h3 className={`font-display font-extrabold text-lg mb-1 ${isSpace ? 'text-white' : 'text-slate-800'}`}>
+            <h3 className={`font-display font-extrabold text-lg mb-1 ${isSpace ? 'text-black' : 'text-slate-800'}`}>
               {selectedDate.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' })}
             </h3>
-            <p className={`text-sm font-semibold mb-4 ${isSpace ? 'text-slate-400' : 'text-slate-500'}`}>{t('howAreYouFeeling')}</p>
+            <p className={`text-sm font-semibold mb-4 ${isSpace ? 'text-black' : 'text-slate-500'}`}>{t('howAreYouFeeling')}</p>
 
             <div className="grid grid-cols-5 gap-2 mb-4">
               {MOODS.map((m) => (
@@ -211,8 +211,8 @@ export default function MoodTracker({ childId, theme, isSpace }: Props) {
                     ${selectedMood === m.key ? `${m.bgClass} scale-110 ring-2 ring-white/50` : isSpace ? 'bg-white/85 hover:bg-white/10' : 'bg-slate-50 hover:bg-slate-100'}
                   `}
                 >
-                  <span className="text-lg">{m.emoji}</span>
-                  <span className={`text-sm font-bold ${selectedMood === m.key ? m.textClass : isSpace ? 'text-slate-400' : 'text-slate-500'}`}>
+                  <span className="text-10lg">{m.emoji}</span>
+                  <span className={`text-s font-bold ${selectedMood === m.key ? m.textClass : isSpace ? 'text-slate-400' : 'text-slate-500'}`}>
                     {t(`mood${m.key.charAt(0).toUpperCase() + m.key.slice(1)}`)}
                   </span>
                 </button>
