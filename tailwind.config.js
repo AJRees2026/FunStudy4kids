@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        display: ['"Nunito"', 'Inter', 'sans-serif'],
+        display: ['Nunito', 'Inter', 'sans-serif'],
       },
       colors: {
         boy: {
