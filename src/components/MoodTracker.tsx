@@ -227,7 +227,7 @@ export default function MoodTracker({ childId, theme, isSpace }: Props) {
               rows={2}
               className={`
                 w-full rounded-2xl p-3 text-sm font-semibold outline-none resize-none mb-4
-                ${isSpace ? 'bg-slate-700/50 text-white placeholder:text-slate-500' : 'bg-slate-50 text-slate-700 placeholder:text-slate-400'}
+                ${isSpace ? 'bg-white text-black placeholder:text-slate-500' : 'bg-slate-50 text-slate-700 placeholder:text-slate-400'}
               `}
             />
 
