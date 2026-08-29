@@ -577,7 +577,7 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
                   rows={6}
                   placeholder={t('reflectionPlaceholder')}
                   className={`w-full rounded-xl px-3 py-2.5 text-sm font-semibold outline-none border resize-y ${
-                    isSpace ? 'bg-white border-slate-600 text-white' : 'bg-slate-50 border-slate-200 text-slate-800'
+                    isSpace ? 'bg-white border-slate-600 text-black' : 'bg-slate-50 border-slate-200 text-slate-800'
                   } focus:border-indigo-400`}
                 />
                 <div className={`text-right text-xs font-bold mt-1 ${liveWordCount > 0 ? theme.accent : theme.textMuted}`}>
