@@ -184,7 +184,7 @@ export default function MoodTracker({ childId, theme, isSpace }: Props) {
         {MOODS.map((m) => (
           <div key={m.key} className="flex items-center gap-1.5">
             <span className={`w-7 h-7 rounded-lg ${m.bgClass} flex items-center justify-center text-xl`}>{m.emoji}</span>
-            <span className={`text-sm font-bold font-'nunito' ${theme.textMuted}`}>{t(`mood${m.key.charAt(0).toUpperCase() + m.key.slice(1)}`)}</span>
+            <span className={`text-sm font-bold font-'nunito'`}>{t(`mood${m.key.charAt(0).toUpperCase() + m.key.slice(1)}`)}</span>
           </div>
         ))}
       </div>
