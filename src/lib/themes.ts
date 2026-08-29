@@ -24,7 +24,7 @@ export const spaceTheme: Theme = {
   textPrimary: 'text-white',
   textSecondary: 'text-red-300',
   textMuted: 'text-[#dcdcdc]',
-  accent: 'text-black',
+  accent: 'text-[#ef684d]',
   accentLight: 'bg-[#ef684d]/20',
   accentGradient: 'from-[#6f5bd3] to-[#ef684d]',
   starLabel: 'Fuel Cells',
