@@ -287,7 +287,7 @@ export default function Onboarding({ onLinked }: Props) {
                     className={`rounded-2xl p-4 border-2 transition-all flex flex-col items-center gap-1 ${gender === 'girl' ? 'border-fuchsia-400 bg-fuchsia-500/20 scale-105' : 'border-slate-700 bg-slate-900/40 hover:border-fuchsia-400/60'}`}
                   >
                     <Sparkles className="w-7 h-7 text-fuchsia-400" />
-                    <span className="font-display font-bold text-white text-s">{t('girl')}</span>
+                    <span className="font-display font-bold text-white text-lg">{t('girl')}</span>
                     <span className="text-[10px] text-slate-400 font-semibold">{t('girlTheme')}</span>
                   </button>
                 </div>
