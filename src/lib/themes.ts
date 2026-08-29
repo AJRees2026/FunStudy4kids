@@ -32,6 +32,8 @@ export const spaceTheme: Theme = {
   starLabel: 'Orbit Gems',
   emoji: '🚀',
   buttonGradient: 'from-[#6f5bd3] to-[#ef684d]',
+  actionButtonBg: 'bg-[#87CEEB]',
+  actionButtonText: 'text-[#E64A19]'
 }
 
 export const unicornTheme: Theme = {
@@ -49,6 +51,8 @@ export const unicornTheme: Theme = {
   starLabel: 'Star Drops',
   emoji: '🦄',
   buttonGradient: 'from-[#eed5ff] to-[#ffc0d7]',
+  actionButtonBg: 'bg-[#F4C2C2]',
+  actionButtonText: 'text-[#E64A19]'
 }
 
 export function getTheme(pref: 'space' | 'unicorn'): Theme {
