@@ -208,7 +208,7 @@ export default function MoodTracker({ childId, theme, isSpace }: Props) {
                   onClick={() => setSelectedMood(m.key)}
                   className={`
                     flex flex-col items-center gap-1 rounded-2xl py-3 transition-all
-                    ${selectedMood === m.key ? `${m.bgClass} scale-110 ring-2 ring-white/50` : isSpace ? 'bg-white/85 hover:bg-white/10' : 'bg-slate-50 hover:bg-slate-100'}
+                    ${selectedMood === m.key ? `${m.bgClass} scale-130 ring-2 ring-white/50` : isSpace ? 'bg-white/85 hover:bg-white/10' : 'bg-slate-50 hover:bg-slate-100'}
                   `}
                 >
                   <span className="text-5xl">{m.emoji}</span>
