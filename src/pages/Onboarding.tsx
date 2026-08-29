@@ -285,7 +285,7 @@ export default function Onboarding({ onLinked }: Props) {
                     onClick={() => setGender('girl')}
                     className={`rounded-2xl p-4 border-2 transition-all flex flex-col items-center gap-1 ${gender === 'girl' ? 'border-fuchsia-400 bg-fuchsia-500/20 scale-105' : 'border-slate-700 bg-slate-900/40 hover:border-fuchsia-400/60'}`}
                   >
-                    <Sparkles className="w-9 h-9 text-fuchsia-400" />
+                   <Sparkles className="w-12 h-12 text-fuchsia-400 drop-shadow-[0_0_12px_rgba(232,121,249,0.8)] animate-pulse" />
                     <span className="font-display font-bold text-white text-s">{t('girl')}</span>
                     <span className="text-m text-slate-400 font-semibold">{t('girlTheme')}</span>
                   </button>
