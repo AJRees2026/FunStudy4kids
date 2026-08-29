@@ -423,7 +423,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                 </div>
                 <h3 className={`font-display font-extrabold text-lg text-[#df5a00] mb-1`}>{t('howMuchIVeGrown')}</h3>
                 <p className={`text-xs font-semibold ${theme.textMuted} leading-snug`}>{t('growthDesc')}</p>
-                <div className={`flex items-center gap-1 mt-3 text-xs font-bold ${theme.accent}`}>
+                <div className="hidden">
                   {t('growthChart')} <ChevronRight className="w-3 h-3" />
                 </div>
               </button>
