@@ -351,7 +351,7 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
                     </span>
                   ))}
                   {reflection.genre && (
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isSpace ? 'bg-rose-200 text-rose-800' : 'bg-white text-rose-600'}`}>
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isSpace ? 'bg-white text-rose-800' : 'bg-white text-rose-600'}`}>
                       {GENRES.find(g => g.key === reflection.genre) ? t(GENRES.find(g => g.key === reflection.genre)!.labelKey) : reflection.genre}
                     </span>
                   )}
