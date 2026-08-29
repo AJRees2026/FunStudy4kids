@@ -199,7 +199,7 @@ export default function MoodTracker({ childId, theme, isSpace }: Props) {
             <h3 className={`font-display font-extrabold text-lg mb-1 ${isSpace ? 'text-black' : 'text-slate-800'}`}>
               {selectedDate.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' })}
             </h3>
-            <p className={`text-sm font-semibold mb-4 ${isSpace ? 'text-slate-400' : 'text-slate-500'}`}>{t('howAreYouFeeling')}</p>
+            <p className={`text-sm font-semibold mb-4 ${isSpace ? 'text-black' : 'text-slate-500'}`}>{t('howAreYouFeeling')}</p>
 
             <div className="grid grid-cols-5 gap-2 mb-4">
               {MOODS.map((m) => (
