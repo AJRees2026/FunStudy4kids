@@ -277,7 +277,7 @@ export default function Onboarding({ onLinked }: Props) {
                     onClick={() => setGender('boy')}
                     className={`rounded-2xl p-4 border-2 transition-all flex flex-col items-center gap-1 ${gender === 'boy' ? 'border-indigo-400 bg-indigo-500/20 scale-105' : 'border-slate-700 bg-slate-900/40 hover:border-indigo-400/60'}`}
                   >
-<Rocket className="w-12 h-12 text-indigo-400 drop-shadow-[0_0_12px_rgba(129,140,248,0.8)] animate-pulse" />                    <span className="font-display font-bold text-white text-s">{t('boy')}</span>
+<Rocket className="w-12 h-12 text-indigo-400 drop-shadow-[0_0_12px_rgba(129,140,248,0.8)] animate-pulse" />                    <span className="font-display font-bold text-white text-lg">{t('boy')}</span>
                     <span className="text-m text-slate-400 font-semibold">{t('boyTheme')}</span>
                   </button>
                   <button
