@@ -123,7 +123,7 @@ export default function MoodTracker({ childId, theme, isSpace }: Props) {
             <Smile className={`w-5 h-5 ${theme.accent}`} />
             {t('moodTracker')}
           </h2>
-          <p className={`text-xs font-semibold mt-1 ${theme.textMuted}`}>{t('moodTrackerDesc')}</p>
+          <p className={`text-xs font-semibold mt-1 bg-white`}>{t('moodTrackerDesc')}</p>
         </div>
       </div>
 
