@@ -552,7 +552,7 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
               }`}>
                 <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
                   liveDayCount !== null
-                    ? 'bg-gradient-to-br from-teal-400 to-emerald-500 text-white'
+                    ? 'bg-gradient-to-br from-teal-400 to-emerald-500 text-black'
                     : isSpace ? 'bg-slate-700 text-slate-500' : 'bg-slate-200 text-slate-400'
                 }`}>
                   <Calendar className="w-5 h-5" />
