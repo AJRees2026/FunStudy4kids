@@ -510,7 +510,7 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
                       className={`rounded-xl py-2 text-xs font-bold transition-all ${
                         form.genre === g.key
                           ? `bg-indigo-500 text-white ring-2 ring-offset-1 ${isSpace ? 'ring-offset-slate-800' : 'ring-offset-white'} ring-indigo-400`
-                          : isSpace ? 'bg-[#b0c4de] text-black' : 'bg-[#b0c4de] text-black'
+                          : isSpace ? 'bg-[#b0c4de] text-black' : 'bg-white text-black'
                       }`}
                     >
                       {t(g.labelKey)}
