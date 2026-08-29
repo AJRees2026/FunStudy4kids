@@ -23,7 +23,7 @@ export const spaceTheme: Theme = {
   cardBorder: 'border-[#8d7bea]/60',
   textPrimary: 'text-white',
   textSecondary: 'text-[#352750]',
-  textMuted: 'text-[#5b4d73]',
+  textMuted: 'text-white',
   accent: 'text-[#ef684d]',
   accentLight: 'bg-[#ef684d]/20',
   accentGradient: 'from-[#6f5bd3] to-[#ef684d]',
