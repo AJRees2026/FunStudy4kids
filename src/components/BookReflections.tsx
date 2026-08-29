@@ -590,7 +590,7 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
                 onClick={() => setForm({ ...form, allow_guardian_edit: !form.allow_guardian_edit })}
                 className={`w-full flex items-center gap-3 rounded-2xl p-3 border-2 transition-all ${
                   form.allow_guardian_edit
-                    ? isSpace ? 'bg-violet-900/30 border-violet-600' : 'bg-violet-50 border-violet-300'
+                    ? isSpace ? 'bg-[#b0c4de] border-violet-600' : 'bg-violet-50 border-violet-300'
                     : isSpace ? 'bg-slate-700/30 border-slate-600' : 'bg-slate-50 border-slate-200'
                 }`}
               >
