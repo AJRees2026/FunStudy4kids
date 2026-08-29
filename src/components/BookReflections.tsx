@@ -346,20 +346,20 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
 
                 <div className="flex flex-wrap gap-2 mb-2">
                   {reflectionChars.map((char, idx) => (
-                    <span key={idx} className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isSpace ? 'bg-white text-indigo-300' : 'bg-white text-indigo-600'}`}>
+                    <span key={idx} className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isSpace ? 'bg-indigo-100 text-indigo-700' : 'bg-white text-indigo-600'}`}>
                       {char}
                     </span>
                   ))}
                   {reflection.genre && (
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isSpace ? 'bg-white text-rose-300' : 'bg-white text-rose-600'}`}>
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isSpace ? 'bg-rose-100 text-rose-700' : 'bg-white text-rose-600'}`}>
                       {GENRES.find(g => g.key === reflection.genre) ? t(GENRES.find(g => g.key === reflection.genre)!.labelKey) : reflection.genre}
                     </span>
                   )}
-                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isSpace ? 'bg-slate-700 text-slate-300' : 'bg-slate-100 text-slate-600'}`}>
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isSpace ? 'bg-slate-200 text-slate-700' : 'bg-slate-100 text-slate-600'}`}>
                     {reflection.word_count} {t('wordCount')}
                   </span>
                   {reflectionDayCount !== null && (
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isSpace ? 'bg-teal-900/60 text-teal-300' : 'bg-teal-100 text-teal-600'}`}>
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isSpace ? 'bg-teal-100 text-teal-700' : 'bg-teal-100 text-teal-600'}`}>
                       <Calendar className="w-2.5 h-2.5 inline mr-0.5" />
                       {reflectionDayCount} {t('dayCount')}
                     </span>
