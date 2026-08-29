@@ -463,7 +463,7 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
                     onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addCharacter() } }}
                     placeholder={t('addCharacter')}
                     className={`flex-1 rounded-xl px-3 py-2.5 text-sm font-semibold outline-none border ${
-                      isSpace ? 'bg-slate-700 border-slate-600 text-white' : 'bg-slate-50 border-slate-200 text-slate-800'
+                      isSpace ? 'bg-slate-700 border-slate-600 text-white' : 'bg-white text-black'
                     } focus:border-indigo-400`}
                   />
                   <button
