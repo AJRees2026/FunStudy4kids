@@ -250,7 +250,7 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
         {!readOnly && (
           <button
             onClick={openAddModal}
-            className={`shrink-0 rounded-xl px-3 py-2 font-display font-bold text-sm ${theme.actionButtonText} hover:scale-105 active:scale-95 ${theme.actionButtonBg} flex items-center gap-1.5`}
+            className={`shrink-0 rounded-xl px-3 py-2 font-display font-bold text-sm text-[#E64A19] hover:scale-105 active:scale-95 bg-[#87CEEB] flex items-center gap-1.5`}
           >
             <Plus className="w-4 h-4" /> {t('writeReflection')}
           </button>
@@ -293,7 +293,7 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
 
       {/* Reflections List */}
       {reflections.length === 0 ? (
-        <div className={`rounded-2xl p-6 text-center ${isSpace ? 'bg-[#fff5e8] border border-[#8d7bea]/20' : 'bg-slate-50'}`}>
+        <div className={`rounded-2xl p-6 text-center ${isSpace ? 'bg-white/5' : 'bg-slate-50'}`}>
           <PenLine className={`w-10 h-10 mx-auto mb-2 ${theme.textMuted}`} />
           <p className={`font-display font-bold text-sm ${theme.textSecondary}`}>{t('noReflectionsYet')}</p>
         </div>
@@ -307,21 +307,21 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
               <div
                 key={reflection.id}
                 className={`rounded-2xl p-3 border transition-all hover:scale-[1.01] ${
-                  isSpace ? 'bg-[#fff5e8] border-[#8d7bea]/20' : 'bg-white border-slate-100 shadow-sm'
+                  isSpace ? 'bg-white/5 border-slate-700' : 'bg-white border-slate-100 shadow-sm'
                 }`}
               >
                 <div className="flex items-start justify-between gap-2 mb-2">
                   <div className="flex items-center gap-2">
-                    <BookOpen className={`w-4 h-4 shrink-0 ${isSpace ? 'text-indigo-600' : 'text-indigo-500'}`} />
-                    <h3 className={`font-display font-bold text-sm ${isSpace ? 'text-slate-800' : theme.textPrimary}`}>{reflection.book_title}</h3>
+                    <BookOpen className={`w-4 h-4 shrink-0 ${isSpace ? 'text-indigo-400' : 'text-indigo-500'}`} />
+                    <h3 className={`font-display font-bold text-sm ${theme.textPrimary}`}>{reflection.book_title}</h3>
                   </div>
                   <div className="flex items-center gap-1.5 shrink-0">
                     {/* Guardian edit permission badge */}
                     {readOnly ? (
                       <div className={`flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold ${
                         reflection.allow_guardian_edit
-                          ? isSpace ? 'bg-violet-200 text-violet-800' : 'bg-violet-100 text-violet-600'
-                          : isSpace ? 'bg-slate-200 text-slate-600' : 'bg-slate-100 text-slate-500'
+                          ? 'bg-violet-100 text-violet-600'
+                          : isSpace ? 'bg-slate-700 text-slate-400' : 'bg-slate-100 text-slate-500'
                       }`}>
                         {reflection.allow_guardian_edit
                           ? <><Unlock className="w-3 h-3" /> {t('guardianEditAllowed')}</>
@@ -332,8 +332,8 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
                         onClick={() => toggleGuardianEdit(reflection)}
                         className={`flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold transition-all ${
                           reflection.allow_guardian_edit
-                            ? isSpace ? 'bg-violet-200 text-violet-800 hover:opacity-80' : 'bg-violet-100 text-violet-600 hover:opacity-80'
-                            : isSpace ? 'bg-slate-200 text-slate-600 hover:opacity-80' : 'bg-slate-100 text-slate-500 hover:opacity-80'
+                            ? 'bg-violet-100 text-violet-600 hover:opacity-80'
+                            : isSpace ? 'bg-slate-700 text-slate-400 hover:opacity-80' : 'bg-slate-100 text-slate-500 hover:opacity-80'
                         }`}
                       >
                         {reflection.allow_guardian_edit
@@ -346,30 +346,30 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
 
                 <div className="flex flex-wrap gap-2 mb-2">
                   {reflectionChars.map((char, idx) => (
-                    <span key={idx} className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isSpace ? 'bg-white text-black' : 'bg-white text-indigo-600'}`}>
+                    <span key={idx} className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isSpace ? 'bg-white text-indigo-300' : 'bg-white text-indigo-600'}`}>
                       {char}
                     </span>
                   ))}
                   {reflection.genre && (
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isSpace ? 'bg-rose-200 text-rose-800' : 'bg-white text-rose-600'}`}>
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isSpace ? 'bg-white text-rose-300' : 'bg-white text-rose-600'}`}>
                       {GENRES.find(g => g.key === reflection.genre) ? t(GENRES.find(g => g.key === reflection.genre)!.labelKey) : reflection.genre}
                     </span>
                   )}
-                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isSpace ? 'bg-amber-200 text-amber-800' : 'bg-slate-100 text-slate-600'}`}>
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isSpace ? 'bg-slate-700 text-slate-300' : 'bg-slate-100 text-slate-600'}`}>
                     {reflection.word_count} {t('wordCount')}
                   </span>
                   {reflectionDayCount !== null && (
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isSpace ? 'bg-teal-200 text-teal-800' : 'bg-teal-100 text-teal-600'}`}>
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isSpace ? 'bg-teal-900/60 text-teal-300' : 'bg-teal-100 text-teal-600'}`}>
                       <Calendar className="w-2.5 h-2.5 inline mr-0.5" />
                       {reflectionDayCount} {t('dayCount')}
                     </span>
                   )}
                 </div>
 
-                <p className={`text-xs ${isSpace ? 'text-slate-700' : theme.textSecondary} line-clamp-3 whitespace-pre-wrap`}>{reflection.reflection_text}</p>
+                <p className={`text-xs ${theme.textSecondary} line-clamp-3 whitespace-pre-wrap`}>{reflection.reflection_text}</p>
 
                 {(reflection.start_date || reflection.end_date) && (
-                  <p className={`text-[10px] mt-2 ${isSpace ? 'text-slate-500' : theme.textMuted}`}>
+                  <p className={`text-[10px] mt-2 ${theme.textMuted}`}>
                     {reflection.start_date && reflection.start_date}
                     {reflection.start_date && reflection.end_date && ' → '}
                     {reflection.end_date && reflection.end_date}
@@ -379,7 +379,7 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
                 <div className="flex gap-1 mt-2">
                   {readOnly && !canGuardianEdit && (
                     <div className={`flex-1 flex items-center justify-center gap-1 rounded-lg py-1.5 text-xs font-bold ${
-                      isSpace ? 'bg-slate-200 text-slate-500' : 'bg-slate-50 text-slate-400'
+                      isSpace ? 'bg-slate-700/50 text-slate-400' : 'bg-slate-50 text-slate-400'
                     }`}>
                       <Lock className="w-3 h-3" /> {t('guardianEditLocked')}
                     </div>
@@ -388,7 +388,7 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
                     <button
                       onClick={() => openEditModal(reflection)}
                       className={`flex-1 flex items-center justify-center gap-1 rounded-lg py-1.5 text-xs font-bold transition-all hover:opacity-80 ${
-                        isSpace ? 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200' : 'bg-slate-100 text-slate-600'
+                        isSpace ? 'bg-white/10 text-slate-300' : 'bg-slate-100 text-slate-600'
                       }`}
                     >
                       <Pencil className="w-3 h-3" /> {t('editReflection')}
@@ -399,7 +399,7 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
                       <button
                         onClick={() => openEditModal(reflection)}
                         className={`flex-1 flex items-center justify-center gap-1 rounded-lg py-1.5 text-xs font-bold transition-all hover:opacity-80 ${
-                          isSpace ? 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200' : 'bg-slate-100 text-slate-600'
+                          isSpace ? 'bg-white/10 text-slate-300' : 'bg-slate-100 text-slate-600'
                         }`}
                       >
                         <Pencil className="w-3 h-3" /> {t('editReflection')}
@@ -407,7 +407,7 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
                       <button
                         onClick={() => deleteReflection(reflection)}
                         className={`flex items-center justify-center rounded-lg px-2.5 py-1.5 text-xs font-bold transition-all hover:opacity-80 ${
-                          isSpace ? 'bg-rose-100 text-rose-700 hover:bg-rose-200' : 'bg-rose-50 text-rose-500'
+                          isSpace ? 'bg-rose-500/20 text-rose-400' : 'bg-rose-50 text-rose-500'
                         }`}
                       >
                         <Trash2 className="w-3 h-3" />
@@ -463,7 +463,7 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
                     onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addCharacter() } }}
                     placeholder={t('addCharacter')}
                     className={`flex-1 rounded-xl px-3 py-2.5 text-sm font-semibold outline-none border ${
-                      isSpace ? 'bg-slate-700 border-slate-600 text-white' : 'bg-white text-black'
+                      isSpace ? 'bg-slate-700 border-slate-600 text-white' : 'bg-slate-50 border-slate-200 text-slate-800'
                     } focus:border-indigo-400`}
                   />
                   <button
@@ -510,7 +510,7 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
                       className={`rounded-xl py-2 text-xs font-bold transition-all ${
                         form.genre === g.key
                           ? `bg-indigo-500 text-white ring-2 ring-offset-1 ${isSpace ? 'ring-offset-slate-800' : 'ring-offset-white'} ring-indigo-400`
-                          : isSpace ? 'bg-slate-700 text-slate-400' : 'bg-slate-50 text-slate-500'
+                          : isSpace ? 'bg-slate-700 text-slate-400' : 'bg-white text-slate-500'
                       }`}
                     >
                       {t(g.labelKey)}
@@ -618,7 +618,7 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
                 disabled={!form.book_title.trim() || !form.reflection_text.trim()}
                 className={`w-full font-display font-bold py-3 rounded-2xl transition-all ${
                   form.book_title.trim() && form.reflection_text.trim()
-                    ? `text-[#c11c84] hover:scale-[1.02] active:scale-95 bg-gradient-to-r ${theme.buttonGradient}`
+                    ? `text-white hover:scale-[1.02] active:scale-95 bg-gradient-to-r ${theme.buttonGradient}`
                     : 'opacity-50 cursor-not-allowed'
                 }`}
               >
