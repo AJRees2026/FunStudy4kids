@@ -435,7 +435,9 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                 <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
                   <Gift className="w-6 h-6 text-white" />
                 </div>
-                <h3 className={`font-display font-extrabold text-lg text-[#df5a00] mb-1`}>{t('rewardShop')}</h3>
+<h3 className="sparkle-title font-display font-extrabold text-lg mb-1">
+  {t('rewardShop')}
+</h3>
                 <p className={`text-xs font-semibold ${theme.textMuted} leading-snug`}>{t('rewardShopDesc')}</p>
                 <div className={`flex items-center gap-1 mt-3 text-xs font-bold ${theme.accent}`}>
                   {t('rewardShop')} <ChevronRight className="w-3 h-3" />
