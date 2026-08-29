@@ -40,7 +40,7 @@ export const spaceTheme: Theme = {
   buttonGradient: 'from-[#6f5bd3] to-[#ef684d]',
   actionButtonBg: 'bg-[#87CEEB]',
   actionButtonText: 'text-[#E64A19]'
-  inputBg: 'bg-sky-100'
+  inputBg: 'bg-white',
   inputBorder: 'border-sky-300',
   inputText: 'text-slate-800',
   inputPlaceholder: 'placeholder-slate-500',
