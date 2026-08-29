@@ -527,7 +527,7 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
                     value={form.start_date}
                     onChange={(e) => setForm({ ...form, start_date: e.target.value })}
                     className={`w-full rounded-xl px-3 py-2.5 text-sm font-semibold outline-none border ${
-                      isSpace ? 'bg-[#b0c4de] border-slate-600 text-white' : 'bg-[#b0c4de] border-slate-200 text-slate-800'
+                      isSpace ? 'bg-[#b0c4de] border-slate-600 text-black' : 'bg-[#b0c4de] border-slate-200 text-slate-800'
                     } focus:border-indigo-400`}
                   />
                 </div>
@@ -538,7 +538,7 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
                     value={form.end_date}
                     onChange={(e) => setForm({ ...form, end_date: e.target.value })}
                     className={`w-full rounded-xl px-3 py-2.5 text-sm font-semibold outline-none border ${
-                      isSpace ? 'bg-slate-700 border-slate-600 text-white' : 'bg-slate-50 border-slate-200 text-slate-800'
+                      isSpace ? 'bg-slate-700 border-slate-600 text-black' : 'bg-slate-50 border-slate-200 text-slate-800'
                     } focus:border-indigo-400`}
                   />
                 </div>
