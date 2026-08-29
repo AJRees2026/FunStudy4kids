@@ -164,7 +164,7 @@ export default function MoodTracker({ childId, theme, isSpace }: Props) {
               className={`
                 aspect-square rounded-xl flex flex-col items-center justify-center transition-all
                 ${isFuture ? 'opacity-30 cursor-not-allowed' : 'hover:scale-105 active:scale-95 cursor-pointer'}
-                ${mood ? mood.bgClass : isSpace ? 'bg-white/5' : 'bg-slate-50'}
+                ${mood ? mood.bgClass : isSpace ? 'bg-black' : 'bg-slate-50'}
                 ${isToday ? 'ring-2 ring-offset-1 ring-offset-transparent ' + (isSpace ? 'ring-white/60' : 'ring-slate-400') : ''}
               `}
             >
