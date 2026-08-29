@@ -316,7 +316,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
               {currentChild.photo_url ? <img src={currentChild.photo_url} alt={currentChild.child_name || currentChild.name} className="w-full h-full object-cover" /> : theme.emoji}
             </div>
             <div>
-              <p className={`font-display font-bold ${theme.textPrimary} text-lg leading-none flex items-center gap-2`}>
+              <p className={`font-display font-bold ${isSpace ? 'text-white' : theme.textPrimary} text-lg leading-none flex items-center gap-2`}>
                 {currentChild.child_name || currentChild.name}
                 {currentChild.writing_rank && ['master_storyteller', 'master_wordsmith', 'grand_chronicler', 'epic_author'].includes(currentChild.writing_rank) && (
                   <span className="inline-flex items-center gap-0.5 text-xs font-bold rounded-full bg-gradient-to-r from-amber-400 to-orange-500 text-white px-2 py-0.5 shadow-sm">
@@ -329,7 +329,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                 <span className={`flex items-center gap-1 text-s font-bold ${theme.accent}`}>
                   <Star className="w-3 h-3" /> {currentChild.points} {isSpace ? t('fuelCells') : t('sparkles')}
                 </span>
-                <span className={`flex items-center gap-1 text-s font-bold ${theme.textMuted}`}>
+                <span className={`flex items-center gap-1 text-s font-bold ${isSpace ? 'text-white/80' : theme.textMuted}`}>
                   <Flame className="w-3 h-3" /> {currentChild.streak || 0} {t('dayStreak')}
                 </span>
               </div>
