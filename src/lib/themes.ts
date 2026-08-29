@@ -70,7 +70,7 @@ export const unicornTheme: Theme = {
   inputText: 'text-slate-800',
   inputPlaceholder: 'placeholder-slate-400',
   tagBg: 'bg-pink-100',
-  tagText: 'text-pink-800'
+  tagText: 'text-[#069494]'
   
 }
 
