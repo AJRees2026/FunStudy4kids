@@ -335,7 +335,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
               </div>
             </div>
           </div>
-          <button onClick={onSwitchProfile} className={`p-2 rounded-xl ${isSpace ? 'text-white hover:text-slate-300' : 'text-slate-600 hover:text-slate-900'} transition-colors`}
+          <button onClick={onSwitchProfile} className={`p-5 rounded-xl ${isSpace ? 'text-white hover:text-slate-300' : 'text-slate-600 hover:text-slate-900'} transition-colors`}
 >
             <LogOut className="w-5 h-5" />
           </button>
