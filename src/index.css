@@ -98,7 +98,7 @@ select option {
     background-size: 200% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: sparkle-shimmer 2.5s linear infinite;
+    animation: sparkle-shimmer 2.0s linear infinite;
   }
 
   /* Define the animation keyframes */
