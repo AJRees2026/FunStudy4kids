@@ -597,7 +597,7 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
                 <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-all ${
                   form.allow_guardian_edit
                     ? 'bg-gradient-to-br from-violet-500 to-blue-600 text-white'
-                    : isSpace ? 'bg-slate-700 text-slate-500' : 'bg-slate-200 text-slate-400'
+                    : isSpace ? 'bg-[#b0c4de] text-slate-500' : 'bg-slate-200 text-slate-400'
                 }`}>
                   {form.allow_guardian_edit ? <Unlock className="w-5 h-5" /> : <Lock className="w-5 h-5" />}
                 </div>
