@@ -65,12 +65,7 @@ export const unicornTheme: Theme = {
   buttonGradient: 'from-[#eed5ff] to-[#ffc0d7]',
   actionButtonBg: 'bg-[#F4C2C2]',
   actionButtonText: 'text-[#E64A19]'
-  inputBg: 'bg-slate-50',
-  inputBorder: 'border-slate-200',
-  inputText: 'text-slate-800',
-  inputPlaceholder: 'placeholder-slate-400',
-  tagBg: 'bg-pink-100',
-  tagText: 'text-pink-800'
+  
 }
 
 export function getTheme(pref: 'space' | 'unicorn'): Theme {
