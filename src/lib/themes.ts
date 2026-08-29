@@ -44,7 +44,7 @@ export const unicornTheme: Theme = {
   accent: 'text-[#ffc0d7]',
   accentLight: 'bg-[#ffc0d7]/30',
   accentGradient: 'from-[#eed5ff] to-[#ffc0d7]',
-  starLabel: 'Sparkles',
+  starLabel: 'Star Drops',
   emoji: '🦄',
   buttonGradient: 'from-[#eed5ff] to-[#ffc0d7]',
 }
