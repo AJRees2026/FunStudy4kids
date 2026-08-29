@@ -530,7 +530,6 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
             {t('Spark Jobs')}
             <span className={`text-sm font-bold ${isSpace ? 'bg-white/20 text-white' : `${theme.textMuted} bg-slate-100`} px-2.5 py-0.5 rounded-full`}>
   {pendingTasks.length}
-              {pendingTasks.length}
             </span>
           </h2>
           {pendingTasks.length === 0 ? (
