@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { supabase, type MoodEntry, type MoodType } from '../lib/supabase'
 import { getTheme, type Theme } from '../lib/themes'
 import { useI18n } from '../lib/i18n'
-import { Smile, ArrowLeft, ArrowRight, Check } from 'lucide-react'
+import { Smile, ArrowLeft, ArrowRight, Check, X } from 'lucide-react'
 
 type Props = {
   childId: string
@@ -193,10 +193,16 @@ export default function MoodTracker({ childId, theme, isSpace }: Props) {
       {selectedDate && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-md p-4" onClick={() => setSelectedDate(null)}>
           <div
-            className={`rounded-3xl p-5 max-w-sm w-full shadow-2xl animate-pop ${isSpace ? 'bg-[#B0C4DE] border border-slate-700' : 'bg-[#fffaf2]'}`}
+            className={`relative rounded-3xl p-5 max-w-sm w-full shadow-2xl animate-pop ${isSpace ? 'bg-[#B0C4DE] border border-slate-700' : 'bg-[#fffaf2]'}`}
             onClick={(e) => e.stopPropagation()}
           >
-            <h3 className={`font-display font-extrabold text-lg mb-1 ${isSpace ? 'text-black' : 'text-slate-800'}`}>
+            <button
+              onClick={() => setSelectedDate(null)}
+              className={`absolute top-3 right-3 w-9 h-9 rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-90 ${isSpace ? 'bg-slate-700 text-white hover:bg-slate-600' : 'bg-slate-200 text-slate-600 hover:bg-slate-300'}`}
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <h3 className={`font-display font-extrabold text-lg mb-1 ${isSpace ? 'text-black' : 'text-slate-800'} pr-10`}>
               {selectedDate.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' })}
             </h3>
             <p className={`text-sm font-semibold mb-4 ${isSpace ? 'text-black' : 'text-slate-500'}`}>{t('howAreYouFeeling')}</p>
