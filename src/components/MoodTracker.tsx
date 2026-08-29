@@ -119,7 +119,7 @@ export default function MoodTracker({ childId, theme, isSpace }: Props) {
     <section className={`rounded-3xl p-4 ${theme.cardBg} border ${theme.cardBorder}`}>
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h2 className={`font-display font-extrabold text-xl ${theme.textPrimary} flex items-center gap-2`}>
+          <h2 className={`font-display font-extrabold text-xl text-white flex items-center gap-2`}>
             <Smile className={`w-5 h-5 ${theme.accent}`} />
             {t('moodTracker')}
           </h2>
