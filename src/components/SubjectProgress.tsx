@@ -99,10 +99,7 @@ export default function SubjectProgress({ tasks, theme, isSpace, childId, onTask
     <section className={`rounded-3xl p-4 ${theme.cardBg} border ${theme.cardBorder}`}>
       <div className="flex items-center justify-between mb-4">
         <div>
-         <h2 className={`font-display font-extrabold text-xl ${isSpace ? 'text-white' : theme.textPrimary} flex items-center gap-2`}>
-  <BookOpen className="w-5 h-5 text-indigo-500" />
-  {t('subjectProgress')}
-</h2>
+          <h2 className={`font-display font-extrabold text-xl ${theme.textPrimary}`}>{t('subjectProgress')}</h2>
           <p className={`text-xs font-semibold mt-1 ${theme.textMuted}`}>{t('weeklySubjectGoals')}</p>
         </div>
         <span className={`text-lg font-semibold ${isSpace ? 'text-amber-400' : 'text-pink-600'}`}>
