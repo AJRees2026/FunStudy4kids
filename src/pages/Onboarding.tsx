@@ -279,7 +279,7 @@ export default function Onboarding({ onLinked }: Props) {
                   >
                     <Rocket className="w-7 h-7 text-indigo-400" />
                     <span className="font-display font-bold text-white text-s">{t('boy')}</span>
-                    <span className="text-[10px] text-slate-400 font-semibold">{t('boyTheme')}</span>
+                    <span className="text-m text-slate-400 font-semibold">{t('boyTheme')}</span>
                   </button>
                   <button
                     type="button"
