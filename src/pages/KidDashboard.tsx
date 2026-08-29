@@ -374,7 +374,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                 <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-500 to-blue-600 flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
                   <Trophy className="w-6 h-6 text-white" />
                 </div>
-                <h3 className={`font-display font-extrabold text-lg ${theme.textPrimary} mb-1`}>{t('subjectProgress')}</h3>
+                <h3 className={`font-display font-extrabold text-lg text-[#df5a00] mb-1`}>{t('subjectProgress')}</h3>
                 <p className={`text-xs font-semibold ${theme.textMuted} leading-snug`}>{t('progressBySubjectDesc')}</p>
                 <div className={`flex items-center gap-1 mt-3 text-xs font-bold ${theme.accent}`}>
                   {t('subjectProgress')} <ChevronRight className="w-3 h-3" />
@@ -388,7 +388,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                 <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-rose-400 to-fuchsia-500 flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
                   <BookMarked className="w-6 h-6 text-white" />
                 </div>
-                <h3 className={`font-display font-extrabold text-lg ${theme.textPrimary} mb-1`}>{t('readingJourney')}</h3>
+                <h3 className={`font-display font-extrabold text-lg text-[#df5a00] mb-1`}>{t('readingJourney')}</h3>
                 <p className={`text-xs font-semibold ${theme.textMuted} leading-snug`}>{t('readingJourneyDesc')}</p>
                 <div className={`flex items-center gap-1 mt-3 text-xs font-bold ${theme.accent}`}>
                   {t('readingJourney')} <ChevronRight className="w-3 h-3" />
@@ -402,7 +402,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                 <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-yellow-400 to-amber-500 flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
                   <Star className="w-6 h-6 text-white fill-white" />
                 </div>
-                <h3 className={`font-display font-extrabold text-lg ${theme.textPrimary} mb-1`}>{t('sparkJobs')}</h3>
+                <h3 className={`font-display font-extrabold text-lg text-[#df5a00] mb-1`}>{t('sparkJobs')}</h3>
                 <p className={`text-xs font-semibold ${theme.textMuted} leading-snug`}>{t('tasksDesc')}</p>
                 <div className={`flex items-center gap-1 mt-3 text-xs font-bold ${theme.accent}`}>
                   {t('sparkJobs')} <ChevronRight className="w-3 h-3" />
@@ -421,7 +421,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                 <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
                   <Ruler className="w-6 h-6 text-white" />
                 </div>
-                <h3 className={`font-display font-extrabold text-lg ${theme.textPrimary} mb-1`}>{t('howMuchIVeGrown')}</h3>
+                <h3 className={`font-display font-extrabold text-lg text-[#df5a00] mb-1`}>{t('howMuchIVeGrown')}</h3>
                 <p className={`text-xs font-semibold ${theme.textMuted} leading-snug`}>{t('growthDesc')}</p>
                 <div className={`flex items-center gap-1 mt-3 text-xs font-bold ${theme.accent}`}>
                   {t('growthChart')} <ChevronRight className="w-3 h-3" />
