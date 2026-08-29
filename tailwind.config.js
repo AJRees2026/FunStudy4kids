@@ -4,8 +4,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
+        sans: ['Nunito', 'Inter', 'system-ui', 'sans-serif'],
         display: ['Fredoka', 'Inter', 'sans-serif'],
-        nunito: ['Nunito', 'sans-serif'],
       },
       colors: {
         boy: {

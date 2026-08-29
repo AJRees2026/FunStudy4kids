@@ -361,7 +361,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                   <Smile className="w-6 h-6 text-white" />
                 </div>
                 <h3 className={`font-display font-extrabold text-lg text-[#df5a00] mb-1`}>{t('moodTracker')}</h3>
-                <p className={`text-sm font-semibold text-[#4169e1] leading-snug font-nunito`}>{t('moodTrackerDesc')}</p>
+                <p className={`text-sm font-semibold text-[#4169e1] leading-snug`}>{t('moodTrackerDesc')}</p>
                  <div className="hidden">
                   {t('moodTracker')} <ChevronRight className="w-3 h-3" />
                 </div>
@@ -375,7 +375,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                   <Trophy className="w-6 h-6 text-white" />
                 </div>
                 <h3 className={`font-display font-extrabold text-lg text-[#df5a00] mb-1`}>{t('subjectProgress')}</h3>
-                <p className={`text-sm font-semibold text-[#4169e1] leading-snug font-nunito`}>{t('progressBySubjectDesc')}</p>
+                <p className={`text-sm font-semibold text-[#4169e1] leading-snug`}>{t('progressBySubjectDesc')}</p>
                  <div className="hidden">
                   {t('subjectProgress')} <ChevronRight className="w-3 h-3" />
                 </div>
@@ -389,7 +389,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                   <BookMarked className="w-6 h-6 text-white" />
                 </div>
                 <h3 className={`font-display font-extrabold text-lg text-[#df5a00] mb-1`}>{t('readingJourney')}</h3>
-                <p className={`text-sm font-semibold text-[#4169e1] leading-snug font-nunito`}>{t('readingJourneyDesc')}</p>
+                <p className={`text-sm font-semibold text-[#4169e1] leading-snug`}>{t('readingJourneyDesc')}</p>
                   <div className="hidden">
                   {t('readingJourney')} <ChevronRight className="w-3 h-3" />
                 </div>
@@ -403,7 +403,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                   <Star className="w-6 h-6 text-white fill-white" />
                 </div>
                 <h3 className={`font-display font-extrabold text-lg text-[#df5a00] mb-1`}>{t('sparkJobs')}</h3>
-                <p className={`text-sm font-semibold text-[#4169e1] leading-snug font-nunito`}>{t('tasksDesc')}</p>
+                <p className={`text-sm font-semibold text-[#4169e1] leading-snug`}>{t('tasksDesc')}</p>
                   <div className="hidden">
                   {t('sparkJobs')} <ChevronRight className="w-3 h-3" />
                 </div>
@@ -422,7 +422,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                   <Ruler className="w-6 h-6 text-white" />
                 </div>
                 <h3 className={`font-display font-extrabold text-lg text-[#df5a00] mb-1`}>{t('howMuchIVeGrown')}</h3>
-                <p className={`text-sm font-semibold text-[#4169e1] leading-snug font-nunito`}>{t('growthDesc')}</p>
+                <p className={`text-sm font-semibold text-[#4169e1] leading-snug`}>{t('growthDesc')}</p>
                 <div className="hidden">
                   {t('growthChart')} <ChevronRight className="w-3 h-3" />
                 </div>
@@ -438,7 +438,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
 <h3 className="sparkle-title font-display font-extrabold text-lg mb-1">
   {t('rewardShop')}
 </h3>
-                <p className={`text-sm font-semibold text-[#4169e1] leading-snug font-nunito`}>{t('rewardShopDesc')}</p>
+                <p className={`text-sm font-semibold text-[#4169e1] leading-snug`}>{t('rewardShopDesc')}</p>
                 <div className="hidden">
                   {t('rewardShop')} <ChevronRight className="w-3 h-3" />
                 </div>
