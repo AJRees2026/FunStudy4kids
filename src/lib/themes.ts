@@ -13,6 +13,8 @@ export type Theme = {
   starLabel: string
   emoji: string
   buttonGradient: string
+  actionButtonBg: string;
+  actionButtonText: string;
 }
 
 export const spaceTheme: Theme = {
