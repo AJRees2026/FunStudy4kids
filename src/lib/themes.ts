@@ -40,6 +40,12 @@ export const spaceTheme: Theme = {
   buttonGradient: 'from-[#6f5bd3] to-[#ef684d]',
   actionButtonBg: 'bg-[#87CEEB]',
   actionButtonText: 'text-[#E64A19]'
+  inputBg: 'bg-sky-100',
+  inputBorder: 'border-sky-300',
+  inputText: 'text-slate-800',
+  inputPlaceholder: 'placeholder-slate-500',
+  tagBg: 'bg-sky-200',
+  tagText: 'text-sky-800',
 }
 
 export const unicornTheme: Theme = {
