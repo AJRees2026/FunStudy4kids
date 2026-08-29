@@ -27,7 +27,7 @@ export const spaceTheme: Theme = {
   accent: 'text-[#ef684d]',
   accentLight: 'bg-[#ef684d]/20',
   accentGradient: 'from-[#6f5bd3] to-[#ef684d]',
-  starLabel: 'Fuel Cells',
+  starLabel: 'Orbit Gems',
   emoji: '🚀',
   buttonGradient: 'from-[#6f5bd3] to-[#ef684d]',
 }
