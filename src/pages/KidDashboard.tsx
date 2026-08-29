@@ -525,9 +525,9 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
         {view === 'tasks' && (
         <>
         <section className="animate-fadeIn">
-          <h2 className={`font-display font-extrabold text-xl ${theme.textPrimary} mb-3 flex items-center gap-2`}>
-            <ClipboardList className="w-5 h-5 text-indigo-400" />
-            {t('tasks')}
+          <h2 className={`font-display font-extrabold text-xl ${isSpace ? 'text-white' : theme.textPrimary} mb-3 flex items-center gap-2`}>
+    <Gift className="w-5 h-5 text-red-500" />
+            {t('Spark Jobs')}
             <span className={`text-sm font-bold ${theme.textMuted} bg-white/5 px-2 py-0.5 rounded-full`}>
               {pendingTasks.length}
             </span>
