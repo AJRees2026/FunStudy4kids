@@ -15,6 +15,12 @@ export type Theme = {
   buttonGradient: string
   actionButtonBg: string
   actionButtonText: string
+  inputBg: string       
+  inputBorder: string
+  inputText: string
+  inputPlaceholder: string
+  tagBg: string
+  tagText: string
 }
 
 export const spaceTheme: Theme = {
