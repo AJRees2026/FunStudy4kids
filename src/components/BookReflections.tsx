@@ -426,7 +426,7 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4" onClick={() => setShowModal(false)}>
           <div
             className={`rounded-3xl p-6 max-w-md w-full shadow-2xl animate-pop max-h-[90vh] overflow-y-auto ${
-              isSpace ? 'bg-slate-100 border border-slate-700' : 'bg-[#A8F0E0]'
+              isSpace ? 'bg-slate-100 border border-slate-700' : 'bg-white'
             }`}
             onClick={(e) => e.stopPropagation()}
           >
