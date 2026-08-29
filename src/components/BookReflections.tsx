@@ -618,7 +618,7 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
                 disabled={!form.book_title.trim() || !form.reflection_text.trim()}
                 className={`w-full font-display font-bold py-3 rounded-2xl transition-all ${
                   form.book_title.trim() && form.reflection_text.trim()
-                    ? `text-white hover:scale-[1.02] active:scale-95 bg-gradient-to-r ${theme.buttonGradient}`
+                    ? `text-[#c11c84] hover:scale-[1.02] active:scale-95 bg-gradient-to-r ${theme.buttonGradient}`
                     : 'opacity-50 cursor-not-allowed'
                 }`}
               >
