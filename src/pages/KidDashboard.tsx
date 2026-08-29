@@ -632,9 +632,9 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
         {view === 'rewards' && (
         <>
         <section className="animate-fadeIn">
-          <h2 className={`font-display font-extrabold text-xl ${theme.textPrimary} mb-3 flex items-center gap-2`}>
-            <Gift className="w-5 h-5 text-red-500" />
-            {t('rewardShop')}
+  <h2 className={`font-display font-extrabold text-xl ${isSpace ? 'text-white' : theme.textPrimary} mb-3 flex items-center gap-2`}>
+    <Gift className="w-5 h-5 text-red-500" />
+    {t('rewardShop')}
           </h2>
           {availableRewards.length === 0 ? (
             <div className={`rounded-2xl p-6 text-center ${theme.cardBg} border ${theme.cardBorder}`}>
