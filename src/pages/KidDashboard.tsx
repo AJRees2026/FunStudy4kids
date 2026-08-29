@@ -326,7 +326,7 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
                 )}
               </p>
               <div className="flex items-center gap-2 mt-1">
-                <span className={`flex items-center gap-1 text-s font-bold text-[#c11c84]`}>
+                <span className={`flex items-center gap-1 text-s font-bold text-purple-600`}>
                   <Star className="w-3 h-3" /> {currentChild.points} {isSpace ? t('fuelCells') : t('sparkles')}
                 </span>
                 <span className={`flex items-center gap-1 text-s font-bold ${theme.textMuted}`}>
