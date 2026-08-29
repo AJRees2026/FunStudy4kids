@@ -115,3 +115,40 @@ select option {
     }
   }
 }
+
+@layer components {
+  /* Parent container styling */
+  .bling-effect {
+    position: relative;
+    overflow: hidden; /* Clips the shine to the container boundaries */
+  }
+
+  /* The shining light overlay */
+  .bling-effect::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -150%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+      60deg,
+      transparent 30%,
+      rgba(255, 255, 255, 0.8) 50%, /* Bright center shine */
+      transparent 70%
+    );
+    transform: rotate(30deg);
+    animation: bling-sweep 3s infinite ease-in-out;
+    pointer-events: none; /* Allows clicks to pass through */
+  }
+
+  /* Sweeping animation keyframes */
+  @keyframes bling-sweep {
+    0% {
+      left: -150%;
+    }
+    30%, 100% {
+      left: 150%; /* Glides completely across before pausing */
+    }
+  }
+}
