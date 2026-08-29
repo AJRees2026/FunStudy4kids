@@ -211,7 +211,7 @@ export default function MoodTracker({ childId, theme, isSpace }: Props) {
                     ${selectedMood === m.key ? `${m.bgClass} scale-110 ring-2 ring-white/50` : isSpace ? 'bg-white/85 hover:bg-white/10' : 'bg-slate-50 hover:bg-slate-100'}
                   `}
                 >
-                  <span className="text-10xl">{m.emoji}</span>
+                  <span className="text-10lg">{m.emoji}</span>
                   <span className={`text-s font-bold ${selectedMood === m.key ? m.textClass : isSpace ? 'text-slate-400' : 'text-slate-500'}`}>
                     {t(`mood${m.key.charAt(0).toUpperCase() + m.key.slice(1)}`)}
                   </span>
@@ -227,7 +227,7 @@ export default function MoodTracker({ childId, theme, isSpace }: Props) {
               rows={2}
               className={`
                 w-full rounded-2xl p-3 text-sm font-semibold outline-none resize-none mb-4
-                ${isSpace ? 'bg-slate-700/50 text-white placeholder:text-slate-500' : 'bg-slate-50 text-slate-700 placeholder:text-slate-400'}
+                ${isSpace ? 'bg-white text-black placeholder:text-slate-500' : 'bg-slate-50 text-slate-700 placeholder:text-slate-400'}
               `}
             />
 
