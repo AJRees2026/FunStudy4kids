@@ -159,7 +159,7 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
             <button
               key={tb.id}
               onClick={() => setTab(tb.id)}
-              className={`flex items-center gap-1.5 px-4 py-3 font-display font-bold text-sm border-b-2 transition-colors whitespace-nowrap ${
+              className={`flex items-center gap-1.5 px-4 py-3 font-display font-bold text-lg border-b-2 transition-colors whitespace-nowrap ${
                 tab === tb.id
                   ? 'border-indigo-500 text-indigo-600'
                   : 'border-transparent text-slate-400 hover:text-slate-600'
