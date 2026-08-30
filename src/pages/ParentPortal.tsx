@@ -242,76 +242,69 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
                 <p className="text-slate-400 text-sm font-semibold">{t('noChildrenLinked')}</p>
               ) : (
                 <div className="space-y-3">
-                  {children.map((c) => (
-                    <div key={c.id} className="flex items-center gap-3 p-3 bg-slate-50 rounded-2xl">
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-teal-500 flex items-center justify-center text-lg overflow-hidden">
-                        {c.photo_url ? <img src={c.photo_url} alt={c.child_name || c.name} className="w-full h-full object-cover" /> : '🚀'}
+                  {children.map((c) => {
+                    const childTasks = tasks.filter((tk) => tk.child_id === c.id)
+                    const childTheme = getTheme(c.theme_preference)
+                    const isOpen = expandedChild === c.id
+                    return (
+                      <div key={c.id} className="bg-slate-50 rounded-2xl overflow-hidden">
+                        <div className="flex items-center gap-3 p-3">
+                          <button
+                            onClick={() => setExpandedChild(isOpen ? null : c.id)}
+                            className="flex items-center gap-3 flex-1 min-w-0 text-left"
+                          >
+                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-teal-500 flex items-center justify-center text-lg overflow-hidden shrink-0">
+                              {c.photo_url ? <img src={c.photo_url} alt={c.child_name || c.name} className="w-full h-full object-cover" /> : '🚀'}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="font-display font-bold text-slate-700 truncate">{c.child_name || c.name}</p>
+                              <p className="text-xs text-slate-400 font-semibold">{c.points} {t('pointsLower')} · {c.theme_preference}</p>
+                            </div>
+                            <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
+                          </button>
+                          <button onClick={() => setTab('profiles')} className="text-indigo-500 text-sm font-bold hover:underline shrink-0">
+                            {t('manage')}
+                          </button>
+                        </div>
+                        {isOpen && (
+                          <div className="px-3 pb-3 space-y-6 animate-fadeIn">
+                            <div className="border-t border-slate-200 pt-4">
+                              <h3 className="font-display font-bold text-slate-700 mb-3">{t('subjectProgress')}</h3>
+                              <SubjectProgress
+                                tasks={childTasks}
+                                theme={childTheme}
+                                isSpace={c.theme_preference === 'space'}
+                                childId={c.id}
+                                onTasksChange={fetchAll}
+                                readOnly
+                              />
+                            </div>
+                            <div className="border-t border-slate-200 pt-4">
+                              <h3 className="font-display font-bold text-slate-700 mb-3">{t('readingJourney')}</h3>
+                              <ReadingJourney
+                                childId={c.id}
+                                theme={childTheme}
+                                isSpace={c.theme_preference === 'space'}
+                                readOnly
+                              />
+                            </div>
+                            <div className="border-t border-slate-200 pt-4">
+                              <h3 className="font-display font-bold text-slate-700 mb-3">{t('iWriteMyBook')}</h3>
+                              <BookReflections
+                                childId={c.id}
+                                theme={childTheme}
+                                isSpace={c.theme_preference === 'space'}
+                                readOnly
+                              />
+                            </div>
+                          </div>
+                        )}
                       </div>
-                      <div className="flex-1">
-                        <p className="font-display font-bold text-slate-700">{c.child_name || c.name}</p>
-                        <p className="text-xs text-slate-400 font-semibold">{c.points} {t('pointsLower')} · {c.theme_preference}</p>
-                      </div>
-                      <button onClick={() => setTab('profiles')} className="text-indigo-500 text-sm font-bold hover:underline">
-                        {t('manage')}
-                      </button>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
               )}
             </div>
-
-            {children.length > 0 && children.map((c) => {
-              const childTasks = tasks.filter((tk) => tk.child_id === c.id)
-              const childTheme = getTheme(c.theme_preference)
-              const isOpen = expandedChild === c.id
-              return (
-                <div key={`progress_${c.id}`} className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
-                  <button
-                    onClick={() => setExpandedChild(isOpen ? null : c.id)}
-                    className="w-full flex items-center gap-3 p-4 hover:bg-slate-50 transition-colors"
-                  >
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-teal-500 flex items-center justify-center text-lg overflow-hidden">
-                      {c.photo_url ? <img src={c.photo_url} alt={c.child_name || c.name} className="w-full h-full object-cover" /> : '🚀'}
-                    </div>
-                    <p className="font-display font-bold text-slate-700 flex-1 text-left">{c.child_name || c.name}</p>
-                    <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-                  </button>
-                  {isOpen && (
-                    <div className="px-4 pb-4 space-y-6 animate-fadeIn">
-                      <div className="border-t border-slate-100 pt-4">
-                        <h3 className="font-display font-bold text-slate-700 mb-3">{t('subjectProgress')}</h3>
-                        <SubjectProgress
-                          tasks={childTasks}
-                          theme={childTheme}
-                          isSpace={c.theme_preference === 'space'}
-                          childId={c.id}
-                          onTasksChange={fetchAll}
-                          readOnly
-                        />
-                      </div>
-                      <div className="border-t border-slate-100 pt-4">
-                        <h3 className="font-display font-bold text-slate-700 mb-3">{t('readingJourney')}</h3>
-                        <ReadingJourney
-                          childId={c.id}
-                          theme={childTheme}
-                          isSpace={c.theme_preference === 'space'}
-                          readOnly
-                        />
-                      </div>
-                      <div className="border-t border-slate-100 pt-4">
-                        <h3 className="font-display font-bold text-slate-700 mb-3">{t('iWriteMyBook')}</h3>
-                        <BookReflections
-                          childId={c.id}
-                          theme={childTheme}
-                          isSpace={c.theme_preference === 'space'}
-                          readOnly
-                        />
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )
-            })}
           </div>
         )}
 
