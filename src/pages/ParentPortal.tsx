@@ -4,7 +4,7 @@ import { useI18n, LANGUAGES, type LangCode } from '../lib/i18n'
 import {
   Shield, LogOut, Plus, Check, X, Clock, TrendingUp, BookOpen, Award,
   UserCog, Rocket, Sparkles, Lock, KeyRound, Copy, Bell, Globe,
-  CalendarClock, Trash2, Palette, Gift, Smile, Ruler,
+  CalendarClock, Trash2, Palette, Gift, Smile, Ruler, ChevronDown,
 } from 'lucide-react'
 import SubjectProgress from '../components/SubjectProgress'
 import ReadingJourney from '../components/ReadingJourney'
@@ -32,6 +32,7 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
   const [showAddReward, setShowAddReward] = useState(false)
   const [showAddChild, setShowAddChild] = useState(false)
   const [copied, setCopied] = useState(false)
+  const [expandedChild, setExpandedChild] = useState<string | null>(null)
 
   const fetchAll = useCallback(async () => {
     const { data: kids } = await supabase
@@ -262,31 +263,52 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
             {children.length > 0 && children.map((c) => {
               const childTasks = tasks.filter((tk) => tk.child_id === c.id)
               const childTheme = getTheme(c.theme_preference)
+              const isOpen = expandedChild === c.id
               return (
-                <div key={`progress_${c.id}`}>
-                  <h3 className="font-display font-bold text-slate-700 mb-3">{c.child_name || c.name} — {t('subjectProgress')}</h3>
-                  <SubjectProgress
-                    tasks={childTasks}
-                    theme={childTheme}
-                    isSpace={c.theme_preference === 'space'}
-                    childId={c.id}
-                    onTasksChange={fetchAll}
-                    readOnly
-                  />
-                  <h3 className="font-display font-bold text-slate-700 mt-6 mb-3">{c.child_name || c.name} — {t('readingJourney')}</h3>
-                  <ReadingJourney
-                    childId={c.id}
-                    theme={childTheme}
-                    isSpace={c.theme_preference === 'space'}
-                    readOnly
-                  />
-                  <h3 className="font-display font-bold text-slate-700 mt-6 mb-3">{c.child_name || c.name} — {t('iWriteMyBook')}</h3>
-                  <BookReflections
-                    childId={c.id}
-                    theme={childTheme}
-                    isSpace={c.theme_preference === 'space'}
-                    readOnly
-                  />
+                <div key={`progress_${c.id}`} className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+                  <button
+                    onClick={() => setExpandedChild(isOpen ? null : c.id)}
+                    className="w-full flex items-center gap-3 p-4 hover:bg-slate-50 transition-colors"
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-teal-500 flex items-center justify-center text-lg overflow-hidden">
+                      {c.photo_url ? <img src={c.photo_url} alt={c.child_name || c.name} className="w-full h-full object-cover" /> : '🚀'}
+                    </div>
+                    <p className="font-display font-bold text-slate-700 flex-1 text-left">{c.child_name || c.name}</p>
+                    <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                  </button>
+                  {isOpen && (
+                    <div className="px-4 pb-4 space-y-6 animate-fadeIn">
+                      <div className="border-t border-slate-100 pt-4">
+                        <h3 className="font-display font-bold text-slate-700 mb-3">{t('subjectProgress')}</h3>
+                        <SubjectProgress
+                          tasks={childTasks}
+                          theme={childTheme}
+                          isSpace={c.theme_preference === 'space'}
+                          childId={c.id}
+                          onTasksChange={fetchAll}
+                          readOnly
+                        />
+                      </div>
+                      <div className="border-t border-slate-100 pt-4">
+                        <h3 className="font-display font-bold text-slate-700 mb-3">{t('readingJourney')}</h3>
+                        <ReadingJourney
+                          childId={c.id}
+                          theme={childTheme}
+                          isSpace={c.theme_preference === 'space'}
+                          readOnly
+                        />
+                      </div>
+                      <div className="border-t border-slate-100 pt-4">
+                        <h3 className="font-display font-bold text-slate-700 mb-3">{t('iWriteMyBook')}</h3>
+                        <BookReflections
+                          childId={c.id}
+                          theme={childTheme}
+                          isSpace={c.theme_preference === 'space'}
+                          readOnly
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
               )
             })}
