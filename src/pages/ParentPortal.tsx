@@ -896,7 +896,7 @@ function AddChildModal({ parentId, lang, t, onClose, onAdd }: {
           <div>
             <label className="text-sm text-slate-400 font-bold uppercase">Your Little User's Name</label>
             <div className="flex items-center gap-2 mt-1">
-              <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Your Little User's Name" lang={lang} spellCheck={true} className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-400" autoFocus />
+              <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder=hidden lang={lang} spellCheck={true} className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-400" autoFocus />
             </div>
           </div>
           <div>
