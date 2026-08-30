@@ -473,7 +473,7 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
                         {char}
                         <button
                           onClick={() => removeCharacter(char)}
-                          className={`hover:opacity-70 transition-opacity ${isSpace ? 'text-indigo-400' : 'text-indigo-400'}`}
+                          className={`hover:opacity-70 transition-opacity ${isSpace ? 'text-black' : 'text-indigo-400'}`}
                         >
                           <X className="w-3 h-3" />
                         </button>
