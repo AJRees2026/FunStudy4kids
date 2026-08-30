@@ -543,7 +543,7 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
                 <div className="flex-1">
                   <p className={`text-xs font-bold uppercase ${theme.textMuted}`}>{t('dayCountTracker')}</p>
                   {liveDayCount !== null ? (
-                    <p className={`font-display font-extrabold text-lg ${isSpace ? 'text-teal-300' : 'text-teal-600'}`}>
+                    <p className={`font-display font-extrabold text-lg ${isSpace ? 'text-black' : 'text-teal-600'}`}>
                       {liveDayCount} {t('dayCount')}
                     </p>
                   ) : (
