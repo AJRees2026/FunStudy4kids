@@ -557,7 +557,19 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
                         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-teal-500 flex items-center justify-center text-lg overflow-hidden">
                           {c.photo_url ? <img src={c.photo_url} alt={c.child_name || c.name} className="w-full h-full object-cover" /> : '🚀'}
                         </div>
-                        <p className="font-display font-extrabold text-lg text-slate-700">{c.child_name || c.name}</p>
+                        <input
+                          type="text"
+                          defaultValue={c.child_name || c.name}
+                          onBlur={(e) => {
+                            const trimmed = e.target.value.trim()
+                            if (trimmed && trimmed !== (c.child_name || c.name)) {
+                              updateProfile(c.id, { child_name: trimmed, name: trimmed })
+                            }
+                          }}
+                          lang={lang}
+                          spellCheck={false}
+                          className="font-display font-extrabold text-lg text-slate-700 bg-transparent border-b-2 border-transparent hover:border-slate-200 focus:border-indigo-400 focus:outline-none px-1 py-0.5 transition-colors flex-1"
+                        />
                       </div>
 
                       {/* Task Approval Mode Selector */}
