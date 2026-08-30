@@ -4,7 +4,7 @@ import { useI18n, LANGUAGES, type LangCode } from '../lib/i18n'
 import {
   Shield, LogOut, Plus, Check, X, Clock, TrendingUp, BookOpen, Award,
   UserCog, Rocket, Sparkles, Lock, KeyRound, Copy, Bell, Globe,
-  BarChart3, CalendarClock, Trash2, Palette, Gift, Smile, Ruler,
+  CalendarClock, Trash2, Palette, Gift, Smile, Ruler,
 } from 'lucide-react'
 import SubjectProgress from '../components/SubjectProgress'
 import ReadingJourney from '../components/ReadingJourney'
@@ -521,27 +521,36 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
               </div>
             </div>
 
-            <div className="bg-white rounded-3xl p-5 shadow-sm border border-slate-100">
-              <h3 className="font-display font-bold text-slate-700 mb-4 flex items-center gap-2">
-                <Lock className="w-5 h-5 text-indigo-500" />
-                {t('guardianSecurity')}
-              </h3>
-              {children.length === 0 ? (
+            {children.length === 0 ? (
+              <div className="bg-white rounded-3xl p-5 shadow-sm border border-slate-100">
                 <p className="text-slate-400 text-sm font-semibold">{t('noChildrenLinkedShort')}</p>
-              ) : (
-                <div className="space-y-4">
-                  {children.map((c) => (
-                    <div key={c.id} className="border border-slate-200 rounded-2xl p-4">
-                      <div className="flex items-center gap-2 mb-4">
-                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-teal-500 flex items-center justify-center text-sm overflow-hidden">
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {children.map((c) => {
+                  const activeSubs: string[] = c.active_subjects || [...ALL_SUBJECTS]
+                  const toggleSubject = (subj: string) => {
+                    const next = activeSubs.includes(subj)
+                      ? activeSubs.filter((s) => s !== subj)
+                      : [...activeSubs, subj]
+                    if (next.length === 0) return
+                    updateProfile(c.id, { active_subjects: next })
+                  }
+                  return (
+                    <div key={c.id} className="bg-white rounded-3xl p-5 shadow-sm border border-slate-100 space-y-4">
+                      <div className="flex items-center gap-2">
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-teal-500 flex items-center justify-center text-lg overflow-hidden">
                           {c.photo_url ? <img src={c.photo_url} alt={c.child_name || c.name} className="w-full h-full object-cover" /> : '🚀'}
                         </div>
-                        <p className="font-display font-bold text-slate-700">{c.child_name || c.name}</p>
+                        <p className="font-display font-extrabold text-lg text-slate-700">{c.child_name || c.name}</p>
                       </div>
 
                       {/* Task Approval Mode Selector */}
-                      <div className="mb-4">
-                        <p className="text-sm font-semibold text-slate-600 mb-2">{t('taskApprovalMode')}</p>
+                      <div className="border-t border-slate-100 pt-4">
+                        <p className="text-sm font-semibold text-slate-600 mb-2 flex items-center gap-1.5">
+                          <Lock className="w-4 h-4 text-indigo-400" />
+                          {t('taskApprovalMode')}
+                        </p>
                         <div className="space-y-2">
                           {([
                             { mode: 'off', label: t('modeOff'), desc: t('modeOffDesc') },
@@ -565,7 +574,7 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
                       </div>
 
                       {/* Reward PIN toggle */}
-                      <label className="flex items-center justify-between cursor-pointer">
+                      <label className="flex items-center justify-between cursor-pointer border-t border-slate-100 pt-4">
                         <div>
                           <p className="text-sm font-semibold text-slate-600">{t('requirePinRewards')}</p>
                           <p className="text-xs text-slate-400">{t('requirePinRewardsDesc')}</p>
@@ -577,130 +586,96 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
                           <span className={`absolute top-1 left-1 w-5 h-5 bg-white rounded-full shadow transition-transform ${c.require_pin_for_rewards ? 'translate-x-5' : ''}`} />
                         </button>
                       </label>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
 
-            {/* Homework Progress Settings */}
-            <div className="bg-white rounded-3xl p-5 shadow-sm border border-slate-100">
-              <h3 className="font-display font-bold text-slate-700 mb-4 flex items-center gap-2">
-                <BarChart3 className="w-5 h-5 text-indigo-500" />
-                {t('homeworkProgress')}
-              </h3>
-              {children.length === 0 ? (
-                <p className="text-slate-400 text-sm font-semibold">{t('noChildrenLinkedShort')}</p>
-              ) : (
-                <div className="space-y-4">
-                  {children.map((c) => {
-                    const activeSubs: string[] = c.active_subjects || [...ALL_SUBJECTS]
-                    const toggleSubject = (subj: string) => {
-                      const next = activeSubs.includes(subj)
-                        ? activeSubs.filter((s) => s !== subj)
-                        : [...activeSubs, subj]
-                      if (next.length === 0) return
-                      updateProfile(c.id, { active_subjects: next })
-                    }
-                    return (
-                      <div key={c.id} className="border border-slate-200 rounded-2xl p-4 space-y-4">
-                        <div className="flex items-center gap-2">
-                          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-teal-500 flex items-center justify-center text-sm overflow-hidden">
-                            {c.photo_url ? <img src={c.photo_url} alt={c.child_name || c.name} className="w-full h-full object-cover" /> : '🚀'}
-                          </div>
-                          <p className="font-display font-bold text-slate-700">{c.child_name || c.name}</p>
+                      {/* Progress Display Mode */}
+                      <div className="border-t border-slate-100 pt-4">
+                        <p className="text-sm font-semibold text-slate-600 mb-1 flex items-center gap-1.5">
+                          <Palette className="w-4 h-4 text-indigo-400" />
+                          {t('progressDisplayMode')}
+                        </p>
+                        <div className="space-y-2">
+                          {([
+                            { mode: 'percentage', label: t('modePercentage'), desc: t('modePercentageDesc') },
+                            { mode: 'task_count', label: t('modeTaskCount'), desc: t('modeTaskCountDesc') },
+                            { mode: 'theme_gauge', label: t('modeThemeGauge'), desc: t('modeThemeGaugeDesc') },
+                          ] as { mode: ProgressDisplayMode; label: string; desc: string }[]).map((opt) => (
+                            <button
+                              key={opt.mode}
+                              onClick={() => updateProfile(c.id, { progress_display_mode: opt.mode })}
+                              className={`w-full text-left rounded-xl p-3 border-2 transition-all ${
+                                c.progress_display_mode === opt.mode
+                                  ? 'border-indigo-500 bg-indigo-50'
+                                  : 'border-slate-200 hover:border-slate-300'
+                              }`}
+                            >
+                              <p className="font-display font-bold text-sm text-slate-700">{opt.label}</p>
+                              <p className="text-xs text-slate-400 mt-0.5">{opt.desc}</p>
+                            </button>
+                          ))}
                         </div>
+                      </div>
 
-                        {/* Progress Display Mode */}
-                        <div>
-                          <p className="text-sm font-semibold text-slate-600 mb-1 flex items-center gap-1.5">
-                            <Palette className="w-4 h-4 text-indigo-400" />
-                            {t('progressDisplayMode')}
-                          </p>
-                          <div className="space-y-2">
-                            {([
-                              { mode: 'percentage', label: t('modePercentage'), desc: t('modePercentageDesc') },
-                              { mode: 'task_count', label: t('modeTaskCount'), desc: t('modeTaskCountDesc') },
-                              { mode: 'theme_gauge', label: t('modeThemeGauge'), desc: t('modeThemeGaugeDesc') },
-                            ] as { mode: ProgressDisplayMode; label: string; desc: string }[]).map((opt) => (
+                      {/* Subject Management */}
+                      <div className="border-t border-slate-100 pt-4">
+                        <p className="text-sm font-semibold text-slate-600 mb-1">{t('subjectManagement')}</p>
+                        <p className="text-xs text-slate-400 mb-2">{t('subjectManagementDesc')}</p>
+                        <div className="flex flex-wrap gap-2">
+                          {ALL_SUBJECTS.map((subj) => {
+                            const on = activeSubs.includes(subj)
+                            return (
                               <button
-                                key={opt.mode}
-                                onClick={() => updateProfile(c.id, { progress_display_mode: opt.mode })}
-                                className={`w-full text-left rounded-xl p-3 border-2 transition-all ${
-                                  c.progress_display_mode === opt.mode
-                                    ? 'border-indigo-500 bg-indigo-50'
-                                    : 'border-slate-200 hover:border-slate-300'
+                                key={subj}
+                                onClick={() => toggleSubject(subj)}
+                                className={`px-3 py-1.5 rounded-full text-sm font-bold transition-all ${
+                                  on
+                                    ? 'bg-indigo-500 text-white shadow-sm'
+                                    : 'bg-slate-100 text-slate-400 hover:bg-slate-200'
                                 }`}
                               >
-                                <p className="font-display font-bold text-sm text-slate-700">{opt.label}</p>
-                                <p className="text-xs text-slate-400 mt-0.5">{opt.desc}</p>
+                                {on && <Check className="w-3 h-3 inline mr-1" />}
+                                {subj}
                               </button>
-                            ))}
-                          </div>
+                            )
+                          })}
                         </div>
-
-                        {/* Subject Management */}
-                        <div>
-                          <p className="text-sm font-semibold text-slate-600 mb-1">{t('subjectManagement')}</p>
-                          <p className="text-xs text-slate-400 mb-2">{t('subjectManagementDesc')}</p>
-                          <div className="flex flex-wrap gap-2">
-                            {ALL_SUBJECTS.map((subj) => {
-                              const on = activeSubs.includes(subj)
-                              return (
-                                <button
-                                  key={subj}
-                                  onClick={() => toggleSubject(subj)}
-                                  className={`px-3 py-1.5 rounded-full text-sm font-bold transition-all ${
-                                    on
-                                      ? 'bg-indigo-500 text-white shadow-sm'
-                                      : 'bg-slate-100 text-slate-400 hover:bg-slate-200'
-                                  }`}
-                                >
-                                  {on && <Check className="w-3 h-3 inline mr-1" />}
-                                  {subj}
-                                </button>
-                              )
-                            })}
-                          </div>
-                        </div>
-
-                        {/* Daily Cutoff Time */}
-                        <div>
-                          <p className="text-sm font-semibold text-slate-600 mb-1 flex items-center gap-1.5">
-                            <CalendarClock className="w-4 h-4 text-amber-400" />
-                            {t('dailyCutoffTime')}
-                          </p>
-                          <p className="text-xs text-slate-400 mb-2">{t('dailyCutoffDesc')}</p>
-                          <input
-                            type="time"
-                            value={c.daily_cutoff_time || '18:00'}
-                            onChange={(e) => updateProfile(c.id, { daily_cutoff_time: e.target.value })}
-                            className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-400"
-                          />
-                        </div>
-
-                        {/* Auto-archive toggle */}
-                        <label className="flex items-center justify-between cursor-pointer">
-                          <div>
-                            <p className="text-sm font-semibold text-slate-600 flex items-center gap-1.5">
-                              <Trash2 className="w-4 h-4 text-teal-400" />
-                              {t('autoArchiveDaily')}
-                            </p>
-                            <p className="text-xs text-slate-400">{t('autoArchiveDesc')}</p>
-                          </div>
-                          <button
-                            onClick={() => updateProfile(c.id, { auto_archive_daily: !c.auto_archive_daily })}
-                            className={`relative w-12 h-7 rounded-full transition-colors ${c.auto_archive_daily ? 'bg-teal-500' : 'bg-slate-300'}`}
-                          >
-                            <span className={`absolute top-1 left-1 w-5 h-5 bg-white rounded-full shadow transition-transform ${c.auto_archive_daily ? 'translate-x-5' : ''}`} />
-                          </button>
-                        </label>
                       </div>
-                    )
-                  })}
-                </div>
-              )}
-            </div>
+
+                      {/* Daily Cutoff Time */}
+                      <div className="border-t border-slate-100 pt-4">
+                        <p className="text-sm font-semibold text-slate-600 mb-1 flex items-center gap-1.5">
+                          <CalendarClock className="w-4 h-4 text-amber-400" />
+                          {t('dailyCutoffTime')}
+                        </p>
+                        <p className="text-xs text-slate-400 mb-2">{t('dailyCutoffDesc')}</p>
+                        <input
+                          type="time"
+                          value={c.daily_cutoff_time || '18:00'}
+                          onChange={(e) => updateProfile(c.id, { daily_cutoff_time: e.target.value })}
+                          className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                        />
+                      </div>
+
+                      {/* Auto-archive toggle */}
+                      <label className="flex items-center justify-between cursor-pointer border-t border-slate-100 pt-4">
+                        <div>
+                          <p className="text-sm font-semibold text-slate-600 flex items-center gap-1.5">
+                            <Trash2 className="w-4 h-4 text-teal-400" />
+                            {t('autoArchiveDaily')}
+                          </p>
+                          <p className="text-xs text-slate-400">{t('autoArchiveDesc')}</p>
+                        </div>
+                        <button
+                          onClick={() => updateProfile(c.id, { auto_archive_daily: !c.auto_archive_daily })}
+                          className={`relative w-12 h-7 rounded-full transition-colors ${c.auto_archive_daily ? 'bg-teal-500' : 'bg-slate-300'}`}
+                        >
+                          <span className={`absolute top-1 left-1 w-5 h-5 bg-white rounded-full shadow transition-transform ${c.auto_archive_daily ? 'translate-x-5' : ''}`} />
+                        </button>
+                      </label>
+                    </div>
+                  )
+                })}
+              </div>
+            )}
 
           </div>
         )}
