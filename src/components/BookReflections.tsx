@@ -530,7 +530,7 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
               {/* Day Count Tracker */}
               <div className={`rounded-2xl p-3 flex items-center gap-3 ${
                 liveDayCount !== null
-                  ? isSpace ? 'bg-teal-900/30 border border-teal-700/50' : 'bg-teal-50 border border-teal-200'
+                  ? isSpace ? 'bg-[#fde7c9] border border-teal-700/50' : 'bg-teal-50 border border-teal-200'
                   : isSpace ? 'bg-slate-700/30 border border-slate-600/50' : 'bg-slate-50 border border-slate-200'
               }`}>
                 <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
