@@ -228,7 +228,15 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
             </div>
 
             <div className="bg-white rounded-3xl p-5 shadow-sm border border-slate-100">
-              <h3 className="font-display font-bold text-slate-700 mb-4">{t('children')}</h3>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-display font-bold text-slate-700">{t('children')}</h3>
+                <button
+                  onClick={() => setShowAddChild(true)}
+                  className="bg-gradient-to-r from-indigo-500 to-teal-500 text-white font-display font-bold px-3 py-1.5 rounded-xl hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5 text-sm"
+                >
+                  <Plus className="w-4 h-4" /> {t('addChild')}
+                </button>
+              </div>
               {children.length === 0 ? (
                 <p className="text-slate-400 text-sm font-semibold">{t('noChildrenLinked')}</p>
               ) : (
