@@ -128,7 +128,7 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
       <header className="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-slate-200">
         <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-teal-500 flex items-center justify-center overflow-hidden">
+            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-teal-500 flex items-center justify-center overflow-hidden">
               {currentParent.photo_url ? <img src={currentParent.photo_url} alt={currentParent.name} className="w-full h-full object-cover" /> : <Shield className="w-5 h-5 text-white" />}
             </div>
             <div>
