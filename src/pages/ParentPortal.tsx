@@ -147,7 +147,7 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
               ))}
             </select>
             <button onClick={onSwitchProfile} className="p-2 rounded-xl text-slate-400 hover:text-slate-600 transition-colors">
-              <LogOut className="w-5 h-5" />
+              <LogOut className="w-7 h-7" />
             </button>
           </div>
         </div>
