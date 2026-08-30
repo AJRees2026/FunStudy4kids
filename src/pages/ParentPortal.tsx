@@ -133,7 +133,7 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
             </div>
             <div>
               <p className="font-display font-bold text-slate-800 text-lg leading-none">{t('parentPortal')}</p>
-              <p className="text-xs text-slate-400 font-semibold">{currentParent.name}</p>
+              <p className="text-sm text-slate-400 font-semibold">{currentParent.name}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
