@@ -908,7 +908,7 @@ function AddChildModal({ parentId, lang, t, onClose, onAdd }: {
                 <p className="text-[10px] text-slate-400 font-semibold">{t('boyTheme')}</p>
               </button>
               <button onClick={() => setGender('girl')} className={`rounded-2xl p-4 border-2 transition-all flex flex-col items-center gap-1 ${gender === 'girl' ? 'border-fuchsia-500 bg-fuchsia-50 scale-105' : 'border-slate-200 hover:border-fuchsia-300'}`}>
-                <Sparkles className="w-7 h-7 text-fuchsia-500" />
+                <Sparkles className="w-9 h-9 text-fuchsia-500" />
                 <p className="font-display font-bold text-slate-700 text-sm">{t('girl')}</p>
                 <p className="text-[10px] text-slate-400 font-semibold">{t('girlTheme')}</p>
               </button>
