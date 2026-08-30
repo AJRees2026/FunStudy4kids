@@ -568,33 +568,35 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
                 </div>
               </div>
 
-              {/* Allow guardian edit toggle */}
-              <button
-                onClick={() => setForm({ ...form, allow_guardian_edit: !form.allow_guardian_edit })}
-                className={`w-full flex items-center gap-3 rounded-2xl p-3 border-2 transition-all ${
-                  form.allow_guardian_edit
-                    ? isSpace ? 'bg-[#b0c4de] border-violet-600' : 'bg-[#b0c4de] border-violet-300'
-                    : isSpace ? 'bg-[#b0c4de] border-slate-600' : 'bg-[#b0c4de] border-slate-200'
-                }`}
-              >
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-all ${
-                  form.allow_guardian_edit
-                    ? 'bg-gradient-to-br from-violet-500 to-blue-600 text-white'
-                    : isSpace ? 'bg-[#b0c4de] text-slate-500' : 'bg-slate-200 text-slate-400'
-                }`}>
-                  {form.allow_guardian_edit ? <Unlock className="w-5 h-5" /> : <Lock className="w-5 h-5" />}
-                </div>
-                <div className="flex-1 text-left">
-                  <p className={`text-sm font-display font-bold ${theme.textPrimary}`}>{t('allowGuardianEdit')}</p>
-                </div>
-                <div className={`w-12 h-7 rounded-full p-1 transition-all shrink-0 ${
-                  form.allow_guardian_edit ? 'bg-violet-500' : isSpace ? 'bg-slate-600' : 'bg-slate-300'
-                }`}>
-                  <div className={`w-5 h-5 rounded-full bg-white transition-transform ${
-                    form.allow_guardian_edit ? 'translate-x-5' : ''
-                  }`} />
-                </div>
-              </button>
+              {/* Allow guardian edit toggle (kid view only) */}
+              {!readOnly && (
+                <button
+                  onClick={() => setForm({ ...form, allow_guardian_edit: !form.allow_guardian_edit })}
+                  className={`w-full flex items-center gap-3 rounded-2xl p-3 border-2 transition-all ${
+                    form.allow_guardian_edit
+                      ? isSpace ? 'bg-[#b0c4de] border-violet-600' : 'bg-[#b0c4de] border-violet-300'
+                      : isSpace ? 'bg-[#b0c4de] border-slate-600' : 'bg-[#b0c4de] border-slate-200'
+                  }`}
+                >
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-all ${
+                    form.allow_guardian_edit
+                      ? 'bg-gradient-to-br from-violet-500 to-blue-600 text-white'
+                      : isSpace ? 'bg-[#b0c4de] text-slate-500' : 'bg-slate-200 text-slate-400'
+                  }`}>
+                    {form.allow_guardian_edit ? <Unlock className="w-5 h-5" /> : <Lock className="w-5 h-5" />}
+                  </div>
+                  <div className="flex-1 text-left">
+                    <p className={`text-sm font-display font-bold ${theme.textPrimary}`}>{t('allowGuardianEdit')}</p>
+                  </div>
+                  <div className={`w-12 h-7 rounded-full p-1 transition-all shrink-0 ${
+                    form.allow_guardian_edit ? 'bg-violet-500' : isSpace ? 'bg-slate-600' : 'bg-slate-300'
+                  }`}>
+                    <div className={`w-5 h-5 rounded-full bg-white transition-transform ${
+                      form.allow_guardian_edit ? 'translate-x-5' : ''
+                    }`} />
+                  </div>
+                </button>
+              )}
 
               <button
                 onClick={saveReflection}
