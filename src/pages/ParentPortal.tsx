@@ -719,11 +719,14 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
       )}
       {showAddChild && (
         <AddChildModal parentId={currentParent.id} lang={lang} t={t} onClose={() => setShowAddChild(false)} onAdd={async (name, theme, gender) => {
-          await supabase.from('profiles').insert({
+          const { error } = await supabase.from('profiles').insert({
             role: 'child', name, child_name: name, gender, theme_preference: theme,
             linked_parent_id: currentParent.id, require_pin_for_tasks: true, require_pin_for_rewards: true, task_approval_mode: 'off',
+            language: lang,
           })
+          if (error) return error.message
           setShowAddChild(false); fetchAll()
+          return null
         }} />
       )}
     </div>
@@ -864,11 +867,21 @@ function AddRewardModal({ children, lang, t, onClose, onAdd }: {
 
 function AddChildModal({ parentId, lang, t, onClose, onAdd }: {
   parentId: string; lang: LangCode; t: TFunc; onClose: () => void
-  onAdd: (name: string, theme: 'space' | 'unicorn', gender: string) => void
+  onAdd: (name: string, theme: 'space' | 'unicorn', gender: string) => Promise<string | null>
 }) {
   const [name, setName] = useState('')
   const [gender, setGender] = useState<'boy' | 'girl' | ''>('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
   const theme: 'space' | 'unicorn' = gender === 'girl' ? 'unicorn' : 'space'
+
+  const handleSubmit = async () => {
+    setLoading(true)
+    setError('')
+    const err = await onAdd(name, theme, gender)
+    setLoading(false)
+    if (err) setError(err)
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
@@ -899,8 +912,9 @@ function AddChildModal({ parentId, lang, t, onClose, onAdd }: {
               </button>
             </div>
           </div>
-          <button onClick={() => onAdd(name, theme, gender)} disabled={!name.trim() || !gender} className="w-full bg-gradient-to-r from-indigo-500 to-teal-500 text-white font-display font-bold text-lg py-3 rounded-2xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50">
-            {t('addChild')}
+          {error && <p className="text-rose-500 text-sm font-semibold text-center">{error}</p>}
+          <button onClick={handleSubmit} disabled={!name.trim() || !gender || loading} className="w-full bg-gradient-to-r from-indigo-500 to-teal-500 text-white font-display font-bold text-lg py-3 rounded-2xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50">
+            {loading ? '...' : t('addChild')}
           </button>
         </div>
       </div>
