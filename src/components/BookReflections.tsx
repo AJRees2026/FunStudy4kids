@@ -455,7 +455,7 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
                     className={`shrink-0 w-10 h-10 rounded-xl flex items-center justify-center font-bold transition-all ${
                       newCharacter.trim()
                         ? `bg-gradient-to-r ${theme.buttonGradient} text-white hover:scale-105 active:scale-95`
-                        : isSpace ? 'bg-[#b0c4de] text-slate-600' : 'bg-[#b0c4de] text-slate-300'
+                        : isSpace ? 'bg-white text-slate-600' : 'bg-[#b0c4de] text-slate-300'
                     }`}
                   >
                     <Plus className="w-4 h-4" />
@@ -467,7 +467,7 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
                       <span
                         key={char}
                         className={`flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full transition-all animate-pop ${
-                          isSpace ? 'bg-white text-indigo-300' : 'bg-[#b0c4de] text-indigo-600'
+                          isSpace ? 'bg-[#b0c4de] text-indigo-300' : 'bg-[#b0c4de] text-indigo-600'
                         }`}
                       >
                         {char}
