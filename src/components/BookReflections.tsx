@@ -316,18 +316,8 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
                     <h3 className={`font-display font-bold text-sm ${theme.textPrimary}`}>{reflection.book_title}</h3>
                   </div>
                   <div className="flex items-center gap-1.5 shrink-0">
-                    {/* Guardian edit permission badge */}
-                    {readOnly ? (
-                      <div className={`flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold ${
-                        reflection.allow_guardian_edit
-                          ? 'bg-violet-100 text-violet-600'
-                          : isSpace ? 'bg-slate-700 text-slate-400' : 'bg-slate-100 text-slate-500'
-                      }`}>
-                        {reflection.allow_guardian_edit
-                          ? <><Unlock className="w-3 h-3" /> {t('guardianEditAllowed')}</>
-                          : <><Lock className="w-3 h-3" /> {t('guardianEditLocked')}</>}
-                      </div>
-                    ) : (
+                    {/* Guardian edit permission badge (kid view only) */}
+                    {!readOnly && (
                       <button
                         onClick={() => toggleGuardianEdit(reflection)}
                         className={`flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold transition-all ${
@@ -377,13 +367,6 @@ export default function BookReflections({ childId, theme, isSpace, onPointsAward
                 )}
 
                 <div className="flex gap-1 mt-2">
-                  {readOnly && !canGuardianEdit && (
-                    <div className={`flex-1 flex items-center justify-center gap-1 rounded-lg py-1.5 text-xs font-bold ${
-                      isSpace ? 'bg-slate-700/50 text-slate-400' : 'bg-slate-50 text-slate-400'
-                    }`}>
-                      <Lock className="w-3 h-3" /> {t('guardianEditLocked')}
-                    </div>
-                  )}
                   {readOnly && canGuardianEdit && (
                     <button
                       onClick={() => openEditModal(reflection)}
