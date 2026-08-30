@@ -900,7 +900,7 @@ function AddChildModal({ parentId, lang, t, onClose, onAdd }: {
             </div>
           </div>
           <div>
-            <label className="text-xs text-slate-400 font-bold uppercase">{t('chooseGender')}</label>
+            <label className="text-sm text-slate-400 font-bold uppercase">{t('chooseGender')}</label>
             <div className="grid grid-cols-2 gap-3 mt-1">
               <button onClick={() => setGender('boy')} className={`rounded-2xl p-4 border-2 transition-all flex flex-col items-center gap-1 ${gender === 'boy' ? 'border-indigo-500 bg-indigo-50 scale-105' : 'border-slate-200 hover:border-indigo-300'}`}>
                 <Rocket className="w-7 h-7 text-indigo-500" />
