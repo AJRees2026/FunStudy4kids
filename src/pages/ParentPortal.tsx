@@ -260,141 +260,114 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
           </div>
         </div>
 
-        {/* Overview Tab */}
-        {tab === 'overview' && (
-          <div className="space-y-6 animate-fadeIn font-sans">
-            {/* Summary metric cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              {/* Pending */}
-              <button
-                onClick={() => setTab('tasks')}
-                className="group bg-white rounded-2xl p-4 shadow-md hover:shadow-xl transition-all hover:scale-[1.02] active:scale-95 text-left"
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
-                    <Clock className="w-4 h-4 text-white" />
-                  </div>
-                  <span className="font-display font-extrabold text-2xl text-slate-800">{pendingTasks.length}</span>
-                </div>
-                <p className="text-xs text-slate-400 font-bold uppercase mb-2">{t('pending')}</p>
-                <div className="h-1.5 rounded-full overflow-hidden bg-slate-100">
-                  <div className="h-full rounded-full bg-gradient-to-r from-amber-400 to-orange-500 transition-all duration-500" style={{ width: `${tasks.length > 0 ? Math.round((pendingTasks.length / tasks.length) * 100) : 0}%` }} />
-                </div>
-              </button>
-
-              {/* Completed */}
-              <button
-                onClick={() => setTab('tasks')}
-                className="group bg-white rounded-2xl p-4 shadow-md hover:shadow-xl transition-all hover:scale-[1.02] active:scale-95 text-left"
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-teal-400 to-green-500 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
-                    <Check className="w-4 h-4 text-white" />
-                  </div>
-                  <span className="font-display font-extrabold text-2xl text-slate-800">{completedTasks.length}</span>
-                </div>
-                <p className="text-xs text-slate-400 font-bold uppercase mb-2">{t('completed')}</p>
-                <div className="h-1.5 rounded-full overflow-hidden bg-slate-100">
-                  <div className="h-full rounded-full bg-gradient-to-r from-teal-400 to-green-500 transition-all duration-500" style={{ width: `${tasks.length > 0 ? Math.round((completedTasks.length / tasks.length) * 100) : 0}%` }} />
-                </div>
-              </button>
-
-              {/* Points Awarded */}
-              <button
-                onClick={() => setTab('rewards')}
-                className="group bg-white rounded-2xl p-4 shadow-md hover:shadow-xl transition-all hover:scale-[1.02] active:scale-95 text-left"
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-fuchsia-500 to-rose-600 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
-                    <Award className="w-4 h-4 text-white" />
-                  </div>
-                  <span className="font-display font-extrabold text-2xl text-slate-800">{completedTasks.length}/{tasks.length}</span>
-                </div>
-                <p className="text-xs text-slate-400 font-bold uppercase mb-2">{t('pointsAwarded')}</p>
-                <div className="h-1.5 rounded-full overflow-hidden bg-slate-100">
-                  <div className="h-full rounded-full bg-gradient-to-r from-fuchsia-500 to-rose-600 transition-all duration-500" style={{ width: `${Math.min(totalPointsAwarded % 100 || 8, 100)}%` }} />
-                </div>
-              </button>
-            </div>
-
-            <div className="bg-white rounded-3xl p-5 shadow-sm border border-slate-100">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-display font-bold text-slate-700">{t('children')}</h3>
-                <button
-                  onClick={() => setShowAddChild(true)}
-                  className="bg-gradient-to-r from-indigo-500 to-teal-500 text-white font-display font-bold px-3 py-1.5 rounded-xl hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5 text-sm"
-                >
-                  <Plus className="w-4 h-4" /> {t('addChild')}
-                </button>
-              </div>
-              {children.length === 0 ? (
-                <p className="text-slate-400 text-sm font-semibold">{t('noChildrenLinked')}</p>
-              ) : (
-                <div className="space-y-3">
-                  {children.map((c) => {
-                    const childTasks = tasks.filter((tk) => tk.child_id === c.id)
-                    const childTheme = getTheme(c.theme_preference)
-                    const isOpen = expandedChild === c.id
-                    return (
-                      <div key={c.id} className="bg-slate-50 rounded-2xl overflow-hidden">
-                        <div className="flex items-center gap-3 p-3">
-                          <button
-                            onClick={() => setExpandedChild(isOpen ? null : c.id)}
-                            className="flex items-center gap-3 flex-1 min-w-0 text-left"
-                          >
-                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-teal-500 flex items-center justify-center text-lg overflow-hidden shrink-0">
-                              {c.photo_url ? <img src={c.photo_url} alt={c.child_name || c.name} className="w-full h-full object-cover" /> : '🚀'}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="font-display font-bold text-slate-700 truncate">{c.child_name || c.name}</p>
-                              <p className="text-xs text-slate-400 font-semibold">{c.points} {t('pointsLower')} · {c.theme_preference}</p>
-                            </div>
-                            <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
-                          </button>
-                          <button onClick={() => setTab('profiles')} className="text-indigo-500 text-sm font-bold hover:underline shrink-0">
-                            {t('manage')}
-                          </button>
-                        </div>
-                        {isOpen && (
-                          <div className="px-3 pb-3 space-y-6 animate-fadeIn">
-                            <div className="border-t border-slate-200 pt-4">
-                              <h3 className="font-display font-bold text-slate-700 mb-3">{t('subjectProgress')}</h3>
-                              <SubjectProgress
-                                tasks={childTasks}
-                                theme={childTheme}
-                                isSpace={c.theme_preference === 'space'}
-                                childId={c.id}
-                                onTasksChange={fetchAll}
-                                readOnly
-                              />
-                            </div>
-                            <div className="border-t border-slate-200 pt-4">
-                              <h3 className="font-display font-bold text-slate-700 mb-3">{t('readingJourney')}</h3>
-                              <ReadingJourney
-                                childId={c.id}
-                                theme={childTheme}
-                                isSpace={c.theme_preference === 'space'}
-                                readOnly
-                              />
-                            </div>
-                            <div className="border-t border-slate-200 pt-4">
-                              <h3 className="font-display font-bold text-slate-700 mb-3">{t('iWriteMyBook')}</h3>
-                              <BookReflections
-                                childId={c.id}
-                                theme={childTheme}
-                                isSpace={c.theme_preference === 'space'}
-                                readOnly
-                              />
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    )
-                  })}
-                </div>
-              )}
-            </div>
+       {/* Overview Tab */}
+{tab === 'overview' && (
+  <div className="space-y-8 animate-fadeIn font-display">
+    {/* Grid Container for Circular Metric Badges */}
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 justify-items-center py-4">
+      
+      {/* 1. Pending Tasks */}
+      <div className="flex flex-col items-center">
+        <div className="w-32 h-32 md:w-36 md:h-36 rounded-full bg-white border-4 border-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.3)] flex flex-col items-center justify-center p-2 text-center transition-transform hover:scale-105">
+          <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mb-1">
+            <ClipboardList className="w-4 h-4" />
           </div>
+          <span className="text-xs font-bold text-slate-700 leading-tight mb-0.5">{t('pendingTasks')}</span>
+          <span className="font-extrabold text-xl text-slate-800">{pendingTasks.length}</span>
+        </div>
+      </div>
+
+      {/* 2. Completed Tasks */}
+      <div className="flex flex-col items-center">
+        <div className="w-32 h-32 md:w-36 md:h-36 rounded-full bg-white border-4 border-pink-500 shadow-[0_0_20px_rgba(236,72,153,0.3)] flex flex-col items-center justify-center p-2 text-center transition-transform hover:scale-105">
+          <div className="w-8 h-8 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center mb-1">
+            <CheckCircle className="w-4 h-4" />
+          </div>
+          <span className="text-xs font-bold text-slate-700 leading-tight mb-0.5">{t('completedTasks')}</span>
+          <span className="font-extrabold text-xl text-slate-800">{completedTasks.length}</span>
+        </div>
+      </div>
+
+      {/* 3. Points Awarded */}
+      <div className="flex flex-col items-center">
+        <div className="w-32 h-32 md:w-36 md:h-36 rounded-full bg-white border-4 border-amber-500 shadow-[0_0_20px_rgba(245,158,11,0.3)] flex flex-col items-center justify-center p-2 text-center transition-transform hover:scale-105">
+          <div className="w-8 h-8 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center mb-1">
+            <Award className="w-4 h-4" />
+          </div>
+          <span className="text-xs font-bold text-slate-700 leading-tight mb-0.5">{t('pointsAwarded')}</span>
+          <span className="font-extrabold text-lg text-slate-800">{completedTasks.length}/{tasks.length}</span>
+        </div>
+      </div>
+
+      {/* 4. Pending Approval */}
+      <div className="flex flex-col items-center">
+        <div className="w-32 h-32 md:w-36 md:h-36 rounded-full bg-white border-4 border-rose-500 shadow-[0_0_20px_rgba(244,63,94,0.3)] flex flex-col items-center justify-center p-2 text-center transition-transform hover:scale-105">
+          <div className="w-8 h-8 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mb-1">
+            <AlertCircle className="w-4 h-4" />
+          </div>
+          <span className="text-xs font-bold text-slate-700 leading-tight mb-0.5">{t('approvalRequests')}</span>
+          <span className="font-extrabold text-xl text-slate-800">{approvalRequests.length}</span>
+        </div>
+      </div>
+
+      {/* 5. Weekly Goal */}
+      <div className="flex flex-col items-center">
+        <div className="w-32 h-32 md:w-36 md:h-36 rounded-full bg-white border-4 border-blue-500 shadow-[0_0_20px_rgba(59,130,246,0.3)] flex flex-col items-center justify-center p-2 text-center transition-transform hover:scale-105">
+          <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mb-1">
+            <Trophy className="w-4 h-4" />
+          </div>
+          <span className="text-xs font-bold text-slate-700 leading-tight mb-0.5">{t('weeklyGoal')}</span>
+          <span className="font-extrabold text-lg text-slate-800">0/20</span>
+        </div>
+      </div>
+
+      {/* 6. Reading Minutes */}
+      <div className="flex flex-col items-center">
+        <div className="w-32 h-32 md:w-36 md:h-36 rounded-full bg-white border-4 border-indigo-400 shadow-[0_0_20px_rgba(129,140,248,0.3)] flex flex-col items-center justify-center p-2 text-center transition-transform hover:scale-105">
+          <div className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center mb-1">
+            <Clock className="w-4 h-4" />
+          </div>
+          <span className="text-xs font-bold text-slate-700 leading-tight mb-0.5">Reading Minutes</span>
+          <span className="font-extrabold text-xl text-slate-800">10</span>
+        </div>
+      </div>
+
+      {/* 7. Spark Jobs */}
+      <div className="flex flex-col items-center">
+        <div className="w-32 h-32 md:w-36 md:h-36 rounded-full bg-white border-4 border-indigo-900 shadow-[0_0_20px_rgba(49,46,129,0.3)] flex flex-col items-center justify-center p-2 text-center transition-transform hover:scale-105">
+          <div className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-900 flex items-center justify-center mb-1">
+            <Sparkles className="w-4 h-4" />
+          </div>
+          <span className="text-xs font-bold text-slate-700 leading-tight mb-0.5">Spark Jobs</span>
+          <span className="font-extrabold text-xl text-slate-800">0</span>
+        </div>
+      </div>
+
+      {/* 8. Unused Points */}
+      <div className="flex flex-col items-center">
+        <div className="w-32 h-32 md:w-36 md:h-36 rounded-full bg-white border-4 border-yellow-600 shadow-[0_0_20px_rgba(202,138,4,0.3)] flex flex-col items-center justify-center p-2 text-center transition-transform hover:scale-105">
+          <div className="w-8 h-8 rounded-full bg-yellow-100 text-yellow-700 flex items-center justify-center mb-1">
+            <Coins className="w-4 h-4" />
+          </div>
+          <span className="text-xs font-bold text-slate-700 leading-tight mb-0.5">Unused Points</span>
+          <span className="font-extrabold text-xl text-slate-800">0</span>
+        </div>
+      </div>
+
+      {/* 9. Profile Completion */}
+      <div className="flex flex-col items-center">
+        <div className="w-32 h-32 md:w-36 md:h-36 rounded-full bg-white border-4 border-orange-500 shadow-[0_0_20px_rgba(249,115,22,0.3)] flex flex-col items-center justify-center p-2 text-center transition-transform hover:scale-105">
+          <div className="w-8 h-8 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center mb-1">
+            <UserCheck className="w-4 h-4" />
+          </div>
+          <span className="text-xs font-bold text-slate-700 leading-tight mb-0.5">Profile Completion</span>
+          <span className="font-extrabold text-xl text-slate-800">0</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+)}
         )}
 
         {/* Tasks Tab */}
