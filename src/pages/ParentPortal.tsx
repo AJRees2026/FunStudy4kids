@@ -181,7 +181,7 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
   }
 
   const navBadges: { icon: typeof BookOpen; label: string; value: string | number; tab: Tab; border: string; shadow: string; iconBg: string; blink?: boolean }[] = [
-    { icon: TrendingUp, label: t('overview'), value: tasks.length, tab: 'overview', border: 'border-indigo-500', shadow: 'shadow-[0_0_20px_rgba(99,102,241,0.3)]', iconBg: 'bg-indigo-100 text-indigo-600' },
+    { icon: TrendingUp, label: t('overview'), value: '', tab: 'overview', border: 'border-indigo-500', shadow: 'shadow-[0_0_20px_rgba(99,102,241,0.3)]', iconBg: 'bg-indigo-100 text-indigo-600' },
     { icon: ClipboardList, label: t('sparkJobs'), value: `${completedTasks.length}/${tasks.length}`, tab: 'tasks', border: 'border-emerald-500', shadow: 'shadow-[0_0_20px_rgba(16,185,129,0.3)]', iconBg: 'bg-emerald-100 text-emerald-600' },
     { icon: Award, label: t('rewardShop'), value: `${totalPointsAwarded} / ${availableRewards.length}`, tab: 'rewards', border: 'border-amber-500', shadow: 'shadow-[0_0_20px_rgba(245,158,11,0.3)]', iconBg: 'bg-amber-100 text-amber-600', blink: availableRewards.length > 0 },
     { icon: AlertCircle, label: t('approvalRequests'), value: approvalRequests.length, tab: 'approvals', border: 'border-rose-500', shadow: 'shadow-[0_0_20px_rgba(244,63,94,0.3)]', iconBg: 'bg-rose-100 text-rose-600', blink: approvalRequests.length > 0 },
@@ -274,7 +274,7 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
                     <badge.icon className="w-3.5 h-3.5" />
                   </div>
                   <span className="text-[10px] font-bold text-slate-700 leading-tight mb-0.5 font-display">{badge.label}</span>
-                  <span className={`font-display font-extrabold text-lg ${isActive ? 'text-indigo-600' : 'text-slate-800'}`}>{badge.value}</span>
+                  {badge.value !== '' && <span className={`font-display font-extrabold text-lg ${isActive ? 'text-indigo-600' : 'text-slate-800'}`}>{badge.value}</span>}
                 </div>
               </button>
             )
