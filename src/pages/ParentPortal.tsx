@@ -178,35 +178,58 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
 
       <main className="max-w-3xl mx-auto px-4 py-6 space-y-6">
         {/* Tab navigation cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
-          {tabs.map((tb) => {
+        <div className="space-y-3">
+          {tabs.filter((tb) => tb.id === 'overview').map((tb) => {
             const isActive = tab === tb.id
             return (
               <button
                 key={tb.id}
                 onClick={() => setTab(tb.id)}
-                className={`group relative rounded-2xl p-3 text-left transition-all hover:scale-[1.03] active:scale-95 flex flex-col h-full min-h-[88px] ${
+                className={`group relative w-full rounded-2xl p-4 text-left transition-all hover:scale-[1.01] active:scale-95 flex items-center gap-3 ${
                   isActive
                     ? 'bg-gradient-to-br from-indigo-500 to-teal-500 text-white shadow-lg'
                     : 'bg-white text-slate-700 shadow-md hover:shadow-xl'
                 }`}
               >
-                <div className="flex items-center justify-between mb-2">
-                  <div className={`w-8 h-8 rounded-xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform shrink-0 ${
-                    isActive ? 'bg-white/20' : 'bg-gradient-to-br from-indigo-500 to-teal-500'
-                  }`}>
-                    <tb.icon className="w-4 h-4 text-white" />
-                  </div>
-                  {tb.badge ? (
-                    <span className="bg-rose-500 text-white text-[10px] font-bold rounded-full px-1.5 py-0.5 min-w-[18px] text-center shadow-md">
-                      {tb.badge}
-                    </span>
-                  ) : null}
+                <div className={`w-9 h-9 rounded-xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform shrink-0 ${
+                  isActive ? 'bg-white/20' : 'bg-gradient-to-br from-indigo-500 to-teal-500'
+                }`}>
+                  <tb.icon className="w-5 h-5 text-white" />
                 </div>
-                <p className={`font-display font-bold text-xs leading-tight ${isActive ? 'text-white' : 'text-slate-600'}`}>{tb.label}</p>
+                <p className={`font-display font-bold text-sm leading-tight ${isActive ? 'text-white' : 'text-slate-600'}`}>{tb.label}</p>
               </button>
             )
           })}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {tabs.filter((tb) => tb.id !== 'overview').map((tb) => {
+              const isActive = tab === tb.id
+              return (
+                <button
+                  key={tb.id}
+                  onClick={() => setTab(tb.id)}
+                  className={`group relative rounded-2xl p-3 text-left transition-all hover:scale-[1.03] active:scale-95 flex flex-col h-full min-h-[88px] ${
+                    isActive
+                      ? 'bg-gradient-to-br from-indigo-500 to-teal-500 text-white shadow-lg'
+                      : 'bg-white text-slate-700 shadow-md hover:shadow-xl'
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <div className={`w-8 h-8 rounded-xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform shrink-0 ${
+                      isActive ? 'bg-white/20' : 'bg-gradient-to-br from-indigo-500 to-teal-500'
+                    }`}>
+                      <tb.icon className="w-4 h-4 text-white" />
+                    </div>
+                    {tb.badge ? (
+                      <span className="bg-rose-500 text-white text-[10px] font-bold rounded-full px-1.5 py-0.5 min-w-[18px] text-center shadow-md">
+                        {tb.badge}
+                      </span>
+                    ) : null}
+                  </div>
+                  <p className={`font-display font-bold text-xs leading-tight ${isActive ? 'text-white' : 'text-slate-600'}`}>{tb.label}</p>
+                </button>
+              )
+            })}
+          </div>
         </div>
 
         {/* Overview Tab */}
