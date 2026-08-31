@@ -271,7 +271,7 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
               >
                 <div className={`w-24 h-24 md:w-28 md:h-28 rounded-full bg-white border-4 ${badge.border} ${badge.shadow} flex flex-col items-center justify-center p-1.5 text-center transition-all ${isActive ? 'ring-4 ring-offset-2 ring-indigo-300 bg-indigo-50/50' : ''} ${badge.blink ? 'animate-blink' : ''}`}>
                   <div className={`w-7 h-7 rounded-full ${badge.iconBg} flex items-center justify-center mb-0.5`}>
-                    <badge.icon className="w-3.5 h-3.5" />
+                    <badge.icon className="w-4 h-4" />
                   </div>
                   <span className="text-[10px] font-bold text-slate-700 leading-tight mb-0.5 font-display">{badge.label}</span>
                   {badge.value !== '' && <span className={`font-display font-extrabold text-lg ${isActive ? 'text-indigo-600' : 'text-slate-800'}`}>{badge.value}</span>}
