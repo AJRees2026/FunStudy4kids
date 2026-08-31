@@ -227,106 +227,27 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
   <div className="space-y-8 animate-fadeIn font-display">
     {/* Grid Container for Circular Metric Badges */}
     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 justify-items-center py-4">
-      
-      {/* 1. Pending Tasks */}
-      <div className="flex flex-col items-center">
-        <div className="w-32 h-32 md:w-36 md:h-36 rounded-full bg-white border-4 border-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.3)] flex flex-col items-center justify-center p-2 text-center transition-transform hover:scale-105">
-          <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mb-1">
-            <ClipboardList className="w-4 h-4" />
+      {([
+        { icon: ClipboardList, label: t('pendingTasks'), value: pendingTasks.length, border: 'border-emerald-500', shadow: 'shadow-[0_0_20px_rgba(16,185,129,0.3)]', iconBg: 'bg-emerald-100 text-emerald-600' },
+        { icon: CheckCircle, label: t('completedTasks'), value: completedTasks.length, border: 'border-pink-500', shadow: 'shadow-[0_0_20px_rgba(236,72,153,0.3)]', iconBg: 'bg-pink-100 text-pink-600' },
+        { icon: Award, label: t('pointsAwarded'), value: `${completedTasks.length}/${tasks.length}`, border: 'border-amber-500', shadow: 'shadow-[0_0_20px_rgba(245,158,11,0.3)]', iconBg: 'bg-amber-100 text-amber-600' },
+        { icon: AlertCircle, label: t('approvalRequests'), value: approvalRequests.length, border: 'border-rose-500', shadow: 'shadow-[0_0_20px_rgba(244,63,94,0.3)]', iconBg: 'bg-rose-100 text-rose-600' },
+        { icon: Trophy, label: t('weeklyGoal'), value: '0/20', border: 'border-blue-500', shadow: 'shadow-[0_0_20px_rgba(59,130,246,0.3)]', iconBg: 'bg-blue-100 text-blue-600' },
+        { icon: Clock, label: 'Reading Minutes', value: 10, border: 'border-indigo-400', shadow: 'shadow-[0_0_20px_rgba(129,140,248,0.3)]', iconBg: 'bg-indigo-100 text-indigo-600' },
+        { icon: Sparkles, label: 'Spark Jobs', value: 0, border: 'border-indigo-900', shadow: 'shadow-[0_0_20px_rgba(49,46,129,0.3)]', iconBg: 'bg-indigo-100 text-indigo-900' },
+        { icon: Coins, label: 'Unused Points', value: 0, border: 'border-yellow-600', shadow: 'shadow-[0_0_20px_rgba(202,138,4,0.3)]', iconBg: 'bg-yellow-100 text-yellow-700' },
+        { icon: UserCheck, label: 'Profile Completion', value: 0, border: 'border-orange-500', shadow: 'shadow-[0_0_20px_rgba(249,115,22,0.3)]', iconBg: 'bg-orange-100 text-orange-600' },
+      ] as const).map((badge, i) => (
+        <div key={i} className="flex flex-col items-center">
+          <div className={`w-32 h-32 md:w-36 md:h-36 rounded-full bg-white border-4 ${badge.border} ${badge.shadow} flex flex-col items-center justify-center p-2 text-center transition-transform hover:scale-105`}>
+            <div className={`w-8 h-8 rounded-full ${badge.iconBg} flex items-center justify-center mb-1`}>
+              <badge.icon className="w-4 h-4" />
+            </div>
+            <span className="text-xs font-bold text-slate-700 leading-tight mb-0.5">{badge.label}</span>
+            <span className="font-extrabold text-xl text-slate-800">{badge.value}</span>
           </div>
-          <span className="text-xs font-bold text-slate-700 leading-tight mb-0.5">{t('pendingTasks')}</span>
-          <span className="font-extrabold text-xl text-slate-800">{pendingTasks.length}</span>
         </div>
-      </div>
-
-      {/* 2. Completed Tasks */}
-      <div className="flex flex-col items-center">
-        <div className="w-32 h-32 md:w-36 md:h-36 rounded-full bg-white border-4 border-pink-500 shadow-[0_0_20px_rgba(236,72,153,0.3)] flex flex-col items-center justify-center p-2 text-center transition-transform hover:scale-105">
-          <div className="w-8 h-8 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center mb-1">
-            <CheckCircle className="w-4 h-4" />
-          </div>
-          <span className="text-xs font-bold text-slate-700 leading-tight mb-0.5">{t('completedTasks')}</span>
-          <span className="font-extrabold text-xl text-slate-800">{completedTasks.length}</span>
-        </div>
-      </div>
-
-      {/* 3. Points Awarded */}
-      <div className="flex flex-col items-center">
-        <div className="w-32 h-32 md:w-36 md:h-36 rounded-full bg-white border-4 border-amber-500 shadow-[0_0_20px_rgba(245,158,11,0.3)] flex flex-col items-center justify-center p-2 text-center transition-transform hover:scale-105">
-          <div className="w-8 h-8 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center mb-1">
-            <Award className="w-4 h-4" />
-          </div>
-          <span className="text-xs font-bold text-slate-700 leading-tight mb-0.5">{t('pointsAwarded')}</span>
-          <span className="font-extrabold text-lg text-slate-800">{completedTasks.length}/{tasks.length}</span>
-        </div>
-      </div>
-
-      {/* 4. Pending Approval */}
-      <div className="flex flex-col items-center">
-        <div className="w-32 h-32 md:w-36 md:h-36 rounded-full bg-white border-4 border-rose-500 shadow-[0_0_20px_rgba(244,63,94,0.3)] flex flex-col items-center justify-center p-2 text-center transition-transform hover:scale-105">
-          <div className="w-8 h-8 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mb-1">
-            <AlertCircle className="w-4 h-4" />
-          </div>
-          <span className="text-xs font-bold text-slate-700 leading-tight mb-0.5">{t('approvalRequests')}</span>
-          <span className="font-extrabold text-xl text-slate-800">{approvalRequests.length}</span>
-        </div>
-      </div>
-
-      {/* 5. Weekly Goal */}
-      <div className="flex flex-col items-center">
-        <div className="w-32 h-32 md:w-36 md:h-36 rounded-full bg-white border-4 border-blue-500 shadow-[0_0_20px_rgba(59,130,246,0.3)] flex flex-col items-center justify-center p-2 text-center transition-transform hover:scale-105">
-          <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mb-1">
-            <Trophy className="w-4 h-4" />
-          </div>
-          <span className="text-xs font-bold text-slate-700 leading-tight mb-0.5">{t('weeklyGoal')}</span>
-          <span className="font-extrabold text-lg text-slate-800">0/20</span>
-        </div>
-      </div>
-
-      {/* 6. Reading Minutes */}
-      <div className="flex flex-col items-center">
-        <div className="w-32 h-32 md:w-36 md:h-36 rounded-full bg-white border-4 border-indigo-400 shadow-[0_0_20px_rgba(129,140,248,0.3)] flex flex-col items-center justify-center p-2 text-center transition-transform hover:scale-105">
-          <div className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center mb-1">
-            <Clock className="w-4 h-4" />
-          </div>
-          <span className="text-xs font-bold text-slate-700 leading-tight mb-0.5">Reading Minutes</span>
-          <span className="font-extrabold text-xl text-slate-800">10</span>
-        </div>
-      </div>
-
-      {/* 7. Spark Jobs */}
-      <div className="flex flex-col items-center">
-        <div className="w-32 h-32 md:w-36 md:h-36 rounded-full bg-white border-4 border-indigo-900 shadow-[0_0_20px_rgba(49,46,129,0.3)] flex flex-col items-center justify-center p-2 text-center transition-transform hover:scale-105">
-          <div className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-900 flex items-center justify-center mb-1">
-            <Sparkles className="w-4 h-4" />
-          </div>
-          <span className="text-xs font-bold text-slate-700 leading-tight mb-0.5">Spark Jobs</span>
-          <span className="font-extrabold text-xl text-slate-800">0</span>
-        </div>
-      </div>
-
-      {/* 8. Unused Points */}
-      <div className="flex flex-col items-center">
-        <div className="w-32 h-32 md:w-36 md:h-36 rounded-full bg-white border-4 border-yellow-600 shadow-[0_0_20px_rgba(202,138,4,0.3)] flex flex-col items-center justify-center p-2 text-center transition-transform hover:scale-105">
-          <div className="w-8 h-8 rounded-full bg-yellow-100 text-yellow-700 flex items-center justify-center mb-1">
-            <Coins className="w-4 h-4" />
-          </div>
-          <span className="text-xs font-bold text-slate-700 leading-tight mb-0.5">Unused Points</span>
-          <span className="font-extrabold text-xl text-slate-800">0</span>
-        </div>
-      </div>
-
-      {/* 9. Profile Completion */}
-      <div className="flex flex-col items-center">
-        <div className="w-32 h-32 md:w-36 md:h-36 rounded-full bg-white border-4 border-orange-500 shadow-[0_0_20px_rgba(249,115,22,0.3)] flex flex-col items-center justify-center p-2 text-center transition-transform hover:scale-105">
-          <div className="w-8 h-8 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center mb-1">
-            <UserCheck className="w-4 h-4" />
-          </div>
-          <span className="text-xs font-bold text-slate-700 leading-tight mb-0.5">Profile Completion</span>
-          <span className="font-extrabold text-xl text-slate-800">0</span>
-        </div>
-      </div>
-
+      ))}
     </div>
 
     {/* Children List */}
