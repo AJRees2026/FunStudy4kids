@@ -367,9 +367,7 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
 
     </div>
   </div>
-)}
         )}
-
         {/* Tasks Tab */}
         {tab === 'tasks' && (
           <div className="space-y-4 animate-fadeIn">
