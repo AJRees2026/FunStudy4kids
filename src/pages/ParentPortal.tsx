@@ -328,6 +328,38 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
       </div>
 
     </div>
+
+    {/* Children List */}
+    <div className="space-y-3">
+      <h3 className="font-display font-extrabold text-lg text-slate-800">{t('children')}</h3>
+      {children.length === 0 ? (
+        <div className="bg-white rounded-2xl p-6 text-center border border-slate-100">
+          <p className="text-slate-400 font-semibold">{t('noChildrenLinkedShort')}</p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {children.map((c) => {
+            const childTasks = tasks.filter((tk) => tk.child_id === c.id)
+            const childPoints = childTasks.filter((tk) => tk.status === 'completed').reduce((sum, tk) => sum + tk.point_value, 0)
+            return (
+              <div key={c.id} className="bg-white rounded-2xl p-4 border border-slate-100 flex items-center gap-3">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-teal-500 flex items-center justify-center text-lg overflow-hidden shrink-0">
+                  {c.photo_url ? <img src={c.photo_url} alt={c.child_name || c.name} className="w-full h-full object-cover" /> : '🚀'}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className="font-display font-bold text-slate-700 truncate">{c.child_name || c.name}</h4>
+                  <p className="text-xs font-bold text-slate-400">{childTasks.filter((tk) => tk.status === 'pending').length} {t('pendingTasks')} · {childPoints} {t('pointsLower')}</p>
+                </div>
+                <div className="flex items-center gap-1 bg-amber-50 px-3 py-1.5 rounded-full shrink-0">
+                  <Award className="w-4 h-4 text-amber-500" />
+                  <span className="font-display font-extrabold text-sm text-amber-600">{childPoints}</span>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
+    </div>
   </div>
         )}
         {/* Tasks Tab */}
