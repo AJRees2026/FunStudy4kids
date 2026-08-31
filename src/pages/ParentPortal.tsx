@@ -308,7 +308,7 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
                   <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-fuchsia-500 to-rose-600 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
                     <Award className="w-4 h-4 text-white" />
                   </div>
-                  <span className="font-display font-extrabold text-2xl text-slate-800">{totalPointsAwarded}</span>
+                  <span className="font-display font-extrabold text-2xl text-slate-800">{completedTasks.length} / {tasks.length}</span>
                 </div>
                 <p className="text-xs text-slate-400 font-bold uppercase mb-2">{t('pointsAwarded')}</p>
                 <div className="h-1.5 rounded-full overflow-hidden bg-slate-100">
