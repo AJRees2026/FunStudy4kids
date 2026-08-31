@@ -212,7 +212,7 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
               <button
                 key={tb.id}
                 onClick={() => setTab(tb.id)}
-                className={`group relative w-full rounded-2xl p-4 text-left transition-all hover:scale-[1.01] active:scale-95 flex items-center gap-3 ${
+                className={`group relative w-full rounded-2xl p-4 shadow-md hover:shadow-xl transition-all hover:scale-[1.02] active:scale-95 text-left flex items-center gap-3 ${
                   isActive
                     ? 'bg-gradient-to-br from-indigo-500 to-teal-500 text-white shadow-lg'
                     : 'bg-white text-slate-700 shadow-md hover:shadow-xl'
@@ -223,7 +223,7 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
                 }`}>
                   <tb.icon className="w-5 h-5 text-white" />
                 </div>
-                <p className={`font-display font-bold text-sm leading-tight ${isActive ? 'text-white' : 'text-slate-600'}`}>{tb.label}</p>
+                <p className={`text-xs font-bold uppercase ${isActive ? 'text-white' : 'text-slate-400'}`}>{tb.label}</p>
               </button>
             )
           })}
@@ -234,14 +234,14 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
                 <button
                   key={tb.id}
                   onClick={() => setTab(tb.id)}
-                  className={`group relative rounded-2xl p-3 text-left transition-all hover:scale-[1.03] active:scale-95 flex flex-col h-full min-h-[88px] ${
+                  className={`group relative rounded-2xl p-4 shadow-md hover:shadow-xl transition-all hover:scale-[1.02] active:scale-95 text-left flex flex-col h-full min-h-[96px] ${
                     isActive
                       ? 'bg-gradient-to-br from-indigo-500 to-teal-500 text-white shadow-lg'
                       : 'bg-white text-slate-700 shadow-md hover:shadow-xl'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <div className={`w-8 h-8 rounded-xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform shrink-0 ${
+                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform shrink-0 ${
                       isActive ? 'bg-white/20' : 'bg-gradient-to-br from-indigo-500 to-teal-500'
                     }`}>
                       <tb.icon className="w-4 h-4 text-white" />
@@ -252,7 +252,7 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
                       </span>
                     ) : null}
                   </div>
-                  <p className={`font-display font-bold text-xs leading-tight ${isActive ? 'text-white' : 'text-slate-600'}`}>{tb.label}</p>
+                  <p className={`text-xs font-bold uppercase ${isActive ? 'text-white' : 'text-slate-400'}`}>{tb.label}</p>
                 </button>
               )
             })}
