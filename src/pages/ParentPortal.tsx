@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { supabase, generatePairCode, ALL_SUBJECTS, type Profile, type Task, type Reward, type ApprovalRequest, type TaskApprovalMode, type ProgressDisplayMode } from '../lib/supabase'
 import { useI18n, LANGUAGES, type LangCode } from '../lib/i18n'
-import { Shield, LogOut, Plus, Check, X, Clock, TrendingUp, BookOpen, Award, UserCog, Rocket, Sparkles, Lock, KeyRound, Copy, Bell, Globe, CalendarClock, Trash2, Palette, Gift, Smile, Ruler, ChevronDown, ChevronRight, Pencil, ClipboardList, CircleCheck as CheckCircle, CircleAlert as AlertCircle, Trophy, Coins, UserCheck } from 'lucide-react'
+import { Shield, LogOut, Plus, Check, X, Clock, TrendingUp, BookOpen, Award, UserCog, Rocket, Sparkles, Lock, KeyRound, Copy, Bell, Globe, CalendarClock, Trash2, Palette, Gift, Smile, Ruler, ChevronDown, ChevronRight, Pencil, ClipboardList, CircleAlert as AlertCircle, Trophy, UserCheck } from 'lucide-react'
 import SubjectProgress from '../components/SubjectProgress'
 import ReadingJourney from '../components/ReadingJourney'
 import BookReflections from '../components/BookReflections'
@@ -182,14 +182,12 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
 
   const navBadges: { icon: typeof BookOpen; label: string; value: string | number; tab: Tab; border: string; shadow: string; iconBg: string; blink?: boolean }[] = [
     { icon: TrendingUp, label: t('overview'), value: tasks.length, tab: 'overview', border: 'border-indigo-500', shadow: 'shadow-[0_0_20px_rgba(99,102,241,0.3)]', iconBg: 'bg-indigo-100 text-indigo-600' },
-    { icon: ClipboardList, label: t('pendingTasks'), value: pendingTasks.length, tab: 'tasks', border: 'border-emerald-500', shadow: 'shadow-[0_0_20px_rgba(16,185,129,0.3)]', iconBg: 'bg-emerald-100 text-emerald-600' },
-    { icon: CheckCircle, label: t('completedTasks'), value: completedTasks.length, tab: 'tasks', border: 'border-pink-500', shadow: 'shadow-[0_0_20px_rgba(236,72,153,0.3)]', iconBg: 'bg-pink-100 text-pink-600' },
-    { icon: Award, label: t('pointsAwarded'), value: `${completedTasks.length}/${tasks.length}`, tab: 'overview', border: 'border-amber-500', shadow: 'shadow-[0_0_20px_rgba(245,158,11,0.3)]', iconBg: 'bg-amber-100 text-amber-600' },
+    { icon: ClipboardList, label: t('sparkJobs'), value: `${completedTasks.length}/${tasks.length}`, tab: 'tasks', border: 'border-emerald-500', shadow: 'shadow-[0_0_20px_rgba(16,185,129,0.3)]', iconBg: 'bg-emerald-100 text-emerald-600' },
+    { icon: Award, label: t('rewardShop'), value: `${totalPointsAwarded} / ${availableRewards.length}`, tab: 'rewards', border: 'border-amber-500', shadow: 'shadow-[0_0_20px_rgba(245,158,11,0.3)]', iconBg: 'bg-amber-100 text-amber-600', blink: availableRewards.length > 0 },
     { icon: AlertCircle, label: t('approvalRequests'), value: approvalRequests.length, tab: 'approvals', border: 'border-rose-500', shadow: 'shadow-[0_0_20px_rgba(244,63,94,0.3)]', iconBg: 'bg-rose-100 text-rose-600', blink: approvalRequests.length > 0 },
     { icon: Trophy, label: t('weeklyGoal'), value: '0/20', tab: 'overview', border: 'border-blue-500', shadow: 'shadow-[0_0_20px_rgba(59,130,246,0.3)]', iconBg: 'bg-blue-100 text-blue-600' },
     { icon: Smile, label: t('moodTracker'), value: children.length, tab: 'mood', border: 'border-violet-500', shadow: 'shadow-[0_0_20px_rgba(139,92,246,0.3)]', iconBg: 'bg-violet-100 text-violet-600' },
     { icon: Ruler, label: t('growth'), value: children.length, tab: 'growth', border: 'border-teal-500', shadow: 'shadow-[0_0_20px_rgba(20,184,166,0.3)]', iconBg: 'bg-teal-100 text-teal-600' },
-    { icon: Coins, label: t('rewards'), value: availableRewards.length, tab: 'rewards', border: 'border-yellow-600', shadow: 'shadow-[0_0_20px_rgba(202,138,4,0.3)]', iconBg: 'bg-yellow-100 text-yellow-700', blink: availableRewards.length > 0 },
     { icon: UserCheck, label: t('profiles'), value: children.length, tab: 'profiles', border: 'border-orange-500', shadow: 'shadow-[0_0_20px_rgba(249,115,22,0.3)]', iconBg: 'bg-orange-100 text-orange-600' },
   ]
 
