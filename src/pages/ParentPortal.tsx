@@ -549,7 +549,7 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
           <div className="space-y-6 animate-fadeIn">
             <div className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-3xl p-6 text-white shadow-lg text-center">
               <Trophy className="w-12 h-12 mx-auto mb-3" />
-              <h2 className="font-display font-extrabold text-2xl mb-2">{t('weeklyGoal')}</h2>
+              <h2 className="font-display font-extrabold text-2xl mb-2">{t('WeeklyGoal')}</h2>
               <p className="text-blue-100 text-sm font-semibold mb-4">0 / 20</p>
               <div className="bg-white/20 rounded-full h-4 overflow-hidden">
                 <div className="bg-white h-full rounded-full transition-all" style={{ width: '0%' }} />
