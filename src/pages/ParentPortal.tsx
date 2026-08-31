@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { supabase, generatePairCode, ALL_SUBJECTS, type Profile, type Task, type Reward, type ApprovalRequest, type TaskApprovalMode, type ProgressDisplayMode } from '../lib/supabase'
 import { useI18n, LANGUAGES, type LangCode } from '../lib/i18n'
-import { Shield, LogOut, Plus, Check, X, Clock, TrendingUp, BookOpen, Award, UserCog, Rocket, Sparkles, Lock, KeyRound, Copy, Bell, Globe, CalendarClock, Trash2, Palette, Gift, Smile, Ruler, ChevronDown, ChevronRight, Pencil, ClipboardList, CircleCheck as CheckCircle, CircleAlert as AlertCircle, Trophy, Coins, UserCheck } from 'lucide-react'
+import { Shield, LogOut, Plus, Check, X, Clock, BookOpen, Award, UserCog, Rocket, Sparkles, Lock, KeyRound, Copy, Bell, Globe, CalendarClock, Trash2, Palette, Gift, Smile, Ruler, ChevronDown, ChevronRight, Pencil, ClipboardList, CircleAlert as AlertCircle, Trophy, UserCheck } from 'lucide-react'
 import SubjectProgress from '../components/SubjectProgress'
 import ReadingJourney from '../components/ReadingJourney'
 import BookReflections from '../components/BookReflections'
@@ -180,17 +180,12 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
     fantastic: '\u{1F929}', good: '\u{1F60A}', okay: '\u{1F610}', sad: '\u{1F622}', frustrated: '\u{1F620}',
   }
 
-  const navBadges: { icon: typeof BookOpen; label: string; value: string | number; tab: Tab; border: string; shadow: string; iconBg: string }[] = [
-    { icon: TrendingUp, label: t('overview'), value: tasks.length, tab: 'overview', border: 'border-indigo-500', shadow: 'shadow-[0_0_20px_rgba(99,102,241,0.3)]', iconBg: 'bg-indigo-100 text-indigo-600' },
-    { icon: ClipboardList, label: t('pendingTasks'), value: pendingTasks.length, tab: 'tasks', border: 'border-emerald-500', shadow: 'shadow-[0_0_20px_rgba(16,185,129,0.3)]', iconBg: 'bg-emerald-100 text-emerald-600' },
-    { icon: CheckCircle, label: t('completedTasks'), value: completedTasks.length, tab: 'tasks', border: 'border-pink-500', shadow: 'shadow-[0_0_20px_rgba(236,72,153,0.3)]', iconBg: 'bg-pink-100 text-pink-600' },
-    { icon: Award, label: t('pointsAwarded'), value: `${completedTasks.length}/${tasks.length}`, tab: 'overview', border: 'border-amber-500', shadow: 'shadow-[0_0_20px_rgba(245,158,11,0.3)]', iconBg: 'bg-amber-100 text-amber-600' },
-    { icon: AlertCircle, label: t('approvalRequests'), value: approvalRequests.length, tab: 'approvals', border: 'border-rose-500', shadow: 'shadow-[0_0_20px_rgba(244,63,94,0.3)]', iconBg: 'bg-rose-100 text-rose-600' },
-    { icon: Trophy, label: t('weeklyGoal'), value: '0/20', tab: 'overview', border: 'border-blue-500', shadow: 'shadow-[0_0_20px_rgba(59,130,246,0.3)]', iconBg: 'bg-blue-100 text-blue-600' },
-    { icon: Smile, label: t('moodTracker'), value: children.length, tab: 'mood', border: 'border-violet-500', shadow: 'shadow-[0_0_20px_rgba(139,92,246,0.3)]', iconBg: 'bg-violet-100 text-violet-600' },
-    { icon: Ruler, label: t('growth'), value: children.length, tab: 'growth', border: 'border-teal-500', shadow: 'shadow-[0_0_20px_rgba(20,184,166,0.3)]', iconBg: 'bg-teal-100 text-teal-600' },
-    { icon: Coins, label: t('rewards'), value: availableRewards.length, tab: 'rewards', border: 'border-yellow-600', shadow: 'shadow-[0_0_20px_rgba(202,138,4,0.3)]', iconBg: 'bg-yellow-100 text-yellow-700' },
-    { icon: UserCheck, label: t('profiles'), value: children.length, tab: 'profiles', border: 'border-orange-500', shadow: 'shadow-[0_0_20px_rgba(249,115,22,0.3)]', iconBg: 'bg-orange-100 text-orange-600' },
+  const navBadges: { icon: typeof BookOpen; label: string; value: string | number; tab: Tab; border: string; shadow: string; iconBg: string; blink?: boolean }[] = [
+    { icon: ClipboardList, label: t('badgeTasks'), value: `${completedTasks.length}/${tasks.length}`, tab: 'tasks', border: 'border-emerald-500', shadow: 'shadow-[0_0_20px_rgba(16,185,129,0.3)]', iconBg: 'bg-emerald-100 text-emerald-600' },
+    { icon: Award, label: t('badgePointsRewards'), value: `${totalPointsAwarded} / ${availableRewards.length} pts`, tab: 'rewards', border: 'border-amber-500', shadow: 'shadow-[0_0_20px_rgba(245,158,11,0.3)]', iconBg: 'bg-amber-100 text-amber-600', blink: availableRewards.length > 0 },
+    { icon: AlertCircle, label: t('badgeApprovals'), value: approvalRequests.length, tab: 'approvals', border: 'border-rose-500', shadow: 'shadow-[0_0_20px_rgba(244,63,94,0.3)]', iconBg: 'bg-rose-100 text-rose-600', blink: approvalRequests.length > 0 },
+    { icon: Trophy, label: t('badgeWeeklyGoal'), value: '0/20', tab: 'growth', border: 'border-blue-500', shadow: 'shadow-[0_0_20px_rgba(59,130,246,0.3)]', iconBg: 'bg-blue-100 text-blue-600' },
+    { icon: UserCheck, label: t('badgeProfiles'), value: children.length, tab: 'profiles', border: 'border-violet-500', shadow: 'shadow-[0_0_20px_rgba(139,92,246,0.3)]', iconBg: 'bg-violet-100 text-violet-600' },
   ]
 
   return (
@@ -271,12 +266,12 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
                 onClick={() => setTab(badge.tab)}
                 className={`flex flex-col items-center group transition-transform active:scale-95 ${isActive ? 'scale-105' : 'hover:scale-105'}`}
               >
-                <div className={`w-24 h-24 md:w-28 md:h-28 rounded-full bg-white border-4 ${badge.border} ${badge.shadow} flex flex-col items-center justify-center p-1.5 text-center transition-all ${isActive ? 'ring-4 ring-offset-2 ring-indigo-300 bg-indigo-50/50' : ''}`}>
+                <div className={`w-24 h-24 md:w-28 md:h-28 rounded-full bg-white border-4 ${badge.border} ${badge.shadow} flex flex-col items-center justify-center p-1.5 text-center transition-all ${isActive ? 'ring-4 ring-offset-2 ring-indigo-300 bg-indigo-50/50' : ''} ${badge.blink ? 'animate-blink' : ''}`}>
                   <div className={`w-7 h-7 rounded-full ${badge.iconBg} flex items-center justify-center mb-0.5`}>
                     <badge.icon className="w-3.5 h-3.5" />
                   </div>
-                  <span className="text-[10px] font-bold text-slate-700 leading-tight mb-0.5">{badge.label}</span>
-                  <span className={`font-extrabold text-lg ${isActive ? 'text-indigo-600' : 'text-slate-800'}`}>{badge.value}</span>
+                  <span className="text-[10px] font-bold text-slate-700 leading-tight mb-0.5 font-display">{badge.label}</span>
+                  <span className={`font-display font-extrabold text-lg ${isActive ? 'text-indigo-600' : 'text-slate-800'}`}>{badge.value}</span>
                 </div>
               </button>
             )
