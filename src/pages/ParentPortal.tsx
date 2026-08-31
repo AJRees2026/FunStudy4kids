@@ -123,14 +123,20 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
   const completedTasks = tasks.filter((tk) => tk.status === 'completed')
   const totalPointsAwarded = completedTasks.reduce((sum, tk) => sum + tk.point_value, 0)
 
-  const tabs: { id: Tab; label: string; icon: typeof BookOpen }[] = [
-    { id: 'overview', label: t('overview'), icon: TrendingUp },
-    { id: 'tasks', label: t('tasks'), icon: BookOpen },
-    { id: 'rewards', label: t('rewards'), icon: Award },
-    { id: 'approvals', label: t('approvalRequests'), icon: Bell },
-    { id: 'mood', label: t('moodTracker'), icon: Smile },
-    { id: 'growth', label: t('growth'), icon: Ruler },
-    { id: 'profiles', label: t('profiles'), icon: UserCog },
+  const availableRewards = rewards.filter((r) => r.status === 'available')
+  const claimedRewards = rewards.filter((r) => r.status === 'claimed')
+
+  const navBadges: { icon: typeof BookOpen; label: string; value: string | number; tab: Tab; border: string; shadow: string; iconBg: string }[] = [
+    { icon: TrendingUp, label: t('overview'), value: tasks.length, tab: 'overview', border: 'border-indigo-500', shadow: 'shadow-[0_0_20px_rgba(99,102,241,0.3)]', iconBg: 'bg-indigo-100 text-indigo-600' },
+    { icon: ClipboardList, label: t('pendingTasks'), value: pendingTasks.length, tab: 'tasks', border: 'border-emerald-500', shadow: 'shadow-[0_0_20px_rgba(16,185,129,0.3)]', iconBg: 'bg-emerald-100 text-emerald-600' },
+    { icon: CheckCircle, label: t('completedTasks'), value: completedTasks.length, tab: 'tasks', border: 'border-pink-500', shadow: 'shadow-[0_0_20px_rgba(236,72,153,0.3)]', iconBg: 'bg-pink-100 text-pink-600' },
+    { icon: Award, label: t('pointsAwarded'), value: `${completedTasks.length}/${tasks.length}`, tab: 'overview', border: 'border-amber-500', shadow: 'shadow-[0_0_20px_rgba(245,158,11,0.3)]', iconBg: 'bg-amber-100 text-amber-600' },
+    { icon: AlertCircle, label: t('approvalRequests'), value: approvalRequests.length, tab: 'approvals', border: 'border-rose-500', shadow: 'shadow-[0_0_20px_rgba(244,63,94,0.3)]', iconBg: 'bg-rose-100 text-rose-600' },
+    { icon: Trophy, label: t('weeklyGoal'), value: '0/20', tab: 'overview', border: 'border-blue-500', shadow: 'shadow-[0_0_20px_rgba(59,130,246,0.3)]', iconBg: 'bg-blue-100 text-blue-600' },
+    { icon: Smile, label: t('moodTracker'), value: children.length, tab: 'mood', border: 'border-violet-500', shadow: 'shadow-[0_0_20px_rgba(139,92,246,0.3)]', iconBg: 'bg-violet-100 text-violet-600' },
+    { icon: Ruler, label: t('growth'), value: children.length, tab: 'growth', border: 'border-teal-500', shadow: 'shadow-[0_0_20px_rgba(20,184,166,0.3)]', iconBg: 'bg-teal-100 text-teal-600' },
+    { icon: Coins, label: t('rewards'), value: availableRewards.length, tab: 'rewards', border: 'border-yellow-600', shadow: 'shadow-[0_0_20px_rgba(202,138,4,0.3)]', iconBg: 'bg-yellow-100 text-yellow-700' },
+    { icon: UserCheck, label: t('profiles'), value: children.length, tab: 'profiles', border: 'border-orange-500', shadow: 'shadow-[0_0_20px_rgba(249,115,22,0.3)]', iconBg: 'bg-orange-100 text-orange-600' },
   ]
 
   return (
@@ -201,22 +207,23 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
       )}
 
       <main className="max-w-3xl mx-auto px-4 py-6 space-y-6">
-        {/* Tab navigation */}
-        <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
-          {tabs.map((tb) => {
-            const isActive = tab === tb.id
+        {/* Dashboard Hub — circular badges as tab navigation */}
+        <div className="grid grid-cols-3 sm:grid-cols-5 gap-4 justify-items-center py-2">
+          {navBadges.map((badge, i) => {
+            const isActive = tab === badge.tab
             return (
               <button
-                key={tb.id}
-                onClick={() => setTab(tb.id)}
-                className={`flex items-center gap-1.5 rounded-full px-4 py-2 font-display font-bold text-sm whitespace-nowrap transition-all ${
-                  isActive
-                    ? 'bg-gradient-to-r from-indigo-500 to-teal-500 text-white shadow-md'
-                    : 'bg-white text-slate-400 hover:text-slate-600 shadow-sm'
-                }`}
+                key={i}
+                onClick={() => setTab(badge.tab)}
+                className={`flex flex-col items-center group transition-transform active:scale-95 ${isActive ? 'scale-105' : 'hover:scale-105'}`}
               >
-                <tb.icon className="w-4 h-4" />
-                {tb.label}
+                <div className={`w-24 h-24 md:w-28 md:h-28 rounded-full bg-white border-4 ${badge.border} ${badge.shadow} flex flex-col items-center justify-center p-1.5 text-center transition-all ${isActive ? 'ring-4 ring-offset-2 ring-indigo-300 bg-indigo-50/50' : ''}`}>
+                  <div className={`w-7 h-7 rounded-full ${badge.iconBg} flex items-center justify-center mb-0.5`}>
+                    <badge.icon className="w-3.5 h-3.5" />
+                  </div>
+                  <span className="text-[10px] font-bold text-slate-700 leading-tight mb-0.5">{badge.label}</span>
+                  <span className={`font-extrabold text-lg ${isActive ? 'text-indigo-600' : 'text-slate-800'}`}>{badge.value}</span>
+                </div>
               </button>
             )
           })}
@@ -225,30 +232,6 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
        {/* Overview Tab */}
 {tab === 'overview' && (
   <div className="space-y-8 animate-fadeIn font-display">
-    {/* Grid Container for Circular Metric Badges */}
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 justify-items-center py-4">
-      {([
-        { icon: ClipboardList, label: t('pendingTasks'), value: pendingTasks.length, border: 'border-emerald-500', shadow: 'shadow-[0_0_20px_rgba(16,185,129,0.3)]', iconBg: 'bg-emerald-100 text-emerald-600' },
-        { icon: CheckCircle, label: t('completedTasks'), value: completedTasks.length, border: 'border-pink-500', shadow: 'shadow-[0_0_20px_rgba(236,72,153,0.3)]', iconBg: 'bg-pink-100 text-pink-600' },
-        { icon: Award, label: t('pointsAwarded'), value: `${completedTasks.length}/${tasks.length}`, border: 'border-amber-500', shadow: 'shadow-[0_0_20px_rgba(245,158,11,0.3)]', iconBg: 'bg-amber-100 text-amber-600' },
-        { icon: AlertCircle, label: t('approvalRequests'), value: approvalRequests.length, border: 'border-rose-500', shadow: 'shadow-[0_0_20px_rgba(244,63,94,0.3)]', iconBg: 'bg-rose-100 text-rose-600' },
-        { icon: Trophy, label: t('weeklyGoal'), value: '0/20', border: 'border-blue-500', shadow: 'shadow-[0_0_20px_rgba(59,130,246,0.3)]', iconBg: 'bg-blue-100 text-blue-600' },
-        { icon: Clock, label: 'Reading Minutes', value: 10, border: 'border-indigo-400', shadow: 'shadow-[0_0_20px_rgba(129,140,248,0.3)]', iconBg: 'bg-indigo-100 text-indigo-600' },
-        { icon: Sparkles, label: 'Spark Jobs', value: 0, border: 'border-indigo-900', shadow: 'shadow-[0_0_20px_rgba(49,46,129,0.3)]', iconBg: 'bg-indigo-100 text-indigo-900' },
-        { icon: Coins, label: 'Unused Points', value: 0, border: 'border-yellow-600', shadow: 'shadow-[0_0_20px_rgba(202,138,4,0.3)]', iconBg: 'bg-yellow-100 text-yellow-700' },
-        { icon: UserCheck, label: 'Profile Completion', value: 0, border: 'border-orange-500', shadow: 'shadow-[0_0_20px_rgba(249,115,22,0.3)]', iconBg: 'bg-orange-100 text-orange-600' },
-      ] as const).map((badge, i) => (
-        <div key={i} className="flex flex-col items-center">
-          <div className={`w-32 h-32 md:w-36 md:h-36 rounded-full bg-white border-4 ${badge.border} ${badge.shadow} flex flex-col items-center justify-center p-2 text-center transition-transform hover:scale-105`}>
-            <div className={`w-8 h-8 rounded-full ${badge.iconBg} flex items-center justify-center mb-1`}>
-              <badge.icon className="w-4 h-4" />
-            </div>
-            <span className="text-xs font-bold text-slate-700 leading-tight mb-0.5">{badge.label}</span>
-            <span className="font-extrabold text-xl text-slate-800">{badge.value}</span>
-          </div>
-        </div>
-      ))}
-    </div>
 
     {/* Children List */}
     <div className="space-y-3">
