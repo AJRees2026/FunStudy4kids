@@ -260,7 +260,7 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
 
       <main className="max-w-3xl mx-auto px-4 py-6 space-y-6">
         {/* Dashboard Hub — circular badges as tab navigation */}
-        <div className="grid grid-cols-3 sm:grid-cols-4 gap-x-6 gap-y-4 justify-items-center py-2">
+        <div className="grid grid-cols-3 sm:grid-cols-4 gap-x-8 gap-y-4 justify-items-center py-2">
           {navBadges.map((badge, i) => {
             const isActive = tab === badge.tab
             return (
