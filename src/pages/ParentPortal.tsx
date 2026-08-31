@@ -805,7 +805,8 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
       )}
       {showAddReward && children.length > 0 && (
         <AddRewardModal children={children} lang={lang} t={t} onClose={() => setShowAddReward(false)} onAdd={async (childId, title, cost) => {
-          await supabase.from('rewards').insert({ child_id: childId, title, point_cost: cost, status: 'available' })
+          const targetIds = childId === '__all__' ? children.map((c) => c.id) : [childId]
+          await supabase.from('rewards').insert(targetIds.map((id) => ({ child_id: id, title, point_cost: cost, status: 'available' })))
           setShowAddReward(false); fetchAll()
         }} />
       )}
@@ -949,7 +950,7 @@ function AddRewardModal({ children, lang, t, onClose, onAdd }: {
   children: Profile[]; lang: LangCode; t: TFunc; onClose: () => void
   onAdd: (childId: string, title: string, cost: number) => void
 }) {
-  const [childId, setChildId] = useState(children[0]?.id || '')
+  const [childId, setChildId] = useState(children.length > 1 ? '__all__' : (children[0]?.id || ''))
   const [title, setTitle] = useState('')
   const [cost, setCost] = useState(20)
 
@@ -965,6 +966,7 @@ function AddRewardModal({ children, lang, t, onClose, onAdd }: {
             <div>
               <label className="text-xs text-slate-400 font-bold uppercase">{t('child')}</label>
               <select value={childId} onChange={(e) => setChildId(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 mt-1 font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                <option value="__all__">{t('allChildren')}</option>
                 {children.map((c) => <option key={c.id} value={c.id}>{c.child_name || c.name}</option>)}
               </select>
             </div>
