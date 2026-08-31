@@ -22,7 +22,7 @@ import HeightBoard from '../components/HeightBoard'
 import {
   Star, Flame, Award, LogOut, Play, Check, Lock, Gift, Trophy,
   ClipboardList, X, Bell, Clock, BarChart3, Sparkles,
-  ArrowLeft, BookMarked, ChevronRight, Smile, Ruler, PenLine,
+  ArrowLeft, BookMarked, Smile, Ruler, PenLine,
 } from 'lucide-react'
 
 type Props = {
@@ -353,98 +353,118 @@ export default function KidDashboard({ child, onSwitchProfile }: Props) {
               <h2 className={`font-display font-extrabold text-2xl ${isSpace ? 'text-slate-200' : 'text-fuchsia-400'} mb-1`}>{t('exploreActivities')}</h2>
               <p className={`text-sm font-semibold ${isSpace ? 'text-slate-200' : 'text-fuchsia-400'}`}>{t('chooseActivity')}</p>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {/* Mood Tracker */}
               <button
                 onClick={() => setView('mood')}
-                className={`group rounded-3xl p-5 ${theme.cardBg} border ${theme.cardBorder} text-left transition-all hover:scale-[1.03] active:scale-95`}
+                className={`group rounded-2xl p-3 ${isSpace ? 'bg-white/10 shadow-lg shadow-black/20' : 'bg-white shadow-md'} text-left transition-all hover:scale-[1.03] active:scale-95 hover:shadow-xl`}
               >
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-yellow-400 to-rose-500 flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
-                  <Smile className="w-6 h-6 text-white" />
+                <div className="flex items-center justify-between mb-2">
+                  <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-yellow-400 to-rose-500 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
+                    <Smile className="w-4 h-4 text-white" />
+                  </div>
                 </div>
-                <h3 className={`font-display font-extrabold text-xl text-[#df5a00] mb-1`}>{t('moodTracker')}</h3>
-                <p className={`text-sm font-semibold text-[#4169e1] leading-snug`}>{t('moodTrackerDesc')}</p>
-                 <div className="hidden">
-                  {t('moodTracker')} <ChevronRight className="w-3 h-3" />
+                <h3 className={`font-display font-bold text-sm ${isSpace ? 'text-white' : 'text-[#df5a00]'} mb-0.5`}>{t('moodTracker')}</h3>
+                <p className={`text-[10px] font-semibold ${isSpace ? 'text-slate-300' : 'text-[#4169e1]'} leading-tight mb-2 line-clamp-1`}>{t('moodTrackerDesc')}</p>
+                <div className={`h-1.5 rounded-full overflow-hidden ${isSpace ? 'bg-white/10' : 'bg-slate-100'}`}>
+                  <div className="h-full rounded-full bg-gradient-to-r from-yellow-400 to-rose-500 transition-all duration-500" style={{ width: '100%' }} />
                 </div>
               </button>
 
+              {/* Subject Progress */}
               <button
                 onClick={() => setView('subjects')}
-                className={`group rounded-3xl p-5 ${theme.cardBg} border ${theme.cardBorder} text-left transition-all hover:scale-[1.03] active:scale-95`}
+                className={`group rounded-2xl p-3 ${isSpace ? 'bg-white/10 shadow-lg shadow-black/20' : 'bg-white shadow-md'} text-left transition-all hover:scale-[1.03] active:scale-95 hover:shadow-xl`}
               >
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-500 to-blue-600 flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
-                  <Trophy className="w-6 h-6 text-white" />
+                <div className="flex items-center justify-between mb-2">
+                  <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-violet-500 to-blue-600 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
+                    <Trophy className="w-4 h-4 text-white" />
+                  </div>
+                  <span className={`text-lg font-display font-extrabold ${isSpace ? 'text-white' : 'text-[#df5a00]'}`}>{progressPct}%</span>
                 </div>
-                <h3 className={`font-display font-extrabold text-xl text-[#df5a00] mb-1`}>{t('subjectProgress')}</h3>
-                <p className={`text-sm font-semibold text-[#4169e1] leading-snug`}>{t('progressBySubjectDesc')}</p>
-                 <div className="hidden">
-                  {t('subjectProgress')} <ChevronRight className="w-3 h-3" />
+                <h3 className={`font-display font-bold text-sm ${isSpace ? 'text-white' : 'text-[#df5a00]'} mb-0.5`}>{t('subjectProgress')}</h3>
+                <p className={`text-[10px] font-semibold ${isSpace ? 'text-slate-300' : 'text-[#4169e1]'} leading-tight mb-2 line-clamp-1`}>{t('progressBySubjectDesc')}</p>
+                <div className={`h-1.5 rounded-full overflow-hidden ${isSpace ? 'bg-white/10' : 'bg-slate-100'}`}>
+                  <div className="h-full rounded-full bg-gradient-to-r from-violet-500 to-blue-600 transition-all duration-500" style={{ width: `${progressPct}%` }} />
                 </div>
               </button>
 
+              {/* Reading Journey */}
               <button
                 onClick={() => setView('reading')}
-                className={`group rounded-3xl p-5 ${theme.cardBg} border ${theme.cardBorder} text-left transition-all hover:scale-[1.03] active:scale-95`}
+                className={`group rounded-2xl p-3 ${isSpace ? 'bg-white/10 shadow-lg shadow-black/20' : 'bg-white shadow-md'} text-left transition-all hover:scale-[1.03] active:scale-95 hover:shadow-xl`}
               >
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-rose-400 to-fuchsia-500 flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
-                  <BookMarked className="w-6 h-6 text-white" />
+                <div className="flex items-center justify-between mb-2">
+                  <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-rose-400 to-fuchsia-500 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
+                    <BookMarked className="w-4 h-4 text-white" />
+                  </div>
+                  <span className={`text-lg font-display font-extrabold ${isSpace ? 'text-white' : 'text-[#df5a00]'}`}>{currentChild.points}</span>
                 </div>
-                <h3 className={`font-display font-extrabold text-xl text-[#df5a00] mb-1`}>{t('readingJourney')}</h3>
-                <p className={`text-sm font-semibold text-[#4169e1] leading-snug`}>{t('readingJourneyDesc')}</p>
-                  <div className="hidden">
-                  {t('readingJourney')} <ChevronRight className="w-3 h-3" />
+                <h3 className={`font-display font-bold text-sm ${isSpace ? 'text-white' : 'text-[#df5a00]'} mb-0.5`}>{t('readingJourney')}</h3>
+                <p className={`text-[10px] font-semibold ${isSpace ? 'text-slate-300' : 'text-[#4169e1]'} leading-tight mb-2 line-clamp-1`}>{t('readingJourneyDesc')}</p>
+                <div className={`h-1.5 rounded-full overflow-hidden ${isSpace ? 'bg-white/10' : 'bg-slate-100'}`}>
+                  <div className="h-full rounded-full bg-gradient-to-r from-rose-400 to-fuchsia-500 transition-all duration-500" style={{ width: `${Math.min((currentChild.points % 100) || 8, 100)}%` }} />
                 </div>
               </button>
 
+              {/* Spark Jobs */}
               <button
                 onClick={() => setView('tasks')}
-                className={`group rounded-3xl p-5 ${theme.cardBg} border ${theme.cardBorder} text-left transition-all hover:scale-[1.03] active:scale-95 relative`}
+                className={`group rounded-2xl p-3 ${isSpace ? 'bg-white/10 shadow-lg shadow-black/20' : 'bg-white shadow-md'} text-left transition-all hover:scale-[1.03] active:scale-95 hover:shadow-xl relative`}
               >
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-yellow-400 to-amber-500 flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
-                  <Star className="w-6 h-6 text-white fill-white" />
+                <div className="flex items-center justify-between mb-2">
+                  <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-yellow-400 to-amber-500 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
+                    <Star className="w-4 h-4 text-white fill-white" />
+                  </div>
+                  <span className={`text-lg font-display font-extrabold ${isSpace ? 'text-white' : 'text-[#df5a00]'}`}>{completedCount}/{totalTasks}</span>
                 </div>
-                <h3 className={`font-display font-extrabold text-xl text-[#df5a00] mb-1`}>{t('sparkJobs')}</h3>
-                <p className={`text-sm font-semibold text-[#4169e1] leading-snug`}>{t('tasksDesc')}</p>
-                  <div className="hidden">
-                  {t('sparkJobs')} <ChevronRight className="w-3 h-3" />
+                <h3 className={`font-display font-bold text-sm ${isSpace ? 'text-white' : 'text-[#df5a00]'} mb-0.5`}>{t('sparkJobs')}</h3>
+                <p className={`text-[10px] font-semibold ${isSpace ? 'text-slate-300' : 'text-[#4169e1]'} leading-tight mb-2 line-clamp-1`}>{t('tasksDesc')}</p>
+                <div className={`h-1.5 rounded-full overflow-hidden ${isSpace ? 'bg-white/10' : 'bg-slate-100'}`}>
+                  <div className="h-full rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 transition-all duration-500" style={{ width: `${progressPct}%` }} />
                 </div>
                 {pendingTasks.length > 0 && (
-                  <span className="absolute top-3 right-3 bg-rose-500 text-white text-xs font-bold rounded-full px-2 py-0.5 min-w-[20px] text-center shadow-md">
+                  <span className="absolute top-2.5 right-2.5 bg-rose-500 text-white text-[10px] font-bold rounded-full px-1.5 py-0.5 min-w-[18px] text-center shadow-md animate-pulse">
                     {pendingTasks.length}
                   </span>
                 )}
               </button>
 
+              {/* Growth */}
               <button
                 onClick={() => setView('growth')}
-                className={`group rounded-3xl p-5 ${theme.cardBg} border ${theme.cardBorder} text-left transition-all hover:scale-[1.03] active:scale-95`}
+                className={`group rounded-2xl p-3 ${isSpace ? 'bg-white/10 shadow-lg shadow-black/20' : 'bg-white shadow-md'} text-left transition-all hover:scale-[1.03] active:scale-95 hover:shadow-xl`}
               >
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
-                  <Ruler className="w-6 h-6 text-white" />
+                <div className="flex items-center justify-between mb-2">
+                  <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
+                    <Ruler className="w-4 h-4 text-white" />
+                  </div>
                 </div>
-                <h3 className={`font-display font-extrabold text-xl text-[#df5a00] mb-1`}>{t('howMuchIVeGrown')}</h3>
-                <p className={`text-sm font-semibold text-[#4169e1] leading-snug`}>{t('growthDesc')}</p>
-                <div className="hidden">
-                  {t('growthChart')} <ChevronRight className="w-3 h-3" />
+                <h3 className={`font-display font-bold text-sm ${isSpace ? 'text-white' : 'text-[#df5a00]'} mb-0.5`}>{t('howMuchIVeGrown')}</h3>
+                <p className={`text-[10px] font-semibold ${isSpace ? 'text-slate-300' : 'text-[#4169e1]'} leading-tight mb-2 line-clamp-1`}>{t('growthDesc')}</p>
+                <div className={`h-1.5 rounded-full overflow-hidden ${isSpace ? 'bg-white/10' : 'bg-slate-100'}`}>
+                  <div className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-teal-500 transition-all duration-500" style={{ width: '100%' }} />
                 </div>
               </button>
 
+              {/* Reward Shop */}
               <button
                 onClick={() => setView('rewards')}
-                className={`group rounded-3xl p-5 ${theme.cardBg} border ${theme.cardBorder} text-left transition-all hover:scale-[1.03] active:scale-95 relative`}
+                className={`group rounded-2xl p-3 ${isSpace ? 'bg-white/10 shadow-lg shadow-black/20' : 'bg-white shadow-md'} text-left transition-all hover:scale-[1.03] active:scale-95 hover:shadow-xl relative`}
               >
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
-                  <Gift className="w-6 h-6 text-white" />
+                <div className="flex items-center justify-between mb-2">
+                  <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
+                    <Gift className="w-4 h-4 text-white" />
+                  </div>
+                  <span className={`text-lg font-display font-extrabold ${isSpace ? 'text-white' : 'text-[#df5a00]'}`}>{claimedRewards.length}</span>
                 </div>
-<h3 className="sparkle-title font-display font-extrabold text-xl mb-1">
-  {t('rewardShop')}
-</h3>
-                <p className={`text-sm font-semibold text-[#4169e1] leading-snug`}>{t('rewardShopDesc')}</p>
-                <div className="hidden">
-                  {t('rewardShop')} <ChevronRight className="w-3 h-3" />
+                <h3 className="sparkle-title font-display font-bold text-sm mb-0.5">{t('rewardShop')}</h3>
+                <p className={`text-[10px] font-semibold ${isSpace ? 'text-slate-300' : 'text-[#4169e1]'} leading-tight mb-2 line-clamp-1`}>{t('rewardShopDesc')}</p>
+                <div className={`h-1.5 rounded-full overflow-hidden ${isSpace ? 'bg-white/10' : 'bg-slate-100'}`}>
+                  <div className="h-full rounded-full bg-gradient-to-r from-red-500 to-rose-600 transition-all duration-500" style={{ width: `${(availableRewards.length + claimedRewards.length) > 0 ? Math.round((claimedRewards.length / (availableRewards.length + claimedRewards.length)) * 100) : 0}%` }} />
                 </div>
                 {availableRewards.length > 0 && (
-                  <span className="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold rounded-full px-2 py-0.5 min-w-[20px] text-center shadow-md">
+                  <span className="absolute top-2.5 right-2.5 bg-red-500 text-white text-[10px] font-bold rounded-full px-1.5 py-0.5 min-w-[18px] text-center shadow-md animate-pulse">
                     {availableRewards.length}
                   </span>
                 )}
