@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { supabase, generatePairCode, ALL_SUBJECTS, type Profile, type Task, type Reward, type ApprovalRequest, type TaskApprovalMode, type ProgressDisplayMode } from '../lib/supabase'
 import { useI18n, LANGUAGES, type LangCode } from '../lib/i18n'
-import { Shield, LogOut, Plus, Check, X, Clock, TrendingUp, BookOpen, Award, UserCog, Rocket, Sparkles, Lock, KeyRound, Copy, Bell, Globe, CalendarClock, Trash2, Palette, Gift, Smile, Ruler, ChevronDown, ChevronRight, Pencil, ClipboardList, CircleAlert as AlertCircle, Trophy, UserCheck } from 'lucide-react'
+import { Shield, LogOut, Plus, Check, X, Clock, TrendingUp, BookOpen, Award, UserCog, Rocket, Sparkles, Lock, KeyRound, Copy, Bell, Globe, CalendarClock, Trash2, Palette, Gift, Smile, Ruler, ChevronDown, ChevronRight, Pencil, ClipboardList, CircleAlert as AlertCircle, Trophy, UserCheck, Cake } from 'lucide-react'
 import SubjectProgress from '../components/SubjectProgress'
 import ReadingJourney from '../components/ReadingJourney'
 import BookReflections from '../components/BookReflections'
@@ -181,13 +181,13 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
   }
 
   const navBadges: { icon: typeof BookOpen; label: string; value: string | number; tab: Tab; border: string; shadow: string; iconBg: string; blink?: boolean }[] = [
-    { icon: TrendingUp, label: t('overview'), value: '', tab: 'overview', border: 'border-indigo-500', shadow: 'shadow-[0_0_20px_rgba(99,102,241,0.3)]', iconBg: 'bg-indigo-100 text-indigo-600' },
+    { icon: TrendingUp, label: t('Command Center'), value: '', tab: 'overview', border: 'border-indigo-500', shadow: 'shadow-[0_0_20px_rgba(99,102,241,0.3)]', iconBg: 'bg-indigo-100 text-indigo-600' },
     { icon: ClipboardList, label: t('sparkJobs'), value: `${completedTasks.length}/${tasks.length}`, tab: 'tasks', border: 'border-emerald-500', shadow: 'shadow-[0_0_20px_rgba(16,185,129,0.3)]', iconBg: 'bg-emerald-100 text-emerald-600' },
-    { icon: Award, label: t('rewardShop'), value: `${totalPointsAwarded} / ${availableRewards.length}`, tab: 'rewards', border: 'border-amber-500', shadow: 'shadow-[0_0_20px_rgba(245,158,11,0.3)]', iconBg: 'bg-amber-100 text-amber-600', blink: availableRewards.length > 0 },
     { icon: AlertCircle, label: t('approvalRequests'), value: approvalRequests.length, tab: 'approvals', border: 'border-rose-500', shadow: 'shadow-[0_0_20px_rgba(244,63,94,0.3)]', iconBg: 'bg-rose-100 text-rose-600', blink: approvalRequests.length > 0 },
-    { icon: Trophy, label: t('weeklyGoal'), value: '0/20', tab: 'weekly', border: 'border-blue-500', shadow: 'shadow-[0_0_20px_rgba(59,130,246,0.3)]', iconBg: 'bg-blue-100 text-blue-600' },
+    { icon: Trophy, label: t('Weekly Goal'), value: '0/20', tab: 'weekly', border: 'border-blue-500', shadow: 'shadow-[0_0_20px_rgba(59,130,246,0.3)]', iconBg: 'bg-blue-100 text-blue-600' },
+   { icon: Ruler, label: t('Growth Chart'), value: children.length, tab: 'growth', border: 'border-teal-500', shadow: 'shadow-[0_0_20px_rgba(20,184,166,0.3)]', iconBg: 'bg-teal-100 text-teal-600' },
     { icon: Smile, label: t('moodTracker'), value: children.length, tab: 'mood', border: 'border-violet-500', shadow: 'shadow-[0_0_20px_rgba(139,92,246,0.3)]', iconBg: 'bg-violet-100 text-violet-600' },
-    { icon: Ruler, label: t('growth'), value: children.length, tab: 'growth', border: 'border-teal-500', shadow: 'shadow-[0_0_20px_rgba(20,184,166,0.3)]', iconBg: 'bg-teal-100 text-teal-600' },
+     { icon: Award, label: t('rewardShop'), value: `${totalPointsAwarded} / ${availableRewards.length}`, tab: 'rewards', border: 'border-amber-500', shadow: 'shadow-[0_0_20px_rgba(245,158,11,0.3)]', iconBg: 'bg-amber-100 text-amber-600', blink: availableRewards.length > 0 },
     { icon: UserCheck, label: t('profiles'), value: children.length, tab: 'profiles', border: 'border-orange-500', shadow: 'shadow-[0_0_20px_rgba(249,115,22,0.3)]', iconBg: 'bg-orange-100 text-orange-600' },
   ]
 
@@ -623,6 +623,21 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
                           lang={lang}
                           spellCheck={false}
                           className="font-display font-extrabold text-lg text-slate-700 bg-transparent border-b-2 border-transparent hover:border-slate-200 focus:border-indigo-400 focus:outline-none px-1 py-0.5 transition-colors flex-1"
+                        />
+                      </div>
+
+                      {/* Birthday */}
+                      <div className="border-t border-slate-100 pt-4">
+                        <p className="text-sm font-semibold text-slate-600 mb-1 flex items-center gap-1.5">
+                          <Cake className="w-4 h-4 text-pink-400" />
+                          {t('birthday')}
+                        </p>
+                        <p className="text-xs text-slate-400 mb-2">{t('birthdayDesc')}</p>
+                        <input
+                          type="date"
+                          value={c.birthday || ''}
+                          onChange={(e) => updateProfile(c.id, { birthday: e.target.value || null })}
+                          className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-400"
                         />
                       </div>
 

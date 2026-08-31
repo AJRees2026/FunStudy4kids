@@ -37,6 +37,7 @@ export type Profile = {
   auto_archive_daily: boolean
   language: string
   writing_rank: WritingRank | null
+  birthday: string | null
 }
 
 export type Outfit = {
