@@ -123,11 +123,11 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
   const completedTasks = tasks.filter((tk) => tk.status === 'completed')
   const totalPointsAwarded = completedTasks.reduce((sum, tk) => sum + tk.point_value, 0)
 
-  const tabs: { id: Tab; label: string; icon: typeof BookOpen; badge?: number }[] = [
+  const tabs: { id: Tab; label: string; icon: typeof BookOpen }[] = [
     { id: 'overview', label: t('overview'), icon: TrendingUp },
     { id: 'tasks', label: t('tasks'), icon: BookOpen },
     { id: 'rewards', label: t('rewards'), icon: Award },
-    { id: 'approvals', label: t('approvalRequests'), icon: Bell, badge: approvalRequests.length },
+    { id: 'approvals', label: t('approvalRequests'), icon: Bell },
     { id: 'mood', label: t('moodTracker'), icon: Smile },
     { id: 'growth', label: t('growth'), icon: Ruler },
     { id: 'profiles', label: t('profiles'), icon: UserCog },
@@ -243,11 +243,6 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
                     }`}>
                       <tb.icon className="w-4 h-4 text-white" />
                     </div>
-                    {tb.badge ? (
-                      <span className="bg-rose-500 text-white text-[10px] font-bold rounded-full px-1.5 py-0.5 min-w-[18px] text-center shadow-md">
-                        {tb.badge}
-                      </span>
-                    ) : null}
                   </div>
                   <p className={`text-xs font-bold uppercase ${isActive ? 'text-white' : 'text-slate-400'}`}>{tb.label}</p>
                 </button>
