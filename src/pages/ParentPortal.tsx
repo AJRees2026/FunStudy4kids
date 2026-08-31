@@ -153,6 +153,29 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
         </div>
       </header>
 
+      {tab === 'overview' && (
+        <div className="max-w-3xl mx-auto px-4 pt-4 animate-fadeIn">
+          <div className="bg-gradient-to-br from-indigo-500 to-teal-500 rounded-3xl p-6 text-white shadow-lg">
+            <div className="flex items-center gap-2 mb-4">
+              <KeyRound className="w-5 h-5" />
+              <h3 className="font-display font-extrabold text-lg">{t('familyPairCodeLabel')}</h3>
+            </div>
+            <p className="text-indigo-100 text-sm font-semibold mb-3">{t('shareCodeHelp')}</p>
+            <div className="flex items-center gap-3">
+              <div className="bg-white/20 backdrop-blur-sm rounded-2xl px-6 py-3 flex-1">
+                <p className="font-display font-extrabold text-4xl tracking-[0.2em]">{currentParent.family_pair_code || '------'}</p>
+              </div>
+              <button onClick={copyPairCode} className="bg-white/20 hover:bg-white/30 rounded-2xl p-3 transition-colors">
+                {copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
+              </button>
+              <button onClick={regeneratePairCode} className="bg-white/20 hover:bg-white/30 rounded-2xl p-3 transition-colors">
+                <Sparkles className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <nav className="sticky top-[57px] z-20 bg-white/80 backdrop-blur-md border-b border-slate-200">
         <div className="max-w-3xl mx-auto px-4 flex gap-1 overflow-x-auto">
           {tabs.map((tb) => (
@@ -178,25 +201,6 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
         {/* Overview Tab */}
         {tab === 'overview' && (
           <div className="space-y-6 animate-fadeIn">
-            <div className="bg-gradient-to-br from-indigo-500 to-teal-500 rounded-3xl p-6 text-white shadow-lg">
-              <div className="flex items-center gap-2 mb-4">
-                <KeyRound className="w-5 h-5" />
-                <h3 className="font-display font-extrabold text-lg">{t('familyPairCodeLabel')}</h3>
-              </div>
-              <p className="text-indigo-100 text-sm font-semibold mb-3">{t('shareCodeHelp')}</p>
-              <div className="flex items-center gap-3">
-                <div className="bg-white/20 backdrop-blur-sm rounded-2xl px-6 py-3 flex-1">
-                  <p className="font-display font-extrabold text-4xl tracking-[0.2em]">{currentParent.family_pair_code || '------'}</p>
-                </div>
-                <button onClick={copyPairCode} className="bg-white/20 hover:bg-white/30 rounded-2xl p-3 transition-colors">
-                  {copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
-                </button>
-                <button onClick={regeneratePairCode} className="bg-white/20 hover:bg-white/30 rounded-2xl p-3 transition-colors">
-                  <Sparkles className="w-5 h-5" />
-                </button>
-              </div>
-            </div>
-
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {/* Pending */}
               <button
