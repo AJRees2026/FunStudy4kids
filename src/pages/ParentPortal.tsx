@@ -30,6 +30,9 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
   const [showAddChild, setShowAddChild] = useState(false)
   const [copied, setCopied] = useState(false)
   const [expandedChild, setExpandedChild] = useState<string | null>(null)
+  const [preselectedChildId, setPreselectedChildId] = useState<string | null>(null)
+  const [awardPointsChild, setAwardPointsChild] = useState<Profile | null>(null)
+  const [moodEntries, setMoodEntries] = useState<{ child_id: string; entry_date: string; mood: string }[]>([])
   const [isPairCodeDismissed, setIsPairCodeDismissed] = useState(() => {
     try { return localStorage.getItem('pairCodeDismissed') === 'true' } catch { return false }
   })
@@ -55,14 +58,16 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
 
     if (kids && kids.length > 0) {
       const childIds = (kids as Profile[]).map((c) => c.id)
-      const [{ data: taskData }, { data: rewardData }, { data: approvalData }] = await Promise.all([
+      const [{ data: taskData }, { data: rewardData }, { data: approvalData }, { data: moodData }] = await Promise.all([
         supabase.from('tasks').select('*').in('child_id', childIds).order('created_at', { ascending: false }),
         supabase.from('rewards').select('*').in('child_id', childIds).order('created_at', { ascending: false }),
         supabase.from('approval_requests').select('*').eq('parent_id', currentParent.id).eq('status', 'pending').order('created_at', { ascending: false }),
+        supabase.from('mood_entries').select('child_id, entry_date, mood').in('child_id', childIds).order('entry_date', { ascending: false }),
       ])
       if (taskData) setTasks(taskData as Task[])
       if (rewardData) setRewards(rewardData as Reward[])
       if (approvalData) setApprovalRequests(approvalData as ApprovalRequest[])
+      if (moodData) setMoodEntries(moodData as { child_id: string; entry_date: string; mood: string }[])
     }
   }, [currentParent.id])
 
@@ -88,6 +93,16 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
   const regeneratePairCode = async () => {
     const newCode = generatePairCode()
     await updateProfile(currentParent.id, { family_pair_code: newCode })
+  }
+
+  const handleAwardPoints = async (childId: string, points: number) => {
+    const child = children.find((c) => c.id === childId)
+    if (!child) return
+    await supabase.from('profiles').update({
+      points: child.points + points,
+    }).eq('id', childId)
+    fetchAll()
+    setAwardPointsChild(null)
   }
 
   const handleApprove = async (req: ApprovalRequest) => {
@@ -125,6 +140,44 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
 
   const availableRewards = rewards.filter((r) => r.status === 'available')
   const claimedRewards = rewards.filter((r) => r.status === 'claimed')
+
+  const todayStr = new Date().toISOString().slice(0, 10)
+
+  const getTodayMood = (childId: string): string | null => {
+    const entry = moodEntries.find((m) => m.child_id === childId && m.entry_date === todayStr)
+    return entry?.mood || null
+  }
+
+  const getDayStreak = (childId: string): number => {
+    const childCompleted = tasks
+      .filter((tk) => tk.child_id === childId && tk.status === 'completed' && tk.completed_at)
+      .sort((a, b) => (b.completed_at || '').localeCompare(a.completed_at || ''))
+    if (childCompleted.length === 0) return 0
+    let streak = 0
+    let checkDate = new Date()
+    for (let i = 0; i < childCompleted.length; i++) {
+      const taskDate = new Date(childCompleted[i].completed_at!).toISOString().slice(0, 10)
+      const checkStr = checkDate.toISOString().slice(0, 10)
+      if (taskDate === checkStr) {
+        streak++
+        checkDate.setDate(checkDate.getDate() - 1)
+      } else if (taskDate < checkStr) {
+        break
+      }
+    }
+    return streak
+  }
+
+  const getLastCompletedTime = (childId: string): string | null => {
+    const last = tasks
+      .filter((tk) => tk.child_id === childId && tk.status === 'completed' && tk.completed_at)
+      .sort((a, b) => (b.completed_at || '').localeCompare(a.completed_at || ''))[0]
+    return last?.completed_at || null
+  }
+
+  const moodEmojiMap: Record<string, string> = {
+    fantastic: '\u{1F929}', good: '\u{1F60A}', okay: '\u{1F610}', sad: '\u{1F622}', frustrated: '\u{1F620}',
+  }
 
   const navBadges: { icon: typeof BookOpen; label: string; value: string | number; tab: Tab; border: string; shadow: string; iconBg: string }[] = [
     { icon: TrendingUp, label: t('overview'), value: tasks.length, tab: 'overview', border: 'border-indigo-500', shadow: 'shadow-[0_0_20px_rgba(99,102,241,0.3)]', iconBg: 'bg-indigo-100 text-indigo-600' },
@@ -277,7 +330,7 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
             <div className="flex items-center justify-between">
               <h2 className="font-display font-extrabold text-xl text-slate-800">{t('tasks')}</h2>
               <button
-                onClick={() => setShowAddTask(true)}
+                onClick={() => { setPreselectedChildId(null); setShowAddTask(true) }}
                 disabled={children.length === 0}
                 className="bg-gradient-to-r from-indigo-500 to-teal-500 text-white font-display font-bold px-4 py-2 rounded-xl hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5 disabled:opacity-50"
               >
@@ -698,10 +751,13 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
 
       {/* Modals */}
       {showAddTask && children.length > 0 && (
-        <AddTaskModal children={children} rewards={rewards} lang={lang} t={t} onClose={() => setShowAddTask(false)} onAdd={async (childId, title, subject, duration, points, rewardId) => {
+        <AddTaskModal children={children} rewards={rewards} lang={lang} t={t} preselectedChildId={preselectedChildId} onClose={() => { setShowAddTask(false); setPreselectedChildId(null) }} onAdd={async (childId, title, subject, duration, points, rewardId) => {
           await supabase.from('tasks').insert({ child_id: childId, title, subject, duration_mins: duration, point_value: points, status: 'pending', reward_id: rewardId || null })
-          setShowAddTask(false); fetchAll()
+          setShowAddTask(false); setPreselectedChildId(null); fetchAll()
         }} />
+      )}
+      {awardPointsChild && (
+        <AwardPointsModal child={awardPointsChild} t={t} onClose={() => setAwardPointsChild(null)} onAward={handleAwardPoints} />
       )}
       {showAddReward && children.length > 0 && (
         <AddRewardModal children={children} lang={lang} t={t} onClose={() => setShowAddReward(false)} onAdd={async (childId, title, cost) => {
@@ -764,11 +820,11 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
 type TFunc = (k: string) => string
 
 
-function AddTaskModal({ children, rewards, lang, t, onClose, onAdd }: {
-  children: Profile[]; rewards: Reward[]; lang: LangCode; t: TFunc; onClose: () => void
+function AddTaskModal({ children, rewards, lang, t, preselectedChildId, onClose, onAdd }: {
+  children: Profile[]; rewards: Reward[]; lang: LangCode; t: TFunc; preselectedChildId: string | null; onClose: () => void
   onAdd: (childId: string, title: string, subject: string, duration: number, points: number, rewardId: string | null) => void
 }) {
-  const [childId, setChildId] = useState(children[0]?.id || '')
+  const [childId, setChildId] = useState(preselectedChildId || children[0]?.id || '')
   const [title, setTitle] = useState('')
   const [duration, setDuration] = useState(15)
   const [points, setPoints] = useState(10)
@@ -892,6 +948,39 @@ function AddRewardModal({ children, lang, t, onClose, onAdd, editing }: {
             {editing ? t('saveReward') : t('createReward')}
           </button>
         </div>
+      </div>
+    </div>
+  )
+}
+
+function AwardPointsModal({ child, t, onClose, onAward }: {
+  child: Profile; t: TFunc; onClose: () => void
+  onAward: (childId: string, points: number) => void
+}) {
+  const [points, setPoints] = useState(10)
+  const presets = [5, 10, 20, 50]
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+      <div className="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl animate-pop">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="font-display font-extrabold text-xl text-slate-800">{t('awardPoints')}</h2>
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-600"><X className="w-5 h-5" /></button>
+        </div>
+        <p className="text-sm text-slate-400 font-semibold mb-4">{t('awardPointsDesc')} <span className="text-slate-700 font-bold">{child.child_name || child.name}</span></p>
+        <div className="grid grid-cols-4 gap-2 mb-4">
+          {presets.map((p) => (
+            <button key={p} onClick={() => setPoints(p)} className={`py-2 rounded-xl font-bold text-sm transition-all ${points === p ? 'bg-amber-500 text-white scale-105' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}>
+              +{p}
+            </button>
+          ))}
+        </div>
+        <div className="mb-4">
+          <label className="text-xs text-slate-400 font-bold uppercase">{t('bonusPoints')}</label>
+          <input type="number" value={points} onChange={(e) => setPoints(Number(e.target.value))} min={1} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 mt-1 font-semibold text-slate-700 text-center focus:outline-none focus:ring-2 focus:ring-amber-400" />
+        </div>
+        <button onClick={() => onAward(child.id, points)} disabled={points <= 0} className="w-full bg-gradient-to-r from-amber-400 to-orange-500 text-white font-display font-bold text-lg py-3 rounded-2xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50">
+          {t('award')}
+        </button>
       </div>
     </div>
   )

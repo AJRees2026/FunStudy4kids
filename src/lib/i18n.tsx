@@ -380,6 +380,18 @@ const en: Dict = {
   editRequestApprovedKid: 'Guardian can now edit your book.',
   editRequestDeniedKid: 'Guardian edit stays locked.',
   guardianEditRequest: 'Guardian wants to edit your book',
+  awardPoints: 'Award Points',
+  awardPointsDesc: 'Give bonus points to',
+  bonusPoints: 'Bonus Points',
+  award: 'Award',
+  pointsAwardedSuccess: 'Points awarded!',
+  tasksToday: 'Tasks Today',
+  noTasksToday: 'No tasks today',
+  dayStreakBadge: 'day streak',
+  moodToday: 'Mood today',
+  noMoodToday: 'No mood logged',
+  lastCompleted: 'Last completed',
+  quickActions: 'Quick Actions',
 }
 
 const es: Dict = {
@@ -732,6 +744,18 @@ const es: Dict = {
   editRequestApprovedKid: 'El tutor ya puede editar tu libro.',
   editRequestDeniedKid: 'La edición del tutor sigue bloqueada.',
   guardianEditRequest: 'El tutor quiere editar tu libro',
+  awardPoints: 'Otorgar Puntos',
+  awardPointsDesc: 'Da puntos extra a',
+  bonusPoints: 'Puntos Extra',
+  award: 'Otorgar',
+  pointsAwardedSuccess: '¡Puntos otorgados!',
+  tasksToday: 'Tareas Hoy',
+  noTasksToday: 'Sin tareas hoy',
+  dayStreakBadge: 'días seguidos',
+  moodToday: 'Ánimo hoy',
+  noMoodToday: 'Sin ánimo registrado',
+  lastCompleted: 'Última completada',
+  quickActions: 'Acciones Rápidas',
 }
 
 const fr: Dict = {
@@ -1084,6 +1108,18 @@ const fr: Dict = {
   editRequestApprovedKid: 'Le tuteur peut maintenant éditer ton livre.',
   editRequestDeniedKid: 'L\'édition du tuteur reste verrouillée.',
   guardianEditRequest: 'Le tuteur veut éditer ton livre',
+  awardPoints: 'Attribuer des Points',
+  awardPointsDesc: 'Donner des points bonus à',
+  bonusPoints: 'Points Bonus',
+  award: 'Attribuer',
+  pointsAwardedSuccess: 'Points attribués !',
+  tasksToday: 'Tâches Aujourd\'hui',
+  noTasksToday: 'Pas de tâches aujourd\'hui',
+  dayStreakBadge: 'jours de suite',
+  moodToday: 'Humeur aujourd\'hui',
+  noMoodToday: 'Pas d\'humeur enregistrée',
+  lastCompleted: 'Dernière complétée',
+  quickActions: 'Actions Rapides',
 }
 
 const ja: Dict = {
@@ -1436,6 +1472,18 @@ const ja: Dict = {
   editRequestApprovedKid: '保護者があなたの本を編集できるようになりました。',
   editRequestDeniedKid: '保護者の編集はロックされたままです。',
   guardianEditRequest: '保護者があなたの本を編集したいそうです',
+  awardPoints: 'ポイント付与',
+  awardPointsDesc: 'ボーナスポイントを付与',
+  bonusPoints: 'ボーナスポイント',
+  award: '付与',
+  pointsAwardedSuccess: 'ポイントを付与しました！',
+  tasksToday: '今日のタスク',
+  noTasksToday: '今日のタスクはありません',
+  dayStreakBadge: '日連続',
+  moodToday: '今日のきぶん',
+  noMoodToday: 'きぶん未記録',
+  lastCompleted: '最後に完了',
+  quickActions: 'クイック操作',
 }
 
 const zh: Dict = {
@@ -1788,6 +1836,18 @@ const zh: Dict = {
   editRequestApprovedKid: '監護人現在可以編輯你的書了。',
   editRequestDeniedKid: '監護人編輯保持鎖定。',
   guardianEditRequest: '監護人想編輯你的書',
+  awardPoints: '獎勵積分',
+  awardPointsDesc: '給予額外積分給',
+  bonusPoints: '額外積分',
+  award: '獎勵',
+  pointsAwardedSuccess: '積分已獎勵！',
+  tasksToday: '今日任務',
+  noTasksToday: '今日無任務',
+  dayStreakBadge: '天連續',
+  moodToday: '今日心情',
+  noMoodToday: '未記錄心情',
+  lastCompleted: '最後完成',
+  quickActions: '快速操作',
 }
 
 const da: Dict = {
@@ -2140,6 +2200,18 @@ const da: Dict = {
   editRequestApprovedKid: 'Værge kan nu redigere din bog.',
   editRequestDeniedKid: 'Værges redigering forbliver låst.',
   guardianEditRequest: 'Værge vil redigere din bog',
+  awardPoints: 'Giv Point',
+  awardPointsDesc: 'Giv bonuspoint til',
+  bonusPoints: 'Bonuspoint',
+  award: 'Giv',
+  pointsAwardedSuccess: 'Point givet!',
+  tasksToday: 'Opgaver I Dag',
+  noTasksToday: 'Ingen opgaver i dag',
+  dayStreakBadge: 'dage i træk',
+  moodToday: 'Humør i dag',
+  noMoodToday: 'Intet humør registreret',
+  lastCompleted: 'Sidst fuldført',
+  quickActions: 'Hurtige Handlinger',
 }
 
 const de: Dict = {
@@ -2492,6 +2564,18 @@ const de: Dict = {
   editRequestApprovedKid: 'Der Vormund kann dein Buch jetzt bearbeiten.',
   editRequestDeniedKid: 'Vormund-Bearbeitung bleibt gesperrt.',
   guardianEditRequest: 'Dein Vormund möchte dein Buch bearbeiten',
+  awardPoints: 'Punkte Vergeben',
+  awardPointsDesc: 'Bonuspunkte geben an',
+  bonusPoints: 'Bonuspunkte',
+  award: 'Vergeben',
+  pointsAwardedSuccess: 'Punkte vergeben!',
+  tasksToday: 'Aufgaben Heute',
+  noTasksToday: 'Keine Aufgaben heute',
+  dayStreakBadge: 'Tage in Folge',
+  moodToday: 'Stimmung heute',
+  noMoodToday: 'Keine Stimmung erfasst',
+  lastCompleted: 'Zuletzt erledigt',
+  quickActions: 'Schnellaktionen',
 }
 
 const ko: Dict = {
@@ -2852,6 +2936,18 @@ const ko: Dict = {
   editRequestApprovedKid: '보호자가 이제 당신의 책을 편집할 수 있습니다.',
   editRequestDeniedKid: '보호자 편집은 잠겨 있습니다.',
   guardianEditRequest: '보호자가 당신의 책을 편집하고 싶어합니다',
+  awardPoints: '포인트 지급',
+  awardPointsDesc: '보너스 포인트 지급',
+  bonusPoints: '보너스 포인트',
+  award: '지급',
+  pointsAwardedSuccess: '포인트가 지급되었습니다!',
+  tasksToday: '오늘의 작업',
+  noTasksToday: '오늘 작업 없음',
+  dayStreakBadge: '일 연속',
+  moodToday: '오늘의 기분',
+  noMoodToday: '기분 미기록',
+  lastCompleted: '마지막 완료',
+  quickActions: '빠른 작업',
 }
 
 const translations: Record<LangCode, Dict> = {
