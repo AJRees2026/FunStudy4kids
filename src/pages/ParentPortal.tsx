@@ -1,11 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { supabase, generatePairCode, ALL_SUBJECTS, type Profile, type Task, type Reward, type ApprovalRequest, type TaskApprovalMode, type ProgressDisplayMode } from '../lib/supabase'
 import { useI18n, LANGUAGES, type LangCode } from '../lib/i18n'
-import {
-  Shield, LogOut, Plus, Check, X, Clock, TrendingUp, BookOpen, Award,
-  UserCog, Rocket, Sparkles, Lock, KeyRound, Copy, Bell, Globe,
-  CalendarClock, Trash2, Palette, Gift, Smile, Ruler, ChevronDown, Pencil,
-} from 'lucide-react'
+import { Shield, LogOut, Plus, Check, X, Clock, TrendingUp, BookOpen, Award, UserCog, Rocket, Sparkles, Lock, KeyRound, Copy, Bell, Globe, CalendarClock, Trash2, Palette, Gift, Smile, Ruler, ChevronDown, Pencil, ClipboardList, CircleCheck as CheckCircle, CircleAlert as AlertCircle, Trophy, Coins, UserCheck } from 'lucide-react'
 import SubjectProgress from '../components/SubjectProgress'
 import ReadingJourney from '../components/ReadingJourney'
 import BookReflections from '../components/BookReflections'
