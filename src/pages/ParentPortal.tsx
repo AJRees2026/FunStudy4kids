@@ -14,7 +14,7 @@ type Props = {
   onSwitchProfile: () => void
 }
 
-type Tab = 'overview' | 'tasks' | 'rewards' | 'profiles' | 'approvals' | 'mood' | 'growth'
+type Tab = 'overview' | 'tasks' | 'rewards' | 'profiles' | 'approvals' | 'mood' | 'growth' | 'weekly'
 
 export default function ParentPortal({ parent, onSwitchProfile }: Props) {
   const { lang, setLang, t } = useI18n()
@@ -185,7 +185,7 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
     { icon: ClipboardList, label: t('sparkJobs'), value: `${completedTasks.length}/${tasks.length}`, tab: 'tasks', border: 'border-emerald-500', shadow: 'shadow-[0_0_20px_rgba(16,185,129,0.3)]', iconBg: 'bg-emerald-100 text-emerald-600' },
     { icon: Award, label: t('rewardShop'), value: `${totalPointsAwarded} / ${availableRewards.length}`, tab: 'rewards', border: 'border-amber-500', shadow: 'shadow-[0_0_20px_rgba(245,158,11,0.3)]', iconBg: 'bg-amber-100 text-amber-600', blink: availableRewards.length > 0 },
     { icon: AlertCircle, label: t('approvalRequests'), value: approvalRequests.length, tab: 'approvals', border: 'border-rose-500', shadow: 'shadow-[0_0_20px_rgba(244,63,94,0.3)]', iconBg: 'bg-rose-100 text-rose-600', blink: approvalRequests.length > 0 },
-    { icon: Trophy, label: t('weeklyGoal'), value: '0/20', tab: 'overview', border: 'border-blue-500', shadow: 'shadow-[0_0_20px_rgba(59,130,246,0.3)]', iconBg: 'bg-blue-100 text-blue-600' },
+    { icon: Trophy, label: t('weeklyGoal'), value: '0/20', tab: 'weekly', border: 'border-blue-500', shadow: 'shadow-[0_0_20px_rgba(59,130,246,0.3)]', iconBg: 'bg-blue-100 text-blue-600' },
     { icon: Smile, label: t('moodTracker'), value: children.length, tab: 'mood', border: 'border-violet-500', shadow: 'shadow-[0_0_20px_rgba(139,92,246,0.3)]', iconBg: 'bg-violet-100 text-violet-600' },
     { icon: Ruler, label: t('growth'), value: children.length, tab: 'growth', border: 'border-teal-500', shadow: 'shadow-[0_0_20px_rgba(20,184,166,0.3)]', iconBg: 'bg-teal-100 text-teal-600' },
     { icon: UserCheck, label: t('profiles'), value: children.length, tab: 'profiles', border: 'border-orange-500', shadow: 'shadow-[0_0_20px_rgba(249,115,22,0.3)]', iconBg: 'bg-orange-100 text-orange-600' },
@@ -541,6 +541,20 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
             ) : (
               <GrowthTracking children={children} />
             )}
+          </div>
+        )}
+
+        {/* Weekly Goal Tab */}
+        {tab === 'weekly' && (
+          <div className="space-y-6 animate-fadeIn">
+            <div className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-3xl p-6 text-white shadow-lg text-center">
+              <Trophy className="w-12 h-12 mx-auto mb-3" />
+              <h2 className="font-display font-extrabold text-2xl mb-2">{t('weeklyGoal')}</h2>
+              <p className="text-blue-100 text-sm font-semibold mb-4">0 / 20</p>
+              <div className="bg-white/20 rounded-full h-4 overflow-hidden">
+                <div className="bg-white h-full rounded-full transition-all" style={{ width: '0%' }} />
+              </div>
+            </div>
           </div>
         )}
 
