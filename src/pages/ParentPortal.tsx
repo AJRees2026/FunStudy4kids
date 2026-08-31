@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { supabase, generatePairCode, ALL_SUBJECTS, type Profile, type Task, type Reward, type ApprovalRequest, type TaskApprovalMode, type ProgressDisplayMode } from '../lib/supabase'
 import { useI18n, LANGUAGES, type LangCode } from '../lib/i18n'
-import { Shield, LogOut, Plus, Check, X, Clock, TrendingUp, BookOpen, Award, UserCog, Rocket, Sparkles, Lock, KeyRound, Copy, Bell, Globe, CalendarClock, Trash2, Palette, Gift, Smile, Ruler, ChevronDown, Pencil, ClipboardList, CircleCheck as CheckCircle, CircleAlert as AlertCircle, Trophy, Coins, UserCheck } from 'lucide-react'
+import { Shield, LogOut, Plus, Check, X, Clock, TrendingUp, BookOpen, Award, UserCog, Rocket, Sparkles, Lock, KeyRound, Copy, Bell, Globe, CalendarClock, Trash2, Palette, Gift, Smile, Ruler, ChevronDown, ChevronRight, Pencil, ClipboardList, CircleCheck as CheckCircle, CircleAlert as AlertCircle, Trophy, Coins, UserCheck } from 'lucide-react'
 import SubjectProgress from '../components/SubjectProgress'
 import ReadingJourney from '../components/ReadingJourney'
 import BookReflections from '../components/BookReflections'
@@ -342,7 +342,11 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
             const childTasks = tasks.filter((tk) => tk.child_id === c.id)
             const childPoints = childTasks.filter((tk) => tk.status === 'completed').reduce((sum, tk) => sum + tk.point_value, 0)
             return (
-              <div key={c.id} className="bg-white rounded-2xl p-4 border border-slate-100 flex items-center gap-3">
+              <button
+                key={c.id}
+                onClick={() => setTab('profiles')}
+                className="group w-full bg-white rounded-2xl p-4 border border-slate-100 flex items-center gap-3 hover:shadow-md hover:border-indigo-200 transition-all active:scale-[0.98] text-left"
+              >
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-teal-500 flex items-center justify-center text-lg overflow-hidden shrink-0">
                   {c.photo_url ? <img src={c.photo_url} alt={c.child_name || c.name} className="w-full h-full object-cover" /> : '🚀'}
                 </div>
@@ -354,7 +358,8 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
                   <Award className="w-4 h-4 text-amber-500" />
                   <span className="font-display font-extrabold text-sm text-amber-600">{childPoints}</span>
                 </div>
-              </div>
+                <ChevronRight className="w-5 h-5 text-slate-300 group-hover:text-indigo-400 transition-colors shrink-0" />
+              </button>
             )
           })}
         </div>
