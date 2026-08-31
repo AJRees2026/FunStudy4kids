@@ -205,6 +205,23 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            {/* Next Birthday Header Badge */}
+{(() => {
+  const upcoming = getUpcomingBirthday(children);
+  if (!upcoming) return null;
+
+  return (
+    <div className="flex items-center gap-2 bg-gradient-to-r from-pink-500 to-rose-500 text-white px-4 py-2 rounded-full shadow-md text-xs sm:text-sm font-bold animate-pulse">
+      <Cake className="w-4 h-4" />
+      <span>
+        {upcoming.daysLeft === 0
+          ? `🎉 Today is ${upcoming.child.name}'s Birthday!`
+          : `${upcoming.child.name}'s Birthday in ${upcoming.daysLeft} day${upcoming.daysLeft > 1 ? 's' : ''}!`}
+      </span>
+      <Clock className="w-4 h-4 opacity-80" />
+    </div>
+  );
+})()}
             <button
               onClick={() => setShowPairCodeModal(true)}
               className="flex items-center gap-1.5 bg-indigo-50 text-indigo-600 font-bold px-3 py-1.5 rounded-xl hover:bg-indigo-100 transition-colors text-sm"
