@@ -176,63 +176,42 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
         </div>
       )}
 
-      <nav className="sticky top-[57px] z-20 bg-white/80 backdrop-blur-md border-b border-slate-200">
-        <div className="max-w-3xl mx-auto px-4 flex gap-1 overflow-x-auto">
-          {tabs.map((tb) => (
-            <button
-              key={tb.id}
-              onClick={() => setTab(tb.id)}
-              className={`flex items-center gap-1.5 px-7 py-5 font-display font-bold text-base border-b-2 transition-colors whitespace-nowrap ${
-                tab === tb.id
-                  ? 'border-indigo-500 text-indigo-600'
-                  : 'border-transparent text-slate-400 hover:text-slate-600'
-              }`}
-            >
-              <tb.icon className="w-4 h-4" /> {tb.label}
-              {tb.badge ? (
-                <span className="bg-rose-500 text-white text-xs font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center">{tb.badge}</span>
-              ) : null}
-            </button>
-          ))}
-        </div>
-      </nav>
-
       <main className="max-w-3xl mx-auto px-4 py-6 space-y-6">
+        {/* Tab navigation cards */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
+          {tabs.map((tb) => {
+            const isActive = tab === tb.id
+            return (
+              <button
+                key={tb.id}
+                onClick={() => setTab(tb.id)}
+                className={`group relative rounded-2xl p-3 text-left transition-all hover:scale-[1.03] active:scale-95 flex flex-col h-full min-h-[88px] ${
+                  isActive
+                    ? 'bg-gradient-to-br from-indigo-500 to-teal-500 text-white shadow-lg'
+                    : 'bg-white text-slate-700 shadow-md hover:shadow-xl'
+                }`}
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <div className={`w-8 h-8 rounded-xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform shrink-0 ${
+                    isActive ? 'bg-white/20' : 'bg-gradient-to-br from-indigo-500 to-teal-500'
+                  }`}>
+                    <tb.icon className="w-4 h-4 text-white" />
+                  </div>
+                  {tb.badge ? (
+                    <span className="bg-rose-500 text-white text-[10px] font-bold rounded-full px-1.5 py-0.5 min-w-[18px] text-center shadow-md">
+                      {tb.badge}
+                    </span>
+                  ) : null}
+                </div>
+                <p className={`font-display font-bold text-xs leading-tight ${isActive ? 'text-white' : 'text-slate-600'}`}>{tb.label}</p>
+              </button>
+            )
+          })}
+        </div>
+
         {/* Overview Tab */}
         {tab === 'overview' && (
           <div className="space-y-6 animate-fadeIn">
-            {/* Tab navigation cards */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
-              {tabs.map((tb) => {
-                const isActive = tab === tb.id
-                return (
-                  <button
-                    key={tb.id}
-                    onClick={() => setTab(tb.id)}
-                    className={`group relative rounded-2xl p-3 text-left transition-all hover:scale-[1.03] active:scale-95 ${
-                      isActive
-                        ? 'bg-gradient-to-br from-indigo-500 to-teal-500 text-white shadow-lg'
-                        : 'bg-white text-slate-700 shadow-md hover:shadow-xl'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <div className={`w-8 h-8 rounded-xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform ${
-                        isActive ? 'bg-white/20' : 'bg-gradient-to-br from-indigo-500 to-teal-500'
-                      }`}>
-                        <tb.icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-white'}`} />
-                      </div>
-                      {tb.badge ? (
-                        <span className="bg-rose-500 text-white text-[10px] font-bold rounded-full px-1.5 py-0.5 min-w-[18px] text-center shadow-md">
-                          {tb.badge}
-                        </span>
-                      ) : null}
-                    </div>
-                    <p className={`font-display font-bold text-xs leading-tight ${isActive ? 'text-white' : 'text-slate-600'}`}>{tb.label}</p>
-                  </button>
-                )
-              })}
-            </div>
-
             {/* Summary metric cards */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {/* Pending */}
