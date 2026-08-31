@@ -224,7 +224,7 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
                 }`}>
                   <tb.icon className="w-5 h-5 text-white" />
                 </div>
-                <p className={`text-sm font-bold uppercase ${isActive ? 'text-white' : 'text-slate-400'}`}>{tb.label}</p>
+                <p className={`text-base font-bold uppercase ${isActive ? 'text-white' : 'text-slate-400'}`}>{tb.label}</p>
               </button>
             )
           })}
