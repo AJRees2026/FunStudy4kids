@@ -33,6 +33,19 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
   const [showAddChild, setShowAddChild] = useState(false)
   const [copied, setCopied] = useState(false)
   const [expandedChild, setExpandedChild] = useState<string | null>(null)
+  const [isPairCodeDismissed, setIsPairCodeDismissed] = useState(() => {
+    try { return localStorage.getItem('pairCodeDismissed') === 'true' } catch { return false }
+  })
+  const [showPairCodeModal, setShowPairCodeModal] = useState(false)
+
+  const dismissPairCode = () => {
+    setIsPairCodeDismissed(true)
+    try { localStorage.setItem('pairCodeDismissed', 'true') } catch {}
+  }
+  const restorePairCode = () => {
+    setIsPairCodeDismissed(false)
+    try { localStorage.removeItem('pairCodeDismissed') } catch {}
+  }
 
   const fetchAll = useCallback(async () => {
     const { data: kids } = await supabase
@@ -137,6 +150,13 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowPairCodeModal(true)}
+              className="flex items-center gap-1.5 bg-indigo-50 text-indigo-600 font-bold px-3 py-1.5 rounded-xl hover:bg-indigo-100 transition-colors text-sm"
+              title={t('showPairCode')}
+            >
+              <KeyRound className="w-4 h-4" /> {t('showPairCode')}
+            </button>
             <select
               value={lang}
               onChange={(e) => setLang(e.target.value as LangCode)}
@@ -153,9 +173,16 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
         </div>
       </header>
 
-      {tab === 'overview' && (
+      {tab === 'overview' && !isPairCodeDismissed && (
         <div className="max-w-3xl mx-auto px-4 pt-4 animate-fadeIn">
-          <div className="bg-gradient-to-br from-indigo-500 to-teal-500 rounded-3xl p-6 text-white shadow-lg">
+          <div className="bg-gradient-to-br from-indigo-500 to-teal-500 rounded-3xl p-6 text-white shadow-lg relative">
+            <button
+              onClick={dismissPairCode}
+              className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors"
+              title={t('cancel')}
+            >
+              <X className="w-4 h-4 text-white" />
+            </button>
             <div className="flex items-center gap-2 mb-4">
               <KeyRound className="w-5 h-5" />
               <h3 className="font-display font-extrabold text-lg">{t('familyPairCodeLabel')}</h3>
@@ -793,6 +820,35 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
           setShowAddChild(false); fetchAll()
           return null
         }} />
+      )}
+      {showPairCodeModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl animate-pop">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-display font-extrabold text-xl text-slate-800">{t('familyPairCodeLabel')}</h2>
+              <button onClick={() => setShowPairCodeModal(false)} className="text-slate-400 hover:text-slate-600"><X className="w-5 h-5" /></button>
+            </div>
+            <p className="text-slate-400 text-sm font-semibold mb-4">{t('shareCodeHelp')}</p>
+            <div className="bg-gradient-to-br from-indigo-500 to-teal-500 rounded-2xl p-6 text-white text-center mb-4">
+              <p className="font-display font-extrabold text-4xl tracking-[0.2em]">{currentParent.family_pair_code || '------'}</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <button onClick={copyPairCode} className="flex-1 bg-slate-100 hover:bg-slate-200 rounded-2xl py-3 font-bold text-slate-700 flex items-center justify-center gap-2 transition-colors">
+                {copied ? <Check className="w-5 h-5 text-teal-500" /> : <Copy className="w-5 h-5" />}
+                {copied ? t('copied') : t('copy')}
+              </button>
+              <button onClick={regeneratePairCode} className="flex-1 bg-slate-100 hover:bg-slate-200 rounded-2xl py-3 font-bold text-slate-700 flex items-center justify-center gap-2 transition-colors">
+                <Sparkles className="w-5 h-5" />
+                {t('regenerate')}
+              </button>
+            </div>
+            {isPairCodeDismissed && (
+              <button onClick={() => { restorePairCode(); setShowPairCodeModal(false) }} className="w-full mt-3 text-indigo-500 font-bold text-sm hover:underline">
+                {t('showOnDashboard')}
+              </button>
+            )}
+          </div>
+        </div>
       )}
     </div>
   )
