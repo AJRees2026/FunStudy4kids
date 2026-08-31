@@ -201,54 +201,25 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
       )}
 
       <main className="max-w-3xl mx-auto px-4 py-6 space-y-6">
-        {/* Tab navigation cards */}
-        <div className="space-y-3">
-          {tabs.filter((tb) => tb.id === 'overview').map((tb) => {
+        {/* Tab navigation */}
+        <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
+          {tabs.map((tb) => {
             const isActive = tab === tb.id
             return (
               <button
                 key={tb.id}
                 onClick={() => setTab(tb.id)}
-                className={`group relative w-full rounded-2xl p-4 shadow-md hover:shadow-xl transition-all hover:scale-[1.02] active:scale-95 text-left font-display flex items-center gap-3 ${
+                className={`flex items-center gap-1.5 rounded-full px-4 py-2 font-display font-bold text-sm whitespace-nowrap transition-all ${
                   isActive
-                    ? 'bg-gradient-to-br from-indigo-500 to-teal-500 text-white shadow-lg'
-                    : 'bg-white text-slate-700 shadow-md hover:shadow-xl'
+                    ? 'bg-gradient-to-r from-indigo-500 to-teal-500 text-white shadow-md'
+                    : 'bg-white text-slate-400 hover:text-slate-600 shadow-sm'
                 }`}
               >
-                <div className={`w-9 h-9 rounded-xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform shrink-0 ${
-                  isActive ? 'bg-white/20' : 'bg-gradient-to-br from-indigo-500 to-teal-500'
-                }`}>
-                  <tb.icon className="w-5 h-5 text-white" />
-                </div>
-                <p className={`text-base font-bold uppercase ${isActive ? 'text-white' : 'text-slate-400'}`}>{tb.label}</p>
+                <tb.icon className="w-4 h-4" />
+                {tb.label}
               </button>
             )
           })}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {tabs.filter((tb) => tb.id !== 'overview').map((tb) => {
-              const isActive = tab === tb.id
-              return (
-                <button
-                  key={tb.id}
-                  onClick={() => setTab(tb.id)}
-                  className={`group relative rounded-2xl p-4 shadow-md hover:shadow-xl transition-all hover:scale-[1.02] active:scale-95 text-left flex flex-col h-full min-h-[96px] ${
-                    isActive
-                      ? 'bg-gradient-to-br from-indigo-500 to-teal-500 text-white shadow-lg'
-                      : 'bg-white text-slate-700 shadow-md hover:shadow-xl'
-                  }`}
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform shrink-0 ${
-                      isActive ? 'bg-white/20' : 'bg-gradient-to-br from-indigo-500 to-teal-500'
-                    }`}>
-                      <tb.icon className="w-4 h-4 text-white" />
-                    </div>
-                  </div>
-                  <p className={`text-xs font-bold uppercase ${isActive ? 'text-white' : 'text-slate-400'}`}>{tb.label}</p>
-                </button>
-              )
-            })}
-          </div>
         </div>
 
        {/* Overview Tab */}
