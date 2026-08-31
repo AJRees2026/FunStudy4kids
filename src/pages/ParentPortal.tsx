@@ -198,33 +198,60 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <div className="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
-                <div className="flex items-center gap-2 mb-1">
-                  <UserCog className="w-4 h-4 text-indigo-500" />
-                  <p className="text-xs text-slate-400 font-bold uppercase">{t('children')}</p>
+              {/* Children */}
+              <div className="group bg-white rounded-2xl p-4 shadow-md hover:shadow-xl transition-all hover:scale-[1.02]">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
+                    <UserCog className="w-4 h-4 text-white" />
+                  </div>
+                  <span className="font-display font-extrabold text-2xl text-slate-800">{children.length}</span>
                 </div>
-                <p className="font-display font-extrabold text-2xl text-slate-800">{children.length}</p>
+                <p className="text-xs text-slate-400 font-bold uppercase mb-2">{t('children')}</p>
+                <div className="h-1.5 rounded-full overflow-hidden bg-slate-100">
+                  <div className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-blue-600 transition-all duration-500" style={{ width: `${children.length > 0 ? 100 : 0}%` }} />
+                </div>
               </div>
-              <div className="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
-                <div className="flex items-center gap-2 mb-1">
-                  <Clock className="w-4 h-4 text-amber-500" />
-                  <p className="text-xs text-slate-400 font-bold uppercase">{t('pending')}</p>
+
+              {/* Pending */}
+              <div className="group bg-white rounded-2xl p-4 shadow-md hover:shadow-xl transition-all hover:scale-[1.02]">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
+                    <Clock className="w-4 h-4 text-white" />
+                  </div>
+                  <span className="font-display font-extrabold text-2xl text-slate-800">{pendingTasks.length}</span>
                 </div>
-                <p className="font-display font-extrabold text-2xl text-slate-800">{pendingTasks.length}</p>
+                <p className="text-xs text-slate-400 font-bold uppercase mb-2">{t('pending')}</p>
+                <div className="h-1.5 rounded-full overflow-hidden bg-slate-100">
+                  <div className="h-full rounded-full bg-gradient-to-r from-amber-400 to-orange-500 transition-all duration-500" style={{ width: `${tasks.length > 0 ? Math.round((pendingTasks.length / tasks.length) * 100) : 0}%` }} />
+                </div>
               </div>
-              <div className="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
-                <div className="flex items-center gap-2 mb-1">
-                  <Check className="w-4 h-4 text-teal-500" />
-                  <p className="text-xs text-slate-400 font-bold uppercase">{t('completed')}</p>
+
+              {/* Completed */}
+              <div className="group bg-white rounded-2xl p-4 shadow-md hover:shadow-xl transition-all hover:scale-[1.02]">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-teal-400 to-green-500 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
+                    <Check className="w-4 h-4 text-white" />
+                  </div>
+                  <span className="font-display font-extrabold text-2xl text-slate-800">{completedTasks.length}</span>
                 </div>
-                <p className="font-display font-extrabold text-2xl text-slate-800">{completedTasks.length}</p>
+                <p className="text-xs text-slate-400 font-bold uppercase mb-2">{t('completed')}</p>
+                <div className="h-1.5 rounded-full overflow-hidden bg-slate-100">
+                  <div className="h-full rounded-full bg-gradient-to-r from-teal-400 to-green-500 transition-all duration-500" style={{ width: `${tasks.length > 0 ? Math.round((completedTasks.length / tasks.length) * 100) : 0}%` }} />
+                </div>
               </div>
-              <div className="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
-                <div className="flex items-center gap-2 mb-1">
-                  <Award className="w-4 h-4 text-fuchsia-500" />
-                  <p className="text-xs text-slate-400 font-bold uppercase">{t('pointsAwarded')}</p>
+
+              {/* Points Awarded */}
+              <div className="group bg-white rounded-2xl p-4 shadow-md hover:shadow-xl transition-all hover:scale-[1.02]">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-fuchsia-500 to-rose-600 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
+                    <Award className="w-4 h-4 text-white" />
+                  </div>
+                  <span className="font-display font-extrabold text-2xl text-slate-800">{totalPointsAwarded}</span>
                 </div>
-                <p className="font-display font-extrabold text-2xl text-slate-800">{totalPointsAwarded}</p>
+                <p className="text-xs text-slate-400 font-bold uppercase mb-2">{t('pointsAwarded')}</p>
+                <div className="h-1.5 rounded-full overflow-hidden bg-slate-100">
+                  <div className="h-full rounded-full bg-gradient-to-r from-fuchsia-500 to-rose-600 transition-all duration-500" style={{ width: `${Math.min(totalPointsAwarded % 100 || 8, 100)}%` }} />
+                </div>
               </div>
             </div>
 
