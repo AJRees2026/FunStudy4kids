@@ -66,6 +66,7 @@ export type Task = {
   status: 'pending' | 'completed'
   completed_at: string | null
   reward_id: string | null
+  created_at: string
 }
 
 export type Reward = {

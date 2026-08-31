@@ -32,6 +32,7 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
   const [expandedChild, setExpandedChild] = useState<string | null>(null)
   const [preselectedChildId, setPreselectedChildId] = useState<string | null>(null)
   const [awardPointsChild, setAwardPointsChild] = useState<Profile | null>(null)
+  const [selectedChildId, setSelectedChildId] = useState<string | null>(null)
   const [moodEntries, setMoodEntries] = useState<{ child_id: string; entry_date: string; mood: string }[]>([])
   const [isPairCodeDismissed, setIsPairCodeDismissed] = useState(() => {
     try { return localStorage.getItem('pairCodeDismissed') === 'true' } catch { return false }
@@ -301,7 +302,7 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
             return (
               <button
                 key={c.id}
-                onClick={() => setTab('profiles')}
+                onClick={() => setSelectedChildId(c.id)}
                 className="group w-full bg-white rounded-2xl p-4 border border-slate-100 flex items-center gap-3 hover:shadow-md hover:border-indigo-200 transition-all active:scale-[0.98] text-left"
               >
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-teal-500 flex items-center justify-center text-lg overflow-hidden shrink-0">
@@ -759,6 +760,29 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
       {awardPointsChild && (
         <AwardPointsModal child={awardPointsChild} t={t} onClose={() => setAwardPointsChild(null)} onAward={handleAwardPoints} />
       )}
+      {selectedChildId && (() => {
+        const child = children.find((c) => c.id === selectedChildId)
+        if (!child) return null
+        return (
+          <ChildDetailDrawer
+            child={child}
+            tasks={tasks.filter((tk) => tk.child_id === child.id)}
+            rewards={rewards.filter((r) => r.child_id === child.id)}
+            t={t}
+            todayMood={getTodayMood(child.id)}
+            dayStreak={getDayStreak(child.id)}
+            lastCompletedTime={getLastCompletedTime(child.id)}
+            moodEmojiMap={moodEmojiMap}
+            todayStr={todayStr}
+            onClose={() => setSelectedChildId(null)}
+            onAddTask={() => { setPreselectedChildId(child.id); setShowAddTask(true); setSelectedChildId(null) }}
+            onAwardPoints={() => { setAwardPointsChild(child); setSelectedChildId(null) }}
+            onEditSettings={() => { setTab('profiles'); setSelectedChildId(null) }}
+            onViewMood={() => { setTab('mood'); setSelectedChildId(null) }}
+            onViewGrowth={() => { setTab('growth'); setSelectedChildId(null) }}
+          />
+        )
+      })()}
       {showAddReward && children.length > 0 && (
         <AddRewardModal children={children} lang={lang} t={t} onClose={() => setShowAddReward(false)} onAdd={async (childId, title, cost) => {
           const targetIds = childId === '__all__' ? children.map((c) => c.id) : [childId]
@@ -819,6 +843,136 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
 
 type TFunc = (k: string) => string
 
+
+function ChildDetailDrawer({ child, tasks, rewards, t, todayMood, dayStreak, lastCompletedTime, moodEmojiMap, todayStr, onClose, onAddTask, onAwardPoints, onEditSettings, onViewMood, onViewGrowth }: {
+  child: Profile; tasks: Task[]; rewards: Reward[]; t: TFunc; todayMood: string | null; dayStreak: number; lastCompletedTime: string | null; moodEmojiMap: Record<string, string>; todayStr: string; onClose: () => void
+  onAddTask: () => void; onAwardPoints: () => void; onEditSettings: () => void; onViewMood: () => void; onViewGrowth: () => void
+}) {
+  const childPoints = tasks.filter((tk) => tk.status === 'completed').reduce((sum, tk) => sum + tk.point_value, 0)
+  const pendingCount = tasks.filter((tk) => tk.status === 'pending').length
+  const completedCount = tasks.filter((tk) => tk.status === 'completed').length
+  const availableRewards = rewards.filter((r) => r.status === 'available')
+  const todayTasks = tasks.filter((tk) => tk.created_at && tk.created_at.slice(0, 10) === todayStr)
+  const todayCompleted = todayTasks.filter((tk) => tk.status === 'completed').length
+  const todayTotal = todayTasks.length
+  const pct = todayTotal > 0 ? Math.round((todayCompleted / todayTotal) * 100) : 0
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm" onClick={onClose}>
+      <div className="bg-white rounded-t-3xl max-w-md w-full max-h-[85vh] overflow-y-auto animate-slideUp shadow-2xl" onClick={(e) => e.stopPropagation()}>
+        {/* Handle bar */}
+        <div className="sticky top-0 bg-white pt-2 pb-1 flex justify-center z-10">
+          <div className="w-10 h-1.5 bg-slate-200 rounded-full" />
+        </div>
+
+        <div className="p-5 space-y-4">
+          {/* Header */}
+          <div className="flex items-center gap-3">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-teal-500 flex items-center justify-center text-2xl overflow-hidden shrink-0">
+              {child.photo_url ? <img src={child.photo_url} alt={child.child_name || child.name} className="w-full h-full object-cover" /> : '\u{1F680}'}
+            </div>
+            <div className="flex-1">
+              <h2 className="font-display font-extrabold text-xl text-slate-800">{child.child_name || child.name}</h2>
+              <p className="text-sm font-bold text-slate-400">{pendingCount} {t('pendingTasks')} · {completedCount} {t('completedTasks')}</p>
+            </div>
+            <button onClick={onClose} className="p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors">
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Stats row */}
+          <div className="grid grid-cols-3 gap-2">
+            <div className="bg-amber-50 rounded-2xl p-3 text-center">
+              <Award className="w-5 h-5 text-amber-500 mx-auto mb-1" />
+              <p className="font-display font-extrabold text-lg text-amber-600">{childPoints}</p>
+              <p className="text-[10px] font-bold text-amber-500">{t('pointsLower')}</p>
+            </div>
+            <div className="bg-orange-50 rounded-2xl p-3 text-center">
+              <p className="text-lg mb-0.5">{'\u{1F525}'}</p>
+              <p className="font-display font-extrabold text-lg text-orange-600">{dayStreak}</p>
+              <p className="text-[10px] font-bold text-orange-500">{t('dayStreakBadge')}</p>
+            </div>
+            <div className="bg-violet-50 rounded-2xl p-3 text-center">
+              <p className="text-lg mb-0.5">{todayMood ? moodEmojiMap[todayMood] : '\u{1F4AD}'}</p>
+              <p className="font-display font-extrabold text-xs text-violet-600">{todayMood ? t('moodToday') : t('noMoodToday')}</p>
+            </div>
+          </div>
+
+          {/* Today's progress */}
+          <div className="bg-slate-50 rounded-2xl p-4">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-bold text-slate-500 uppercase">{t('tasksToday')}</span>
+              <span className="text-xs font-bold text-slate-600">{todayCompleted}/{todayTotal}</span>
+            </div>
+            <div className="h-2.5 bg-slate-200 rounded-full overflow-hidden">
+              <div className="h-full bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full transition-all duration-500" style={{ width: `${pct}%` }} />
+            </div>
+          </div>
+
+          {/* Quick actions */}
+          <div className="grid grid-cols-2 gap-2">
+            <button onClick={onAddTask} className="flex items-center justify-center gap-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 font-bold text-sm py-2.5 rounded-xl transition-colors active:scale-95">
+              <Plus className="w-4 h-4" /> {t('addTask')}
+            </button>
+            <button onClick={onAwardPoints} className="flex items-center justify-center gap-1.5 bg-amber-50 hover:bg-amber-100 text-amber-600 font-bold text-sm py-2.5 rounded-xl transition-colors active:scale-95">
+              <Award className="w-4 h-4" /> {t('awardPoints')}
+            </button>
+          </div>
+
+          {/* Recent tasks */}
+          <div>
+            <h3 className="font-display font-bold text-sm text-slate-600 mb-2">{t('tasks')}</h3>
+            {tasks.length === 0 ? (
+              <p className="text-sm text-slate-400 font-semibold py-2">{t('noTasksForChild')}</p>
+            ) : (
+              <div className="space-y-2">
+                {tasks.slice(0, 5).map((task) => (
+                  <div key={task.id} className="flex items-center gap-2 bg-slate-50 rounded-xl p-2.5">
+                    <div className={`w-1.5 h-8 rounded-full ${task.status === 'completed' ? 'bg-teal-400' : 'bg-amber-400'}`} />
+                    <div className="flex-1 min-w-0">
+                      <p className="font-bold text-sm text-slate-700 truncate">{task.title}</p>
+                      <p className="text-xs font-bold text-slate-400">{task.subject} · {task.point_value} pts</p>
+                    </div>
+                    {task.status === 'completed' && <Check className="w-4 h-4 text-teal-400 shrink-0" />}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Rewards */}
+          <div>
+            <h3 className="font-display font-bold text-sm text-slate-600 mb-2">{t('rewards')}</h3>
+            {availableRewards.length === 0 ? (
+              <p className="text-sm text-slate-400 font-semibold py-2">{t('noRewardsForChild')}</p>
+            ) : (
+              <div className="flex flex-wrap gap-2">
+                {availableRewards.map((r) => (
+                  <span key={r.id} className="flex items-center gap-1 bg-amber-50 text-amber-600 text-xs font-bold px-2.5 py-1.5 rounded-full">
+                    <Gift className="w-3 h-3" /> {r.title} ({r.point_cost})
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Navigation buttons */}
+          <div className="grid grid-cols-3 gap-2 pt-2 border-t border-slate-100">
+            <button onClick={onViewMood} className="flex flex-col items-center gap-1 bg-violet-50 hover:bg-violet-100 text-violet-600 font-bold text-xs py-2.5 rounded-xl transition-colors active:scale-95">
+              <Smile className="w-4 h-4" /> {t('viewMood')}
+            </button>
+            <button onClick={onViewGrowth} className="flex flex-col items-center gap-1 bg-teal-50 hover:bg-teal-100 text-teal-600 font-bold text-xs py-2.5 rounded-xl transition-colors active:scale-95">
+              <Ruler className="w-4 h-4" /> {t('viewGrowth')}
+            </button>
+            <button onClick={onEditSettings} className="flex flex-col items-center gap-1 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs py-2.5 rounded-xl transition-colors active:scale-95">
+              <UserCog className="w-4 h-4" /> {t('editSettings')}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 function AddTaskModal({ children, rewards, lang, t, preselectedChildId, onClose, onAdd }: {
   children: Profile[]; rewards: Reward[]; lang: LangCode; t: TFunc; preselectedChildId: string | null; onClose: () => void

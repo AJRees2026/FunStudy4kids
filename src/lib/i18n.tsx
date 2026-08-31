@@ -392,6 +392,12 @@ const en: Dict = {
   noMoodToday: 'No mood logged',
   lastCompleted: 'Last completed',
   quickActions: 'Quick Actions',
+  childDetails: 'Child Details',
+  editSettings: 'Edit Settings',
+  viewMood: 'View Mood',
+  viewGrowth: 'View Growth',
+  noTasksForChild: 'No tasks yet',
+  noRewardsForChild: 'No rewards yet',
 }
 
 const es: Dict = {
@@ -756,6 +762,12 @@ const es: Dict = {
   noMoodToday: 'Sin ánimo registrado',
   lastCompleted: 'Última completada',
   quickActions: 'Acciones Rápidas',
+  childDetails: 'Detalles del Niño',
+  editSettings: 'Editar Ajustes',
+  viewMood: 'Ver Ánimo',
+  viewGrowth: 'Ver Crecimiento',
+  noTasksForChild: 'Sin tareas aún',
+  noRewardsForChild: 'Sin recompensas aún',
 }
 
 const fr: Dict = {
@@ -1120,6 +1132,12 @@ const fr: Dict = {
   noMoodToday: 'Pas d\'humeur enregistrée',
   lastCompleted: 'Dernière complétée',
   quickActions: 'Actions Rapides',
+  childDetails: 'Détails de l\'Enfant',
+  editSettings: 'Modifier les Réglages',
+  viewMood: 'Voir l\'Humeur',
+  viewGrowth: 'Voir la Croissance',
+  noTasksForChild: 'Pas de tâches encore',
+  noRewardsForChild: 'Pas de récompenses encore',
 }
 
 const ja: Dict = {
@@ -1484,6 +1502,12 @@ const ja: Dict = {
   noMoodToday: 'きぶん未記録',
   lastCompleted: '最後に完了',
   quickActions: 'クイック操作',
+  childDetails: 'お子様の詳細',
+  editSettings: '設定を編集',
+  viewMood: 'きぶんを見る',
+  viewGrowth: '成長を見る',
+  noTasksForChild: 'まだタスクがありません',
+  noRewardsForChild: 'まだご褒美がありません',
 }
 
 const zh: Dict = {
@@ -1848,6 +1872,12 @@ const zh: Dict = {
   noMoodToday: '未記錄心情',
   lastCompleted: '最後完成',
   quickActions: '快速操作',
+  childDetails: '孩子詳情',
+  editSettings: '編輯設置',
+  viewMood: '查看心情',
+  viewGrowth: '查看成長',
+  noTasksForChild: '尚無任務',
+  noRewardsForChild: '尚無獎勵',
 }
 
 const da: Dict = {
@@ -2212,6 +2242,12 @@ const da: Dict = {
   noMoodToday: 'Intet humør registreret',
   lastCompleted: 'Sidst fuldført',
   quickActions: 'Hurtige Handlinger',
+  childDetails: 'Barnedetaljer',
+  editSettings: 'Rediger Indstillinger',
+  viewMood: 'Se Humør',
+  viewGrowth: 'Se Vækst',
+  noTasksForChild: 'Ingen opgaver endnu',
+  noRewardsForChild: 'Ingen belønninger endnu',
 }
 
 const de: Dict = {
@@ -2576,6 +2612,12 @@ const de: Dict = {
   noMoodToday: 'Keine Stimmung erfasst',
   lastCompleted: 'Zuletzt erledigt',
   quickActions: 'Schnellaktionen',
+  childDetails: 'Kind-Details',
+  editSettings: 'Einstellungen Bearbeiten',
+  viewMood: 'Stimmung Anzeigen',
+  viewGrowth: 'Wachstum Anzeigen',
+  noTasksForChild: 'Noch keine Aufgaben',
+  noRewardsForChild: 'Noch keine Belohnungen',
 }
 
 const ko: Dict = {
@@ -2948,6 +2990,12 @@ const ko: Dict = {
   noMoodToday: '기분 미기록',
   lastCompleted: '마지막 완료',
   quickActions: '빠른 작업',
+  childDetails: '아이 상세',
+  editSettings: '설정 편집',
+  viewMood: '기분 보기',
+  viewGrowth: '성장 보기',
+  noTasksForChild: '아직 작업 없음',
+  noRewardsForChild: '아직 보상 없음',
 }
 
 const translations: Record<LangCode, Dict> = {

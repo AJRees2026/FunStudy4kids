@@ -78,6 +78,15 @@ button.font-display {
   animation: pop 0.2s ease-out;
 }
 
+@keyframes slideUp {
+  0% { transform: translateY(100%); }
+  100% { transform: translateY(0); }
+}
+
+.animate-slideUp {
+  animation: slideUp 0.3s ease-out;
+}
+
 * {
   -webkit-tap-highlight-color: transparent;
 }
