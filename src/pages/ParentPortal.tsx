@@ -213,7 +213,7 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
               <button
                 key={tb.id}
                 onClick={() => setTab(tb.id)}
-                className={`group relative w-full rounded-2xl p-4 shadow-md hover:shadow-xl transition-all hover:scale-[1.02] active:scale-95 text-left text-xl font-display flex items-center gap-3 ${
+                className={`group relative w-full rounded-2xl p-4 shadow-md hover:shadow-xl transition-all hover:scale-[1.02] active:scale-95 text-left font-display flex items-center gap-3 ${
                   isActive
                     ? 'bg-gradient-to-br from-indigo-500 to-teal-500 text-white shadow-lg'
                     : 'bg-white text-slate-700 shadow-md hover:shadow-xl'
