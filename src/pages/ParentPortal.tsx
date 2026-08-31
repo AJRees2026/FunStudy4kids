@@ -4,7 +4,7 @@ import { useI18n, LANGUAGES, type LangCode } from '../lib/i18n'
 import {
   Shield, LogOut, Plus, Check, X, Clock, TrendingUp, BookOpen, Award,
   UserCog, Rocket, Sparkles, Lock, KeyRound, Copy, Bell, Globe,
-  CalendarClock, Trash2, Palette, Gift, Smile, Ruler, ChevronDown,
+  CalendarClock, Trash2, Palette, Gift, Smile, Ruler, ChevronDown, Pencil,
 } from 'lucide-react'
 import SubjectProgress from '../components/SubjectProgress'
 import ReadingJourney from '../components/ReadingJourney'
@@ -30,6 +30,7 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
   const [currentParent, setCurrentParent] = useState(parent)
   const [showAddTask, setShowAddTask] = useState(false)
   const [showAddReward, setShowAddReward] = useState(false)
+  const [editingReward, setEditingReward] = useState<Reward | null>(null)
   const [showAddChild, setShowAddChild] = useState(false)
   const [copied, setCopied] = useState(false)
   const [expandedChild, setExpandedChild] = useState<string | null>(null)
@@ -484,7 +485,26 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
                 {rewards.map((reward) => {
                   const child = children.find((c) => c.id === reward.child_id)
                   return (
-                    <div key={reward.id} className="bg-white rounded-2xl p-4 border border-slate-100 flex flex-col items-center text-center">
+                    <div key={reward.id} className="bg-white rounded-2xl p-4 border border-slate-100 flex flex-col items-center text-center relative">
+                      <div className="absolute top-2 right-2 flex gap-1">
+                        <button
+                          onClick={() => setEditingReward(reward)}
+                          className="w-7 h-7 rounded-lg bg-slate-100 hover:bg-indigo-100 text-slate-400 hover:text-indigo-500 flex items-center justify-center transition-colors"
+                          title={t('editBook')}
+                        >
+                          <Pencil className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={async () => {
+                            await supabase.from('rewards').delete().eq('id', reward.id)
+                            fetchAll()
+                          }}
+                          className="w-7 h-7 rounded-lg bg-slate-100 hover:bg-rose-100 text-slate-400 hover:text-rose-500 flex items-center justify-center transition-colors"
+                          title={t('deleteBook')}
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
                       <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center mb-2">
                         <Award className="w-5 h-5 text-white" />
                       </div>
@@ -810,6 +830,12 @@ export default function ParentPortal({ parent, onSwitchProfile }: Props) {
           setShowAddReward(false); fetchAll()
         }} />
       )}
+      {editingReward && (
+        <AddRewardModal children={children} lang={lang} t={t} onClose={() => setEditingReward(null)} editing={editingReward} onAdd={async (_childId, title, cost) => {
+          await supabase.from('rewards').update({ title, point_cost: cost }).eq('id', editingReward.id)
+          setEditingReward(null); fetchAll()
+        }} />
+      )}
       {showAddChild && (
         <AddChildModal parentId={currentParent.id} lang={lang} t={t} onClose={() => setShowAddChild(false)} onAdd={async (name, theme, gender) => {
           const { error } = await supabase.from('profiles').insert({
@@ -946,23 +972,24 @@ function AddTaskModal({ children, rewards, lang, t, onClose, onAdd }: {
   )
 }
 
-function AddRewardModal({ children, lang, t, onClose, onAdd }: {
+function AddRewardModal({ children, lang, t, onClose, onAdd, editing }: {
   children: Profile[]; lang: LangCode; t: TFunc; onClose: () => void
   onAdd: (childId: string, title: string, cost: number) => void
+  editing?: Reward | null
 }) {
-  const [childId, setChildId] = useState(children.length > 1 ? '__all__' : (children[0]?.id || ''))
-  const [title, setTitle] = useState('')
-  const [cost, setCost] = useState(20)
+  const [childId, setChildId] = useState(editing ? editing.child_id : (children.length > 1 ? '__all__' : (children[0]?.id || '')))
+  const [title, setTitle] = useState(editing?.title || '')
+  const [cost, setCost] = useState(editing?.point_cost ?? 20)
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
       <div className="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl animate-pop">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="font-display font-extrabold text-xl text-slate-800">{t('addReward')}</h2>
+          <h2 className="font-display font-extrabold text-xl text-slate-800">{editing ? t('editBook') : t('addReward')}</h2>
           <button onClick={onClose} className="text-slate-400 hover:text-slate-600"><X className="w-5 h-5" /></button>
         </div>
         <div className="space-y-4">
-          {children.length > 1 && (
+          {children.length > 1 && !editing && (
             <div>
               <label className="text-xs text-slate-400 font-bold uppercase">{t('child')}</label>
               <select value={childId} onChange={(e) => setChildId(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 mt-1 font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-400">
@@ -982,7 +1009,7 @@ function AddRewardModal({ children, lang, t, onClose, onAdd }: {
             <input type="number" value={cost} onChange={(e) => setCost(Number(e.target.value))} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 mt-1 font-semibold text-slate-700 text-center focus:outline-none focus:ring-2 focus:ring-indigo-400" />
           </div>
           <button onClick={() => onAdd(childId, title, cost)} disabled={!title.trim()} className="w-full bg-gradient-to-r from-amber-400 to-orange-500 text-white font-display font-bold text-lg py-3 rounded-2xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50">
-            {t('createReward')}
+            {editing ? t('saveReward') : t('createReward')}
           </button>
         </div>
       </div>
